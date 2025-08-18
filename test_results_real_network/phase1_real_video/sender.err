@@ -1,0 +1,921 @@
+(main_wnd.cc:258): SwitchToConnectUI
+(peer_connection_client.cc:306): Headers received
+(peer_connection_client.cc:481): OnClose
+(conductor.cc:385): OnSignedIn
+(main_wnd.cc:306): SwitchToPeerList
+(conductor.cc:647): SEND_MESSAGE_TO_PEER
+(peer_connection_client.cc:383): OnHangingGetRead
+(peer_connection_client.cc:306): Headers received
+(peer_connection_client.cc:481): OnClose
+(conductor.cc:399): OnPeerConnected
+(main_wnd.cc:306): SwitchToPeerList
+(webrtc_voice_engine.cc:477): WebRtcVoiceEngine::WebRtcVoiceEngine
+(webrtc_video_engine.cc:819): WebRtcVideoEngine::WebRtcVideoEngine()
+(webrtc_voice_engine.cc:499): WebRtcVoiceEngine::Init
+(audio_device_impl.cc:70): Create
+(audio_device_buffer.cc:72): AudioDeviceBuffer::ctor
+(audio_device_impl.cc:116): AudioDeviceModuleImpl
+(audio_device_impl.cc:131): CheckPlatform
+(audio_device_impl.cc:142): current platform is Linux
+(audio_device_impl.cc:165): CreatePlatformSpecificObjects
+(audio_device_impl.cc:905): PlatformAudioLayer
+(audio_device_impl.cc:223): PulseAudio support is enabled.
+(audio_mixer_manager_pulse_linux.cc:56): AudioMixerManagerLinuxPulse created
+(audio_device_pulse_linux.cc:95): AudioDeviceLinuxPulse created
+(audio_device_impl.cc:228): Linux PulseAudio APIs will be utilized
+(audio_device_impl.cc:272): AttachAudioBuffer
+(audio_device_buffer.cc:202): SetRecordingSampleRate(0)
+(audio_device_buffer.cc:208): SetPlayoutSampleRate(0)
+(audio_device_buffer.cc:222): SetRecordingChannels(0)
+(audio_device_buffer.cc:228): SetPlayoutChannels(0)
+(audio_device_impl.cc:292): Init
+(audio_device_impl.cc:636): SetPlayoutDevice(0)
+(audio_device_impl.cc:325): InitSpeaker
+(audio_device_impl.cc:540): StereoPlayoutIsAvailable
+(audio_mixer_manager_pulse_linux.cc:188): SpeakerIsInitialized
+(audio_device_impl.cc:547): output: 1
+(audio_device_impl.cc:552): SetStereoPlayout(1)
+(audio_device_buffer.cc:228): SetPlayoutChannels(2)
+(audio_device_impl.cc:698): SetRecordingDevice(0)
+(audio_device_impl.cc:331): InitMicrophone
+(audio_device_impl.cc:494): StereoRecordingIsAvailable
+(audio_mixer_manager_pulse_linux.cc:195): MicrophoneIsInitialized
+(audio_device_impl.cc:501): output: 1
+(audio_device_impl.cc:506): SetStereoRecording(1)
+(audio_device_buffer.cc:222): SetRecordingChannels(2)
+(audio_device_impl.cc:811): RegisterAudioCallback
+(audio_device_buffer.cc:103): RegisterAudioCallback
+(webrtc_voice_engine.cc:602): WebRtcVoiceEngine::ApplyOptions: AudioOptions {aec: 1, agc: 1, ns: 1, hf: 1, swap: 0, audio_jitter_buffer_max_packets: 200, audio_jitter_buffer_fast_accelerate: 0, audio_jitter_buffer_min_delay_ms: 0, }
+(audio_device_impl.cc:827): BuiltInAECIsAvailable
+(audio_device_impl.cc:830): output: 0
+(audio_device_impl.cc:843): BuiltInAGCIsAvailable
+(audio_device_impl.cc:846): output: 0
+(audio_device_impl.cc:859): BuiltInNSIsAvailable
+(audio_device_impl.cc:862): output: 0
+(peer_connection_factory.cc:411): Using default network controller factory
+(bitrate_prober.cc:54): Bandwidth probing enabled, set to inactive
+(cpu_info.cc:89): Available number of cores: 8
+(transport_sequence_number_feedback_generator.cc:52): Maximum interval between transport feedback RTCP messages: 250 ms
+(aimd_rate_control.cc:88): Using aimd rate control with back off factor 0.85
+(remote_bitrate_estimator_single_stream.cc:59): RemoteBitrateEstimatorSingleStream: Instantiating.
+(openssl_key_pair.cc:36): Making key pair
+(conductor.cc:595): 音频轨道已禁用
+(conductor.cc:140): 视频文件路径: /home/wuq/webrtc-checkout/blue_sky_1080p25.y4m [单次播放]
+(file_video_capturer.cc:28): 成功打开Y4M文件: /home/wuq/webrtc-checkout/blue_sky_1080p25.y4m (1920x1080 @ 25fps) [单次播放]
+(openssl_key_pair.cc:89): Returning key pair
+(boringssl_certificate.cc:186): Making certificate for WebRTC
+(boringssl_certificate.cc:242): Returning certificate
+(conductor.cc:148): 使用Y4M视频文件: /home/wuq/webrtc-checkout/blue_sky_1080p25.y4m
+(rtp_transmission_manager.cc:238): Adding video transceiver in response to a call to AddTrack.
+(main_wnd.cc:343): SwitchToStreamingUI
+(p2p_transport_channel.cc:552): Set backup connection ping interval to 25000 milliseconds.
+(p2p_transport_channel.cc:561): Set ICE receiving timeout to 2500 milliseconds
+(p2p_transport_channel.cc:568): Set ping most likely connection to 0
+(p2p_transport_channel.cc:575): Set stable_writable_connection_ping_interval to 2500
+(p2p_transport_channel.cc:588): Set presume writable when fully relayed to 0
+(p2p_transport_channel.cc:606): Set regather_on_failed_networks_interval to 300000
+(p2p_transport_channel.cc:613): Set receiving_switching_delay to 1000
+(jsep_transport_controller.cc:1213): Creating DtlsSrtpTransport.
+(dtls_srtp_transport.cc:72): Setting RTP Transport on 0 transport b0007e00
+(p2p_transport_channel.cc:486): Set ICE ufrag: YKRm pwd: oATJWp13XqxGQqvfwsvLDcdF on transport 0
+(channel.cc:148): Created channel: {mid: 0, media_type: video}
+(rtp_demuxer.cc:160): Added sink = a4034c50 for criteria {mid: 0, rsid: <empty>, ssrcs: [], payload_types = []}
+(pacing_controller.cc:113): PacedSender paused.
+(sdp_offer_answer.cc:3115): Session: 7451601486408348337 Old state: stable New state: have-local-offer
+(webrtc_video_engine.cc:3093): ResetUnsignaledRecvStream.
+(channel.cc:1031): Setting local video description for {mid: 0, media_type: video}
+(webrtc_video_engine.cc:2885): SetReceiverParameters: {codecs: [VideoCodec[96:VP8], VideoCodec[97:rtx], VideoCodec[98:VP9], VideoCodec[99:rtx], VideoCodec[100:VP9], VideoCodec[101:rtx], VideoCodec[39:AV1], VideoCodec[40:rtx], VideoCodec[103:red], VideoCodec[104:rtx], VideoCodec[107:ulpfec]], extensions: [{uri: http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01, id: 4}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time, id: 2}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/color-space, id: 8}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/playout-delay, id: 5}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/video-content-type, id: 6}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/video-timing, id: 7}, {uri: urn:3gpp:video-orientation, id: 3}, {uri: urn:ietf:params:rtp-hdrext:sdes:mid, id: 9}, {uri: urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id, id: 11}, {uri: urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id, id: 10}, {uri: urn:ietf:params:rtp-hdrext:toffset, id: 1}], rtcp: {reduced_size:1, remote_estimate:0}}
+(webrtc_video_engine.cc:2891): Changing FlexFEC payload type (recv) from 43 to -1
+(webrtc_video_engine.cc:2901): Changing recv codecs from {VideoCodec[96:VP8], VideoCodec[98:VP9], VideoCodec[100:VP9], VideoCodec[35:VP9], VideoCodec[37:VP9], VideoCodec[39:AV1], VideoCodec[41:AV1]} to {VideoCodec[96:VP8], VideoCodec[98:VP9], VideoCodec[100:VP9], VideoCodec[39:AV1]}
+(webrtc_video_engine.cc:1524): AddSendStream: {id:video_label;ssrcs:[3035118802,2221346197];ssrc_groups:{semantics:FID;ssrcs:[3035118802,2221346197]};cname:AQU9tWyWqAF/Z1U3;stream_ids:stream_id;}
+(channel.cc:699): Add send stream ssrc: 3035118802 into {mid: 0, media_type: video}
+(channel.cc:1023): Changing video state, recv=0 send=0 for {mid: 0, media_type: video}
+(webrtc_video_engine.cc:1495): SetVideoSend (ssrc= 3035118802, options: VideoOptions {is_screencast : 0, }, source = (source))
+(basic_port_allocator.cc:370): Start getting ports with turn_port_prune_policy 0
+(basic_port_allocator.cc:702): Count of networks: 4
+(basic_port_allocator.cc:704): Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]
+(basic_port_allocator.cc:704): Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]
+(basic_port_allocator.cc:704): Net[lo:0:0:0:x:x:x:x:x/128:Loopback:id=2]
+(basic_port_allocator.cc:704): Net[lo:127.0.0.x/8:Loopback:id=1]
+(basic_port_allocator.cc:125): Filtered out ignored networks:
+(basic_port_allocator.cc:127): Net[lo:0:0:0:x:x:x:x:x/128:Loopback:id=2]
+(basic_port_allocator.cc:127): Net[lo:127.0.0.x/8:Loopback:id=1]
+(basic_port_allocator.cc:900): Network manager has started
+(basic_port_allocator.cc:702): Count of networks: 4
+(basic_port_allocator.cc:704): Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]
+(basic_port_allocator.cc:704): Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]
+(basic_port_allocator.cc:704): Net[lo:0:0:0:x:x:x:x:x/128:Loopback:id=2]
+(basic_port_allocator.cc:704): Net[lo:127.0.0.x/8:Loopback:id=1]
+(basic_port_allocator.cc:125): Filtered out ignored networks:
+(basic_port_allocator.cc:127): Net[lo:0:0:0:x:x:x:x:x/128:Loopback:id=2]
+(basic_port_allocator.cc:127): Net[lo:127.0.0.x/8:Loopback:id=1]
+(basic_port_allocator.cc:810): Allocate ports on wlp0s20f3 wlp0s20f3 
+(conductor.cc:92): OnSuccess
+(conductor.cc:647): SEND_MESSAGE_TO_PEER
+(basic_port_allocator.cc:1409): Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]: Allocation Phase=Udp
+(port.cc:149): Port[b000cc20::1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Port created with network cost 50
+(basic_port_allocator.cc:1495): AllocationSequence: UDPPort will be handling the STUN candidate generation.
+(basic_port_allocator.cc:923): Adding allocated port for 0
+(basic_port_allocator.cc:943): Port[b000cc20:0:1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Added port to allocator
+(peer_connection_client.cc:306): Headers received
+(basic_port_allocator.cc:960): Port[b000cc20:0:1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Gathered candidate: Cand[:2709390103:1:udp:2122194687:192.168.1.x:37768:host::0:YKRm:oATJWp13XqxGQqvfwsvLDcdF:3:50:0]
+(basic_port_allocator.cc:993): Port[b000cc20:0:1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Port ready.
+(peer_connection_client.cc:481): OnClose
+(conductor.cc:647): SEND_MESSAGE_TO_PEER
+(stun_port.cc:446): Port[b000cc20:0:1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Starting STUN host lookup for stun.l.google.com:19302
+(conductor.cc:362): OnIceCandidate 0
+(basic_port_allocator.cc:1409): Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]: Allocation Phase=Udp
+(conductor.cc:647): SEND_MESSAGE_TO_PEER
+(port.cc:149): Port[b000eba0::1:0:host:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]]: Port created with network cost 50
+(basic_port_allocator.cc:1495): AllocationSequence: UDPPort will be handling the STUN candidate generation.
+(basic_port_allocator.cc:923): Adding allocated port for 0
+(basic_port_allocator.cc:943): Port[b000eba0:0:1:0:host:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]]: Added port to allocator
+(peer_connection_client.cc:306): Headers received
+(basic_port_allocator.cc:960): Port[b000eba0:0:1:0:host:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]]: Gathered candidate: Cand[:576575690:1:udp:2122262783:[2409:8a3c:1e13:x:x:x:x:x]:55140:host::0:YKRm:oATJWp13XqxGQqvfwsvLDcdF:4:50:0]
+(peer_connection_client.cc:481): OnClose
+(basic_port_allocator.cc:993): Port[b000eba0:0:1:0:host:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]]: Port ready.
+(conductor.cc:647): SEND_MESSAGE_TO_PEER
+(stun_port.cc:446): Port[b000eba0:0:1:0:host:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]]: Starting STUN host lookup for stun.l.google.com:19302
+(conductor.cc:362): OnIceCandidate 0
+(conductor.cc:647): SEND_MESSAGE_TO_PEER
+(peer_connection_client.cc:306): Headers received
+(peer_connection_client.cc:481): OnClose
+(conductor.cc:647): SEND_MESSAGE_TO_PEER
+(basic_port_allocator.cc:1409): Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]: Allocation Phase=Relay
+(basic_port_allocator.cc:1409): Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]: Allocation Phase=Relay
+(basic_port_allocator.cc:1409): Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]: Allocation Phase=Tcp
+(port.cc:149): Port[b00107e0::1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Port created with network cost 50
+(basic_port_allocator.cc:923): Adding allocated port for 0
+(basic_port_allocator.cc:943): Port[b00107e0:0:1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Added port to allocator
+(basic_port_allocator.cc:960): Port[b00107e0:0:1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Gathered candidate: Cand[:3756008986:1:tcp:1518214911:192.168.1.x:32821:host::0:YKRm:oATJWp13XqxGQqvfwsvLDcdF:3:50:0]
+(basic_port_allocator.cc:993): Port[b00107e0:0:1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Port ready.
+(basic_port_allocator.cc:1105): Port[b00107e0:0:1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Port completed gathering candidates.
+(basic_port_allocator.cc:1409): Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]: Allocation Phase=Tcp
+(port.cc:149): Port[b0011980::1:0:host:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]]: Port created with network cost 50
+(conductor.cc:362): OnIceCandidate 0
+(basic_port_allocator.cc:923): Adding allocated port for 0
+(basic_port_allocator.cc:943): Port[b0011980:0:1:0:host:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]]: Added port to allocator
+(basic_port_allocator.cc:960): Port[b0011980:0:1:0:host:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]]: Gathered candidate: Cand[:1556348359:1:tcp:1518283007:[2409:8a3c:1e13:x:x:x:x:x]:59915:host::0:YKRm:oATJWp13XqxGQqvfwsvLDcdF:4:50:0]
+(basic_port_allocator.cc:993): Port[b0011980:0:1:0:host:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]]: Port ready.
+(conductor.cc:647): SEND_MESSAGE_TO_PEER
+(basic_port_allocator.cc:1105): Port[b0011980:0:1:0:host:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]]: Port completed gathering candidates.
+(conductor.cc:362): OnIceCandidate 0
+(peer_connection_client.cc:306): Headers received
+(peer_connection_client.cc:481): OnClose
+(conductor.cc:647): SEND_MESSAGE_TO_PEER
+(conductor.cc:647): SEND_MESSAGE_TO_PEER
+(peer_connection_client.cc:306): Headers received
+(peer_connection_client.cc:481): OnClose
+(conductor.cc:647): SEND_MESSAGE_TO_PEER
+(basic_port_allocator.cc:1105): Port[b000eba0:0:1:0:host:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]]: Port completed gathering candidates.
+(basic_port_allocator.cc:960): Port[b000cc20:0:1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Gathered candidate: Cand[:3076737445:1:udp:1685987071:223.98.101.x:1739:srflx:192.168.1.x:37768:YKRm:oATJWp13XqxGQqvfwsvLDcdF:3:50:0]
+(basic_port_allocator.cc:1105): Port[b000cc20:0:1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Port completed gathering candidates.
+(basic_port_allocator.cc:1179): All candidates gathered for 0:1:0
+(p2p_transport_channel.cc:970): P2PTransportChannel: 0, component 1 gathering complete
+(conductor.cc:362): OnIceCandidate 0
+(conductor.cc:647): SEND_MESSAGE_TO_PEER
+(peer_connection_client.cc:306): Headers received
+(peer_connection_client.cc:481): OnClose
+(conductor.cc:647): SEND_MESSAGE_TO_PEER
+(peer_connection_client.cc:383): OnHangingGetRead
+(peer_connection_client.cc:306): Headers received
+(peer_connection_client.cc:481): OnClose
+(port.cc:352): Received STUN BINDING request id=5a6d306e5041734549453066 from unknown address [2409:8a3c:1e13:x:x:x:x:x]:50196
+(connection.cc:260): Conn[b0033780:0:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]:LEU+rLcn:1:0:host:udp:[2409:8a3c:1e13:x:x:x:x:x]:55140->tlpYYoQw:1:1853827327:prflx:udp:[2409:8a3c:1e13:x:x:x:x:x]:50196|C--W|-|0|0|7962127746140623359|-]: Connection created
+(p2p_transport_channel.cc:1108): Adding connection from peer reflexive candidate: Cand[:2806022742:1:udp:1853827327:[2409:8a3c:1e13:x:x:x:x:x]:50196:prflx::0:AdUA::4:50:0]
+(conductor.cc:487):  Received session description :{
+	"sdp" : "v=0\r\no=- 640949512239682774 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS stream_id\r\nm=video 9 UDP/TLS/RTP/SAVPF 96 97 98 99 100 101 39 40 103 104 107\r\nc=IN IP4 0.0.0.0\r\na=rtcp:9 IN IP4 0.0.0.0\r\na=ice-ufrag:AdUA\r\na=ice-pwd:/MtgmX1q7NpVkK+BZZ7WjmOt\r\na=ice-options:trickle\r\na=fingerprint:sha-256 51:2A:6B:56:27:EB:09:FC:1B:BC:EB:4E:32:60:23:72:D1:1D:22:D4:09:19:62:89:5F:1C:54:E5:3D:AC:BE:9F\r\na=setup:active\r\na=mid:0\r\na=extmap:1 urn:ietf:params:rtp-hdrext:toffset\r\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\r\na=extmap:3 urn:3gpp:video-orientation\r\na=extmap:4 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01\r\na=extmap:5 http://www.webrtc.org/experiments/rtp-hdrext/playout-delay\r\na=extmap:6 http://www.webrtc.org/experiments/rtp-hdrext/video-content-type\r\na=extmap:7 http://www.webrtc.org/experiments/rtp-hdrext/video-timing\r\na=extmap:8 http://www.webrtc.org/experiments/rtp-hdrext/color-space\r\na=extmap:9 urn:ietf:params:rtp-hdrext:sdes:mid\r\na=extmap:10 urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id\r\na=extmap:11 urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id\r\na=sendrecv\r\na=msid:stream_id video_label\r\na=rtcp-mux\r\na=rtcp-rsize\r\na=rtpmap:96 VP8/90000\r\na=rtcp-fb:96 goog-remb\r\na=rtcp-fb:96 transport-cc\r\na=rtcp-fb:96 ccm fir\r\na=rtcp-fb:96 nack\r\na=rtcp-fb:96 nack pli\r\na=rtpmap:97 rtx/90000\r\na=fmtp:97 apt=96\r\na=rtpmap:98 VP9/90000\r\na=rtcp-fb:98 goog-remb\r\na=rtcp-fb:98 transport-cc\r\na=rtcp-fb:98 ccm fir\r\na=rtcp-fb:98 nack\r\na=rtcp-fb:98 nack pli\r\na=fmtp:98 profile-id=0\r\na=rtpmap:99 rtx/90000\r\na=fmtp:99 apt=98\r\na=rtpmap:100 VP9/90000\r\na=rtcp-fb:100 goog-remb\r\na=rtcp-fb:100 transport-cc\r\na=rtcp-fb:100 ccm fir\r\na=rtcp-fb:100 nack\r\na=rtcp-fb:100 nack pli\r\na=fmtp:100 profile-id=2\r\na=rtpmap:101 rtx/90000\r\na=fmtp:101 apt=100\r\na=rtpmap:39 AV1/90000\r\na=rtcp-fb:39 goog-remb\r\na=rtcp-fb:39 transport-cc\r\na=rtcp-fb:39 ccm fir\r\na=rtcp-fb:39 nack\r\na=rtcp-fb:39 nack pli\r\na=fmtp:39 level-idx=5;profile=0;tier=0\r\na=rtpmap:40 rtx/90000\r\na=fmtp:40 apt=39\r\na=rtpmap:103 red/90000\r\na=rtpmap:104 rtx/90000\r\na=fmtp:104 apt=103\r\na=rtpmap:107 ulpfec/90000\r\na=ssrc-group:FID 303404767 4000561396\r\na=ssrc:303404767 cname:RWg6AuQhXPrkXzRf\r\na=ssrc:4000561396 cname:RWg6AuQhXPrkXzRf\r\n",
+	"type" : "answer"
+}
+(connection.cc:875): Conn[b0033780:0:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]:LEU+rLcn:1:0:host:udp:[2409:8a3c:1e13:x:x:x:x:x]:55140->tlpYYoQw:1:1853827327:prflx:udp:[2409:8a3c:1e13:x:x:x:x:x]:50196|CR-W|-|0|0|7962127746140623359|-]: Sent STUN BINDING response, to=[2409:8a3c:1e13:x:x:x:x:x]:50196, id=5a6d306e5041734549453066
+(p2p_transport_channel.cc:1946): Channel[0|1|R_]: Transport channel state changed from 0 to 2
+(jsep_transport_controller.cc:1373): 0 Transport 1 state changed. Check if state is complete.
+(dtls_srtp_transport.cc:72): Setting RTP Transport on 0 transport b0007e00
+(p2p_transport_channel.cc:497): Received remote ICE parameters: ufrag=AdUA, renomination disabled
+(openssl_stream_adapter.cc:148): WebRTC-ForceDtls13: 
+(dtls_transport.cc:498): DtlsTransport[0|1|__]: DTLS setup complete, dtls_in_stun: 0
+(p2p_transport_channel.cc:1743): Channel[0|1|R_]: Have a pingable connection for the first time; starting to ping.
+(sdp_offer_answer.cc:3115): Session: 7451601486408348337 Old state: have-local-offer New state: stable
+(channel.cc:540): Channel enabled: {mid: 0, media_type: video}
+(channel.cc:1023): Changing video state, recv=1 send=0 for {mid: 0, media_type: video}
+(basic_ice_controller.cc:259): Selecting connection for triggered check: Conn[b0033780:0:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]:LEU+rLcn:1:0:host:udp:[2409:8a3c:1e13:x:x:x:x:x]:55140->tlpYYoQw:1:1853827327:prflx:udp:[2409:8a3c:1e13:x:x:x:x:x]:50196|CR-W|-|0|0|7962127746140623359|-]
+(channel.cc:1152): Setting remote video description for {mid: 0, media_type: video}
+(connection.cc:1628): Conn[b0033780:0:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]:LEU+rLcn:1:0:host:udp:[2409:8a3c:1e13:x:x:x:x:x]:55140->tlpYYoQw:1:1853827327:prflx:udp:[2409:8a3c:1e13:x:x:x:x:x]:50196|CR-W|-|0|0|7962127746140623359|-]: Sent STUN BINDING request, id=556e4f45556f374a46477334, use_candidate=1, nomination=0
+(dtls_transport.cc:777): DtlsTransport[0|1|__]: Packet received before DTLS started.
+(dtls_transport.cc:786): DtlsTransport[0|1|__]: Caching DTLS ClientHello packet until DTLS is started.
+(connection.cc:1504): Conn[b0033780:0:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]:LEU+rLcn:1:0:host:udp:[2409:8a3c:1e13:x:x:x:x:x]:55140->tlpYYoQw:1:1853827327:prflx:udp:[2409:8a3c:1e13:x:x:x:x:x]:50196|CR-I|-|0|0|7962127746140623359|-]: Received STUN BINDING response, id=556e4f45556f374a46477334, code=0, rtt=0, pings_since_last_response=556e4f45556f374a46477334 
+(webrtc_video_engine.cc:1216): SetSenderParameters: {codecs: [VideoCodec[96:VP8], VideoCodec[97:rtx], VideoCodec[98:VP9], VideoCodec[99:rtx], VideoCodec[100:VP9], VideoCodec[101:rtx], VideoCodec[39:AV1], VideoCodec[40:rtx], VideoCodec[103:red], VideoCodec[104:rtx], VideoCodec[107:ulpfec]], conference_mode: no, extensions: [{uri: http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01, id: 4}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time, id: 2}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/color-space, id: 8}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/playout-delay, id: 5}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/video-content-type, id: 6}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/video-timing, id: 7}, {uri: urn:3gpp:video-orientation, id: 3}, {uri: urn:ietf:params:rtp-hdrext:sdes:mid, id: 9}, {uri: urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id, id: 11}, {uri: urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id, id: 10}, {uri: urn:ietf:params:rtp-hdrext:toffset, id: 1}], extmap-allow-mixed: true, max_bandwidth_bps: -1, mid: 0, rtcp: {reduced_size:1, remote_estimate:0}}
+(wrapping_active_ice_controller.cc:193): Switching selected connection due to: candidate pair state changed
+(p2p_transport_channel.cc:1854): Channel[0|1|R_]: New selected connection: Conn[b0033780:0:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]:LEU+rLcn:1:0:host:udp:[2409:8a3c:1e13:x:x:x:x:x]:55140->tlpYYoQw:1:1853827327:prflx:udp:[2409:8a3c:1e13:x:x:x:x:x]:50196|CRWS|S|0|0|7962127746140623359|0]
+(channel.cc:346): Network route changed for {mid: 0, media_type: video}
+(dtls_transport.cc:688): DtlsTransport[0|1|__]: ice_transport writable state changed to 1 dtls_state: kNew
+(dtls_transport.cc:1059): DtlsTransport[0|1|__]: configuring DTLS handshake timeout 50ms based on ICE RTT 0
+(openssl_stream_adapter.cc:866): BeginSSL with peer.
+(webrtc_video_engine.cc:1224): Negotiated codec: VideoCodec[96:VP8]
+(webrtc_video_engine.cc:1224): Negotiated codec: VideoCodec[98:VP9]
+(webrtc_video_engine.cc:1224): Negotiated codec: VideoCodec[100:VP9]
+(webrtc_video_engine.cc:1224): Negotiated codec: VideoCodec[39:AV1]
+(webrtc_video_engine.cc:2033): RecreateWebRtcStream (send) because of SetCodec.
+(openssl_adapter.cc:798): TLS server start_accept
+(openssl_adapter.cc:798): TLS server read_client_hello
+(openssl_adapter.cc:798): TLS server read_client_hello
+(openssl_stream_adapter.cc:950):  -- error when we want to read
+(dtls_transport.cc:954): DtlsTransport[0|1|__]: DtlsTransportInternalImpl: Started DTLS handshake active=1 role=server
+(srtp_transport.cc:272): The params in SRTP transport are reset.
+(dtls_transport.cc:965): DtlsTransport[0|1|__]: Handling #1 cached DTLS ClientHello packet(s).
+(openssl_adapter.cc:798): TLS server read_client_hello_after_ech
+(openssl_adapter.cc:798): TLS server cert_callback
+(openssl_adapter.cc:798): TLS server select_parameters
+(openssl_adapter.cc:798): TLS server send_server_hello
+(openssl_adapter.cc:798): TLS server send_server_certificate
+(video_send_stream_impl.cc:257): Using default encoder max bitrate = 10 Mbps
+(video_send_stream_impl.cc:471): VideoSendStreamImpl: {encoder_settings: { experiment_cpu_load_estimator: off}}, rtp: {ssrcs: [3035118802], rids: [], mid: '0', rtcp_mode: RtcpMode::kReducedSize, max_packet_size: 1200, extmap-allow-mixed: true, extensions: [{uri: http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01, id: 4}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time, id: 2}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/color-space, id: 8}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/playout-delay, id: 5}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/video-content-type, id: 6}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/video-timing, id: 7}, {uri: urn:3gpp:video-orientation, id: 3}, {uri: urn:ietf:params:rtp-hdrext:sdes:mid, id: 9}, {uri: urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id, id: 11}, {uri: urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id, id: 10}], lntf: {enabled: false}, nack: {rtp_history_ms: 1000}, ulpfec: {ulpfec_payload_type: 107, red_payload_type: 103, red_rtx_payload_type: 104}, payload_name: VP8, payload_type: 96, raw_payload: false, stream_configs: [{ssrc: 3035118802, rid: , payload_name: VP8, payload_type: 96, raw_payload: false, rtx: {ssrc: 2221346197, payload_type: 97}}], flexfec: {payload_type: -1, ssrc: 0, protected_media_ssrcs: []}, rtx: {ssrcs: [2221346197], payload_type: 97}, c_name: AQU9tWyWqAF/Z1U3}, rtcp_report_interval_ms: 1000, send_transport: (Transport), render_delay_ms: 0, target_delay_ms: 0, suspend_below_min_bitrate: off}
+(video_stream_encoder.cc:907): SetStartBitrate 300000
+(video_send_stream_impl.cc:559): Encoder config: {codec_type: VP8, content_type: kRealtimeVideo, frame_drop_enabled: 1, encoder_specific_settings: (ptr), min_transmit_bitrate_bps: 0, number_of_streams: 1, legacy_conference_mode: 0, is_quality_scaling_allowed: 1, max_qp: -1, simulcast_layers[0]: {width: 0, height: 0, max_framerate: -1, min_bitrate_bps:-1, target_bitrate_bps:-1, max_bitrate_bps:-1, max_qp: -1, num_temporal_layers: 1, bitrate_priority: 0, active: 1, scale_down_by: -1}} VideoSendStream config: {encoder_settings: { experiment_cpu_load_estimator: off}}, rtp: {ssrcs: [3035118802], rids: [], mid: '0', rtcp_mode: RtcpMode::kReducedSize, max_packet_size: 1200, extmap-allow-mixed: true, extensions: [{uri: http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01, id: 4}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time, id: 2}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/color-space, id: 8}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/playout-delay, id: 5}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/video-content-type, id: 6}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/video-timing, id: 7}, {uri: urn:3gpp:video-orientation, id: 3}, {uri: urn:ietf:params:rtp-hdrext:sdes:mid, id: 9}, {uri: urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id, id: 11}, {uri: urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id, id: 10}], lntf: {enabled: false}, nack: {rtp_history_ms: 1000}, ulpfec: {ulpfec_payload_type: 107, red_payload_type: 103, red_rtx_payload_type: 104}, payload_name: VP8, payload_type: 96, raw_payload: false, stream_configs: [{ssrc: 3035118802, rid: , payload_name: VP8, payload_type: 96, raw_payload: false, rtx: {ssrc: 2221346197, payload_type: 97}}], flexfec: {payload_type: -1, ssrc: 0, protected_media_ssrcs: []}, rtx: {ssrcs: [2221346197], payload_type: 97}, c_name: AQU9tWyWqAF/Z1U3}, rtcp_report_interval_ms: 1000, send_transport: (Transport), render_delay_ms: 0, target_delay_ms: 0, suspend_below_min_bitrate: off}
+(video_stream_encoder.cc:975): ConfigureEncoder requested.
+(video_send_stream_impl.cc:691): VideoSendStreamImpl::Stop
+(webrtc_video_engine.cc:2982): AddRecvStream: {id:video_label;ssrcs:[303404767,4000561396];ssrc_groups:{semantics:FID;ssrcs:[303404767,4000561396]};cname:RWg6AuQhXPrkXzRf;stream_ids:stream_id;}
+(openssl_adapter.cc:798): TLS server send_server_key_exchange
+(corruption_classifier.cc:27): Calculating corruption probability using scale factor.
+(video_receive_stream2.cc:274): VideoReceiveStream2: {decoders: [{payload_type: 96, payload_name: VP8, codec_params: {}}, {payload_type: 98, payload_name: VP9, codec_params: {profile-id: 0}}, {payload_type: 100, payload_name: VP9, codec_params: {profile-id: 2}}, {payload_type: 39, payload_name: AV1, codec_params: {level-idx: 5, profile: 0, tier: 0}}], rtp: {remote_ssrc: 303404767, local_ssrc: 2221346197, rtcp_mode: RtcpMode::kReducedSize, rtcp_xr: {receiver_reference_time_report: off}, lntf: {enabled: false}, nack: {rtp_history_ms: 1000}, ulpfec_payload_type: 107, red_type: 103, rtx_ssrc: 4000561396, rtx_payload_types: {40 (pt) -> 39 (apt), 97 (pt) -> 96 (apt), 99 (pt) -> 98 (apt), 101 (pt) -> 100 (apt), 104 (pt) -> 103 (apt), }, raw_payload_types: {}}, renderer: (renderer), render_delay_ms: 10, sync_group: stream_id}
+(rtp_demuxer.cc:160): Added sink = a4049d88 for criteria {mid: <empty>, rsid: <empty>, ssrcs: [303404767, ], payload_types = []}
+(rtp_demuxer.cc:160): Added sink = a4043660 for criteria {mid: <empty>, rsid: <empty>, ssrcs: [4000561396, ], payload_types = []}
+(channel.cc:762): Add remote ssrc: 303404767 to {mid: 0, media_type: video}
+(openssl_adapter.cc:798): TLS server send_server_hello_done
+(openssl_adapter.cc:798): TLS server read_client_certificate
+(openssl_adapter.cc:798): TLS server read_client_certificate
+(openssl_stream_adapter.cc:950):  -- error when we want to read
+(jsep_transport_controller.cc:1373): 0 Transport 1 state changed. Check if state is complete.
+(rtp_demuxer.cc:160): Added sink = a4034c50 for criteria {mid: 0, rsid: <empty>, ssrcs: [303404767, 4000561396, ], payload_types = []}
+(video_send_stream_impl.cc:691): VideoSendStreamImpl::Stop
+(channel.cc:1023): Changing video state, recv=1 send=0 for {mid: 0, media_type: video}
+(peer_connection.cc:1874): Changing IceConnectionState 0 => 1
+(rtp_transport_controller_send.cc:366): Network route changed on transport 0: new_route = [ connected: 1 local: [ 0/4 Unknown turn: 0 ] remote: [ 0/4 Unknown turn: 0 ] packet_overhead_bytes: 48 ]
+(sdp_offer_answer.cc:2239): Processing the MSIDs for MID=0 (streams=[stream_id]).
+(sdp_offer_answer.cc:2249): Processing the addition of a remote track for MID=0.
+(rtp_transceiver.cc:502): Changing transceiver (MID=0) current direction from <not set> to kSendRecv.
+(webrtc_video_engine.cc:3137): SetSink: ssrc:303404767 (ptr)
+(conductor.cc:350): OnAddTrack 9435cb9d-3a6e-43cc-9b53-8e97d2968571
+(peer_connection.cc:1896): Changing standardized IceConnectionState 0 => 1
+(peer_connection.cc:1896): Changing standardized IceConnectionState 1 => 2
+(conductor.cc:92): OnSuccess
+(peer_connection_client.cc:383): OnHangingGetRead
+(peer_connection_client.cc:306): Headers received
+(peer_connection_client.cc:481): OnClose
+(conductor.cc:520):  Received candidate :{
+	"candidate" : "candidate:2140966841 1 udp 2122194687 192.168.1.8 39287 typ host generation 0 ufrag AdUA network-id 3 network-cost 50",
+	"sdpMLineIndex" : 0,
+	"sdpMid" : "0"
+}
+(peer_connection_client.cc:383): OnHangingGetRead
+(peer_connection_client.cc:306): Headers received
+(connection.cc:260): Conn[b003d460:0:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]:Ov+69Y7F:1:0:host:udp:192.168.1.x:37768->eu7Q6Swu:1:2122194687:host:udp:192.168.1.x:39287|C--W|-|0|0|9114756780654345726|-]: Connection created
+(peer_connection_client.cc:481): OnClose
+(p2p_transport_channel.cc:1497): Channel[0|1|RW]: Created connection with origin: 2, total: 2
+(conductor.cc:520):  Received candidate :{
+	"candidate" : "candidate:1510718612 1 udp 2122262783 2409:8a3c:1e13:a010:531:eb25:af6c:3a3c 50196 typ host generation 0 ufrag AdUA network-id 4 network-cost 50",
+	"sdpMLineIndex" : 0,
+	"sdpMid" : "0"
+}
+(video_stream_encoder.cc:1829): Video frame parameters changed: dimensions=1920x1080, texture=0.
+(video_stream_encoder.cc:1020): [VSE] ReconfigureEncoder [encoder_config={codec_type: VP8, content_type: kRealtimeVideo, frame_drop_enabled: 1, encoder_specific_settings: (ptr), min_transmit_bitrate_bps: 0, number_of_streams: 1, legacy_conference_mode: 0, is_quality_scaling_allowed: 1, max_qp: -1, simulcast_layers[0]: {width: 0, height: 0, max_framerate: -1, min_bitrate_bps:-1, target_bitrate_bps:-1, max_bitrate_bps:-1, max_qp: -1, num_temporal_layers: 1, bitrate_priority: 0, active: 1, scale_down_by: -1}}]
+(openssl_adapter.cc:798): TLS server verify_client_certificate
+(openssl_stream_adapter.cc:1156): Accepted peer certificate.
+(openssl_adapter.cc:798): TLS server read_client_key_exchange
+(sdp_video_format.cc:291): Matched SdpVideoFormat Codec name: VP8, parameters: { } with Codec name: VP8, parameters: { }, scalability_modes: [L1T1, L1T2, L1T3]
+(video_stream_encoder.cc:1274): [VSE] ReconfigureEncoder: simulcast streams: {0: 1920x1080 L1T1, min_kbps: 30, target_kbps: 2500, max_kbps: 2500, max_fps: 60, max_qp: 56, num_tl: 1, active: true}
+(openssl_adapter.cc:798): TLS server read_client_certificate_verify
+(openssl_adapter.cc:798): TLS server read_change_cipher_spec
+(openssl_adapter.cc:798): TLS server process_change_cipher_spec
+(openssl_adapter.cc:798): TLS server read_next_proto
+(openssl_adapter.cc:798): TLS server read_channel_id
+(openssl_adapter.cc:798): TLS server read_client_finished
+(openssl_adapter.cc:798): TLS server send_server_finished
+(openssl_adapter.cc:798): TLS server finish_server_handshake
+(openssl_adapter.cc:798): TLS server done
+(openssl_adapter.cc:798): TLS server done
+(openssl_adapter.cc:798): TLS server done
+(openssl_stream_adapter.cc:931):  -- success
+(dtls_transport.cc:867): DtlsTransport[0|1|__]: DTLS handshake complete.
+(jsep_transport_controller.cc:1312):  Transport 0 writability changed to 1.
+(call.cc:1261): UpdateAggregateNetworkState: aggregate_state change to up
+(peer_connection.cc:2411): Changing to ICE completed state because all transports are complete.
+(dtls_srtp_transport.cc:217): Extracting keys from transport: 0
+(pacing_controller.cc:120): PacedSender resumed.
+(peer_connection.cc:1874): Changing IceConnectionState 1 => 2
+(peer_connection.cc:1874): Changing IceConnectionState 2 => 3
+(peer_connection.cc:1896): Changing standardized IceConnectionState 2 => 3
+(rtp_transport_controller_send.cc:713): Creating fallback congestion controller
+(alr_experiment.cc:69): Using ALR experiment settings: pacing factor: 1, max pacer queue length: 2875, ALR bandwidth usage percent: 80, ALR start budget level percent: 40, ALR end budget level percent: -60, ALR experiment group ID: 3
+(trendline_estimator.cc:187): Using Trendline filter for delay change estimation with settings sort:false,cap:false,beginning_packets:7,end_packets:7,cap_uncertainty:0,window_size:20 and no network state predictor
+(trendline_estimator.cc:187): Using Trendline filter for delay change estimation with settings sort:false,cap:false,beginning_packets:7,end_packets:7,cap_uncertainty:0,window_size:20 and no network state predictor
+(aimd_rate_control.cc:88): Using aimd rate control with back off factor 0.85
+(delay_based_bwe.cc:93): Initialized DelayBasedBwe with separate audio overuse detectionenabled:false,packet_threshold:10,time_threshold:1 s
+(delay_based_bwe.cc:313): BWE Setting start bitrate to: 300 kbps
+(goog_cc_network_control.cc:637): [GCC-OUTPUT] TargetRateUpdate at 95218859 ms, DelayBasedBps: 0, LossBasedBps: 300000, FinalTargetBps: 300000
+(bitrate_allocator.cc:500): Current BWE 300000
+(bitrate_prober.cc:130): Probe cluster (bitrate_bps:min bytes:min packets): (900 kbps:1688:5, Inactive)
+(bitrate_prober.cc:130): Probe cluster (bitrate_bps:min bytes:min packets): (1800 kbps:3375:5, Inactive)
+(srtp_transport.cc:217): SRTP activated with negotiated parameters: send crypto_suite 1 recv crypto_suite 1
+(channel.cc:570): Channel writable ({mid: 0, media_type: video}) for the first time
+(bitrate_allocator.cc:687): UpdateAllocationLimits : total_requested_min_bitrate: 0 bps, total_requested_padding_bitrate: 0 bps, total_requested_max_bitrate: 10000 kbps
+(channel.cc:1023): Changing video state, recv=1 send=1 for {mid: 0, media_type: video}
+(resource_adaptation_processor.cc:128): Registered resource "EncoderUsageResource".
+(quality_scaling_experiment.cc:53): QP thresholds: low: 29, high: 95
+(quality_scaler.cc:221): QP thresholds: low: 29, high: 95
+(resource_adaptation_processor.cc:128): Registered resource "QualityScalerResource".
+(video_stream_encoder.cc:1873): Dropping frame. Too large for target bitrate.
+(video_stream_adapter.cc:498): Scaling down resolution, max pixels: 1244160
+(bitrate_allocator.cc:687): UpdateAllocationLimits : total_requested_min_bitrate: 30 kbps, total_requested_padding_bitrate: 0 bps, total_requested_max_bitrate: 2500 kbps
+(video_stream_encoder_resource_manager.cc:735): Downgrade counts: fps: {quality:0cpu:0}, resolution {quality:1cpu:0}
+(video_stream_encoder.cc:2465): Updating sink restrictions from QualityScalerResource to { max_pixels_per_frame=1244160 }
+(video_stream_encoder.cc:2404): Video suspend state changed to: not suspended
+(video_adapter.cc:286): Frame size changed: scaled 1 / out 11 / in 11 Changes: 1 Input: 1920x1080 Scale: 2/3 Output: 1280x720 fps: 2147483647/-1 alignment: 1
+(video_stream_encoder.cc:1829): Video frame parameters changed: dimensions=1280x720, texture=0.
+(video_stream_encoder.cc:1020): [VSE] ReconfigureEncoder [encoder_config={codec_type: VP8, content_type: kRealtimeVideo, frame_drop_enabled: 1, encoder_specific_settings: (ptr), min_transmit_bitrate_bps: 0, number_of_streams: 1, legacy_conference_mode: 0, is_quality_scaling_allowed: 1, max_qp: -1, simulcast_layers[0]: {width: 0, height: 0, max_framerate: -1, min_bitrate_bps:-1, target_bitrate_bps:-1, max_bitrate_bps:-1, max_qp: -1, num_temporal_layers: 1, bitrate_priority: 0, active: 1, scale_down_by: -1}}]
+(video_stream_encoder.cc:1274): [VSE] ReconfigureEncoder: simulcast streams: {0: 1280x720 L1T1, min_kbps: 30, target_kbps: 2500, max_kbps: 2500, max_fps: 60, max_qp: 56, num_tl: 1, active: true}
+(video_stream_encoder.cc:1873): Dropping frame. Too large for target bitrate.
+(video_stream_adapter.cc:498): Scaling down resolution, max pixels: 552960
+(video_stream_encoder_resource_manager.cc:735): Downgrade counts: fps: {quality:0cpu:0}, resolution {quality:2cpu:0}
+(video_stream_encoder.cc:2465): Updating sink restrictions from QualityScalerResource to { max_pixels_per_frame=552960 }
+(video_adapter.cc:286): Frame size changed: scaled 2 / out 12 / in 12 Changes: 2 Input: 1920x1080 Scale: 1/2 Output: 960x540 fps: 2147483647/-1 alignment: 1
+(video_stream_encoder.cc:1829): Video frame parameters changed: dimensions=960x540, texture=0.
+(video_stream_encoder.cc:1020): [VSE] ReconfigureEncoder [encoder_config={codec_type: VP8, content_type: kRealtimeVideo, frame_drop_enabled: 1, encoder_specific_settings: (ptr), min_transmit_bitrate_bps: 0, number_of_streams: 1, legacy_conference_mode: 0, is_quality_scaling_allowed: 1, max_qp: -1, simulcast_layers[0]: {width: 0, height: 0, max_framerate: -1, min_bitrate_bps:-1, target_bitrate_bps:-1, max_bitrate_bps:-1, max_qp: -1, num_temporal_layers: 1, bitrate_priority: 0, active: 1, scale_down_by: -1}}]
+(video_stream_encoder.cc:1274): [VSE] ReconfigureEncoder: simulcast streams: {0: 960x540 L1T1, min_kbps: 30, target_kbps: 2000, max_kbps: 2000, max_fps: 60, max_qp: 56, num_tl: 1, active: true}
+(video_stream_encoder.cc:1873): Dropping frame. Too large for target bitrate.
+(video_stream_adapter.cc:498): Scaling down resolution, max pixels: 311040
+(bitrate_allocator.cc:687): UpdateAllocationLimits : total_requested_min_bitrate: 30 kbps, total_requested_padding_bitrate: 0 bps, total_requested_max_bitrate: 2000 kbps
+(video_stream_encoder_resource_manager.cc:735): Downgrade counts: fps: {quality:0cpu:0}, resolution {quality:3cpu:0}
+(video_stream_encoder.cc:2465): Updating sink restrictions from QualityScalerResource to { max_pixels_per_frame=311040 }
+(video_adapter.cc:286): Frame size changed: scaled 3 / out 13 / in 13 Changes: 3 Input: 1920x1080 Scale: 1/3 Output: 640x360 fps: 2147483647/-1 alignment: 1
+(video_stream_encoder.cc:1829): Video frame parameters changed: dimensions=640x360, texture=0.
+(video_stream_encoder.cc:1020): [VSE] ReconfigureEncoder [encoder_config={codec_type: VP8, content_type: kRealtimeVideo, frame_drop_enabled: 1, encoder_specific_settings: (ptr), min_transmit_bitrate_bps: 0, number_of_streams: 1, legacy_conference_mode: 0, is_quality_scaling_allowed: 1, max_qp: -1, simulcast_layers[0]: {width: 0, height: 0, max_framerate: -1, min_bitrate_bps:-1, target_bitrate_bps:-1, max_bitrate_bps:-1, max_qp: -1, num_temporal_layers: 1, bitrate_priority: 0, active: 1, scale_down_by: -1}}]
+(video_stream_encoder.cc:1274): [VSE] ReconfigureEncoder: simulcast streams: {0: 640x360 L1T1, min_kbps: 30, target_kbps: 1700, max_kbps: 1700, max_fps: 60, max_qp: 56, num_tl: 1, active: true}
+(video_stream_encoder.cc:1873): Dropping frame. Too large for target bitrate.
+(video_stream_adapter.cc:498): Scaling down resolution, max pixels: 138240
+(video_stream_encoder_resource_manager.cc:735): Downgrade counts: fps: {quality:0cpu:0}, resolution {quality:4cpu:0}
+(video_stream_encoder.cc:2465): Updating sink restrictions from QualityScalerResource to { max_pixels_per_frame=138240 }
+(bitrate_allocator.cc:687): UpdateAllocationLimits : total_requested_min_bitrate: 30 kbps, total_requested_padding_bitrate: 0 bps, total_requested_max_bitrate: 1700 kbps
+(connection.cc:555): Conn[b003d460:0:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]:Ov+69Y7F:1:0:host:udp:192.168.1.x:37768->eu7Q6Swu:1:2122194687:host:udp:192.168.1.x:39287|C--W|-|0|0|9114756780654345726|-]: Received STUN BINDING request, id=514268633942394d484e5764
+(connection.cc:875): Conn[b003d460:0:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]:Ov+69Y7F:1:0:host:udp:192.168.1.x:37768->eu7Q6Swu:1:2122194687:host:udp:192.168.1.x:39287|CR-W|-|0|0|9114756780654345726|-]: Sent STUN BINDING response, to=192.168.1.x:39287, id=514268633942394d484e5764
+(basic_ice_controller.cc:259): Selecting connection for triggered check: Conn[b003d460:0:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]:Ov+69Y7F:1:0:host:udp:192.168.1.x:37768->eu7Q6Swu:1:2122194687:host:udp:192.168.1.x:39287|CR-W|-|0|0|9114756780654345726|-]
+(connection.cc:1628): Conn[b003d460:0:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]:Ov+69Y7F:1:0:host:udp:192.168.1.x:37768->eu7Q6Swu:1:2122194687:host:udp:192.168.1.x:39287|CR-W|-|0|0|9114756780654345726|-]: Sent STUN BINDING request, id=783738754a45655a794c436e, use_candidate=0, nomination=0
+(connection.cc:1504): Conn[b003d460:0:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]:Ov+69Y7F:1:0:host:udp:192.168.1.x:37768->eu7Q6Swu:1:2122194687:host:udp:192.168.1.x:39287|CR-I|-|0|0|9114756780654345726|-]: Received STUN BINDING response, id=783738754a45655a794c436e, code=0, rtt=0, pings_since_last_response=783738754a45655a794c436e 
+(video_adapter.cc:286): Frame size changed: scaled 4 / out 14 / in 14 Changes: 4 Input: 1920x1080 Scale: 1/4 Output: 480x270 fps: 2147483647/-1 alignment: 1
+(video_stream_encoder.cc:1829): Video frame parameters changed: dimensions=480x270, texture=0.
+(video_stream_encoder.cc:1020): [VSE] ReconfigureEncoder [encoder_config={codec_type: VP8, content_type: kRealtimeVideo, frame_drop_enabled: 1, encoder_specific_settings: (ptr), min_transmit_bitrate_bps: 0, number_of_streams: 1, legacy_conference_mode: 0, is_quality_scaling_allowed: 1, max_qp: -1, simulcast_layers[0]: {width: 0, height: 0, max_framerate: -1, min_bitrate_bps:-1, target_bitrate_bps:-1, max_bitrate_bps:-1, max_qp: -1, num_temporal_layers: 1, bitrate_priority: 0, active: 1, scale_down_by: -1}}]
+(video_stream_encoder.cc:1274): [VSE] ReconfigureEncoder: simulcast streams: {0: 480x270 L1T1, min_kbps: 30, target_kbps: 1700, max_kbps: 1700, max_fps: 60, max_qp: 56, num_tl: 1, active: true}
+(video_stream_encoder.cc:1985): [VSE] Encoder info changed to EncoderInfo { ScalingSettings { Thresholds { low = 29, high = 95}, min_pixels_per_frame = 57600 }, requested_resolution_alignment = 1, apply_alignment_to_all_simulcast_layers = 0, supports_native_handle = 0, implementation_name = 'libvpx', has_trusted_rate_controller = 1, is_hardware_accelerated = 0, fps_allocation = [[ 1] ], resolution_bitrate_limits = [] , supports_simulcast = 1, preferred_pixel_formats = [kI420, kNV12]}
+(video_send_stream_impl.cc:782): SignalEncoderActive, Encoder is active.
+(rtp_sender_video.cc:762): Sent first RTP packet of the first video frame (pre-pacer)
+(rtp_sender_video.cc:766): Sent last RTP packet of the first video frame (pre-pacer)
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95219061 ms, NumPackets: 5, InFlight: 0 bytes
+(probe_bitrate_estimator.cc:164): Probing successful [cluster id: 1] [send: 2437 bytes / 22 ms = 886181 bps ] [receive: 3159 bytes / 22 ms = 1148727 bps]
+(probe_bitrate_estimator.cc:164): Probing successful [cluster id: 1] [send: 3490 bytes / 32 ms = 872500 bps ] [receive: 4212 bytes / 32 ms = 1053 kbps]
+(trendline_estimator.cc:187): Using Trendline filter for delay change estimation with settings sort:false,cap:false,beginning_packets:7,end_packets:7,cap_uncertainty:0,window_size:20 and no network state predictor
+(trendline_estimator.cc:187): Using Trendline filter for delay change estimation with settings sort:false,cap:false,beginning_packets:7,end_packets:7,cap_uncertainty:0,window_size:20 and no network state predictor
+(trendline_estimator.cc:276): [Trendline] Time: 95219100 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.1 ms, Trendline slope: 0, Modified trend: nan, Threshold: 12.5, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95219110 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.19 ms, Trendline slope: 0, Modified trend: 0, Threshold: 12.5, State: Normal
+(delay_based_bwe.cc:261): [DelayBWE-Decision] Time: 95219061 ms, Detector state: 0, Old bitrate: 0 bps, New bitrate: 872500 bps, Updated: yes, Probe: yes
+(goog_cc_network_control.cc:637): [GCC-OUTPUT] TargetRateUpdate at 95219061 ms, DelayBasedBps: 872500, LossBasedBps: 872500, FinalTargetBps: 872500
+(probe_controller.cc:356): Measured bitrate: 872500 bps Minimum to probe further: 1260 kbps upper limit: +inf bps
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95219111 ms, NumPackets: 7, InFlight: 0 bytes
+(probe_bitrate_estimator.cc:164): Probing successful [cluster id: 2] [send: 2439 bytes / 10 ms = 1951200 bps ] [receive: 2563 bytes / 10 ms = 2050400 bps]
+(probe_bitrate_estimator.cc:164): Probing successful [cluster id: 2] [send: 2894 bytes / 13 ms = 1780923 bps ] [receive: 3619 bytes / 13 ms = 2227076 bps]
+(probe_bitrate_estimator.cc:164): Probing successful [cluster id: 2] [send: 3950 bytes / 17 ms = 1858823 bps ] [receive: 4675 bytes / 17 ms = 2200 kbps]
+(trendline_estimator.cc:276): [Trendline] Time: 95219120 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.271 ms, Trendline slope: 0, Modified trend: 0, Threshold: 7.625, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95219126 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.3439 ms, Trendline slope: 0, Modified trend: 0, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95219133 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.40951 ms, Trendline slope: 0, Modified trend: 0, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95219152 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.468559 ms, Trendline slope: 0, Modified trend: 0, Threshold: 6, State: Normal
+(delay_based_bwe.cc:261): [DelayBWE-Decision] Time: 95219111 ms, Detector state: 0, Old bitrate: 872500 bps, New bitrate: 1858823 bps, Updated: yes, Probe: yes
+(goog_cc_network_control.cc:637): [GCC-OUTPUT] TargetRateUpdate at 95219111 ms, DelayBasedBps: 1858823, LossBasedBps: 1858823, FinalTargetBps: 1858823
+(probe_controller.cc:356): Measured bitrate: 1858823 bps Minimum to probe further: 1260 kbps upper limit: +inf bps
+(bitrate_prober.cc:130): Probe cluster (bitrate_bps:min bytes:min packets): (3400 kbps:6375:5, Inactive)
+(rtp_video_stream_receiver2.cc:1489): Packet received on SSRC: 303404767 with payload type: 96, timestamp: 2564144291, sequence number: 14528, arrival time: -inf ms, abs send time: 7600498
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95219162 ms, NumPackets: 10, InFlight: 0 bytes
+(probe_bitrate_estimator.cc:164): Probing successful [cluster id: 3] [send: 4975 bytes / 12 ms = 3316666 bps ] [receive: 5805 bytes / 12 ms = 3870 kbps]
+(probe_bitrate_estimator.cc:164): Probing successful [cluster id: 3] [send: 6136 bytes / 14 ms = 3506285 bps ] [receive: 6966 bytes / 14 ms = 3980571 bps]
+(trendline_estimator.cc:276): [Trendline] Time: 95219194 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.521703 ms, Trendline slope: 0, Modified trend: 0, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95219200 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.569533 ms, Trendline slope: 0, Modified trend: 0, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95219206 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.61258 ms, Trendline slope: 0, Modified trend: 0, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95219213 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.651322 ms, Trendline slope: 0, Modified trend: 0, Threshold: 6, State: Normal
+(delay_based_bwe.cc:261): [DelayBWE-Decision] Time: 95219162 ms, Detector state: 0, Old bitrate: 1858823 bps, New bitrate: 3506285 bps, Updated: yes, Probe: yes
+(goog_cc_network_control.cc:637): [GCC-OUTPUT] TargetRateUpdate at 95219162 ms, DelayBasedBps: 3506285, LossBasedBps: 3506285, FinalTargetBps: 3506285
+(decoder_database.cc:130): Initializing decoder with payload type '96'.
+(generic_decoder.cc:309): Decoder implementation: DecoderInfo { prefers_late_decoding = implementation_name = 'libvpx', is_hardware_accelerated = false }
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95219263 ms, NumPackets: 5, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95219274 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.686189 ms, Trendline slope: 0, Modified trend: 0, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95219263 ms, State: 0, Acked bitrate: 1037265 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95219315 ms, NumPackets: 6, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95219354 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.61757 ms, Trendline slope: 0, Modified trend: 0, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95219315 ms, State: 0, Acked bitrate: 921971 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95219416 ms, NumPackets: 3, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95219433 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.655813 ms, Trendline slope: 0, Modified trend: 0, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95219416 ms, State: 0, Acked bitrate: 789836 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95219466 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95219473 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.690232 ms, Trendline slope: 0, Modified trend: 0, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95219513 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.721209 ms, Trendline slope: 0, Modified trend: 0, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95219466 ms, State: 0, Acked bitrate: 800993 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95219517 ms, NumPackets: 5, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95219553 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.749088 ms, Trendline slope: 0, Modified trend: 0, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95219517 ms, State: 0, Acked bitrate: 817970 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95219567 ms, NumPackets: 5, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95219593 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.674179 ms, Trendline slope: 0, Modified trend: 0, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95219567 ms, State: 0, Acked bitrate: 837095 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95219618 ms, NumPackets: 5, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95219634 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.706761 ms, Trendline slope: 0, Modified trend: 0, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95219618 ms, State: 0, Acked bitrate: 851136 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95219669 ms, NumPackets: 10, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95219674 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.736085 ms, Trendline slope: 0, Modified trend: 0, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95219713 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.762477 ms, Trendline slope: -0.000730996, Modified trend: -0.0584797, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95219669 ms, State: 0, Acked bitrate: 881285 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95219720 ms, NumPackets: 6, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95219753 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.786229 ms, Trendline slope: -0.000621742, Modified trend: -0.0522263, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95219720 ms, State: 0, Acked bitrate: 903217 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95219771 ms, NumPackets: 5, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95219793 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.807606 ms, Trendline slope: -0.000537249, Modified trend: -0.047278, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95219771 ms, State: 0, Acked bitrate: 913913 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95219821 ms, NumPackets: 6, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95219834 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.826845 ms, Trendline slope: -0.000471721, Modified trend: -0.0433983, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95219821 ms, State: 0, Acked bitrate: 930423 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95219871 ms, NumPackets: 12, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95219874 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.844161 ms, Trendline slope: -0.000421488, Modified trend: -0.0404629, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95219913 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.859745 ms, Trendline slope: -0.000384342, Modified trend: -0.0384342, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95219871 ms, State: 0, Acked bitrate: 961398 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95219922 ms, NumPackets: 6, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95219953 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.87377 ms, Trendline slope: -0.000358416, Modified trend: -0.0372753, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95219922 ms, State: 0, Acked bitrate: 973915 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95219972 ms, NumPackets: 6, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95219994 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.886393 ms, Trendline slope: -0.000341408, Modified trend: -0.036872, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95219972 ms, State: 0, Acked bitrate: 984489 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220022 ms, NumPackets: 12, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220033 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.897754 ms, Trendline slope: -0.000334872, Modified trend: -0.0375056, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95220074 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.807979 ms, Trendline slope: -0.000308362, Modified trend: -0.03577, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220022 ms, State: 0, Acked bitrate: 1006979 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220072 ms, NumPackets: 6, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220114 ms, Delta: 0 ms, Accumulated delay: 0 ms, Smoothed delay: -0.727181 ms, Trendline slope: -0.000267457, Modified trend: -0.0320948, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220072 ms, State: 0, Acked bitrate: 1026189 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220123 ms, NumPackets: 6, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220153 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.754463 ms, Trendline slope: -0.000242756, Modified trend: -0.0301018, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220123 ms, State: 0, Acked bitrate: 1063441 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220173 ms, NumPackets: 6, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220193 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.779016 ms, Trendline slope: -0.000188014, Modified trend: -0.0240659, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220173 ms, State: 0, Acked bitrate: 1073921 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220223 ms, NumPackets: 12, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220235 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.801115 ms, Trendline slope: -0.000148414, Modified trend: -0.0195906, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95220275 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.821003 ms, Trendline slope: -0.000124106, Modified trend: -0.0168784, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220223 ms, State: 0, Acked bitrate: 1063224 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220274 ms, NumPackets: 6, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220314 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.738903 ms, Trendline slope: -7.79055e-05, Modified trend: -0.0109068, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220274 ms, State: 0, Acked bitrate: 1155058 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:637): [GCC-OUTPUT] TargetRateUpdate at 95220300 ms, DelayBasedBps: 3506285, LossBasedBps: 3506285, FinalTargetBps: 3506285
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220326 ms, NumPackets: 6, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220354 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.765013 ms, Trendline slope: -5.13406e-05, Modified trend: -0.00739304, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220326 ms, State: 0, Acked bitrate: 1163683 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220376 ms, NumPackets: 7, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220394 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.688511 ms, Trendline slope: 3.26776e-05, Modified trend: 0.00483628, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220376 ms, State: 0, Acked bitrate: 1222301 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220426 ms, NumPackets: 14, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220433 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.71966 ms, Trendline slope: 9.31534e-05, Modified trend: 0.0141593, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95220474 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.747694 ms, Trendline slope: 0.000132556, Modified trend: 0.0206787, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220426 ms, State: 0, Acked bitrate: 1290405 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220477 ms, NumPackets: 7, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220514 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.672925 ms, Trendline slope: 0.0001888, Modified trend: 0.0302079, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220477 ms, State: 0, Acked bitrate: 1318151 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220527 ms, NumPackets: 7, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220553 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.705632 ms, Trendline slope: 0.000220758, Modified trend: 0.0362043, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220527 ms, State: 0, Acked bitrate: 1328984 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220579 ms, NumPackets: 7, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220593 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.735069 ms, Trendline slope: 0.000230806, Modified trend: 0.0387754, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220579 ms, State: 0, Acked bitrate: 1362891 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220629 ms, NumPackets: 14, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220634 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.761562 ms, Trendline slope: 0.000220804, Modified trend: 0.0379783, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95220674 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.785406 ms, Trendline slope: 0.000193019, Modified trend: 0.0339713, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220629 ms, State: 0, Acked bitrate: 1391392 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220680 ms, NumPackets: 7, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220713 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.806865 ms, Trendline slope: 0.000149428, Modified trend: 0.026897, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220680 ms, State: 0, Acked bitrate: 1425366 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220731 ms, NumPackets: 7, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220755 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.726179 ms, Trendline slope: 0.000126896, Modified trend: 0.0233488, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220731 ms, State: 0, Acked bitrate: 1436573 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220782 ms, NumPackets: 7, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220794 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.753561 ms, Trendline slope: 8.4134e-05, Modified trend: 0.0158172, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220782 ms, State: 0, Acked bitrate: 1459875 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220833 ms, NumPackets: 14, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220835 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.778205 ms, Trendline slope: 2.29733e-05, Modified trend: 0.00441088, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95220874 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.800384 ms, Trendline slope: -1.50234e-05, Modified trend: -0.00294458, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220833 ms, State: 0, Acked bitrate: 1486860 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220883 ms, NumPackets: 7, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220914 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.820346 ms, Trendline slope: -2.8563e-05, Modified trend: -0.0057126, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220883 ms, State: 0, Acked bitrate: 1503991 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220934 ms, NumPackets: 7, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220954 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.838311 ms, Trendline slope: -5.58018e-05, Modified trend: -0.0113836, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220934 ms, State: 0, Acked bitrate: 1522350 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95220984 ms, NumPackets: 14, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95220994 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.85448 ms, Trendline slope: -9.54161e-05, Modified trend: -0.0198465, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95221034 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.869032 ms, Trendline slope: -0.000145917, Modified trend: -0.0309344, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95220984 ms, State: 0, Acked bitrate: 1506397 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221034 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221074 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.882129 ms, Trendline slope: -0.000206273, Modified trend: -0.044555, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221034 ms, State: 0, Acked bitrate: 1559192 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221085 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221114 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.893916 ms, Trendline slope: -0.000236319, Modified trend: -0.0519902, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221085 ms, State: 0, Acked bitrate: 1577016 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221136 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221154 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.904524 ms, Trendline slope: -0.00027461, Modified trend: -0.0615126, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221136 ms, State: 0, Acked bitrate: 1605885 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221187 ms, NumPackets: 15, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221194 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.914072 ms, Trendline slope: -0.000280919, Modified trend: -0.0640496, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95221233 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.922665 ms, Trendline slope: -0.000294348, Modified trend: -0.0682887, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221187 ms, State: 0, Acked bitrate: 1621885 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221238 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221275 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.830398 ms, Trendline slope: -0.000277845, Modified trend: -0.0655715, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221238 ms, State: 0, Acked bitrate: 1632975 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221288 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221314 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.847358 ms, Trendline slope: -0.00023503, Modified trend: -0.0564073, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221288 ms, State: 0, Acked bitrate: 1649272 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221339 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221354 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.862623 ms, Trendline slope: -0.000204054, Modified trend: -0.048973, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221339 ms, State: 0, Acked bitrate: 1665398 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221390 ms, NumPackets: 15, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221394 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.87636 ms, Trendline slope: -0.000183686, Modified trend: -0.0440847, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95221437 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.888724 ms, Trendline slope: -0.000172582, Modified trend: -0.0414196, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221390 ms, State: 0, Acked bitrate: 1682974 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221440 ms, NumPackets: 7, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221474 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.899852 ms, Trendline slope: -0.000170353, Modified trend: -0.0408847, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221440 ms, State: 0, Acked bitrate: 1684592 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221491 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221514 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.909867 ms, Trendline slope: -0.000175955, Modified trend: -0.0422292, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221491 ms, State: 0, Acked bitrate: 1697336 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221543 ms, NumPackets: 14, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221554 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.91888 ms, Trendline slope: -0.00014897, Modified trend: -0.0357528, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95221594 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.926992 ms, Trendline slope: -0.000128436, Modified trend: -0.0308246, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221543 ms, State: 0, Acked bitrate: 1690437 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221593 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221634 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.934293 ms, Trendline slope: -0.000113711, Modified trend: -0.0272907, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221593 ms, State: 0, Acked bitrate: 1716050 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221644 ms, NumPackets: 7, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221675 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.840864 ms, Trendline slope: -6.84591e-05, Modified trend: -0.0164302, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221644 ms, State: 0, Acked bitrate: 1711817 bps, New target: 3506285 bps, Valid: yes
+(remote_ntp_time_estimator.cc:94): RTP timestamp: 2564369291 in NTP clock: 3962746975484 estimated time in receiver NTP clock: 3962746975484
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221694 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221714 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.856777 ms, Trendline slope: -3.53324e-05, Modified trend: -0.00847978, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221694 ms, State: 0, Acked bitrate: 1671808 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221745 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221754 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.871099 ms, Trendline slope: -1.30129e-05, Modified trend: -0.0031231, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95221794 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.88399 ms, Trendline slope: -4.2728e-07, Modified trend: -0.000102547, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221745 ms, State: 0, Acked bitrate: 1727248 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221796 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221834 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.895591 ms, Trendline slope: 3.39068e-06, Modified trend: 0.000813763, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221796 ms, State: 0, Acked bitrate: 1735775 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221847 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221876 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.906032 ms, Trendline slope: -7.19662e-07, Modified trend: -0.000172719, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221847 ms, State: 0, Acked bitrate: 1741089 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221897 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221913 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.915428 ms, Trendline slope: -1.18828e-05, Modified trend: -0.00285187, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221897 ms, State: 0, Acked bitrate: 1745473 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221947 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95221953 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.923886 ms, Trendline slope: -2.94686e-05, Modified trend: -0.00707247, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95221994 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.931497 ms, Trendline slope: -5.28528e-05, Modified trend: -0.0126847, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221947 ms, State: 0, Acked bitrate: 1757111 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95221997 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222034 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.838347 ms, Trendline slope: -4.57674e-05, Modified trend: -0.0109842, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95221997 ms, State: 0, Acked bitrate: 1757960 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222048 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222075 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.854513 ms, Trendline slope: -1.10437e-05, Modified trend: -0.00265049, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222048 ms, State: 0, Acked bitrate: 1763912 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222098 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222115 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.869061 ms, Trendline slope: 1.26709e-05, Modified trend: 0.00304101, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222098 ms, State: 0, Acked bitrate: 1766701 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222149 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222154 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.882155 ms, Trendline slope: 2.64818e-05, Modified trend: 0.00635563, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95222194 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.89394 ms, Trendline slope: 3.13934e-05, Modified trend: 0.00753443, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222149 ms, State: 0, Acked bitrate: 1773440 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222200 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222235 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.904546 ms, Trendline slope: 2.81758e-05, Modified trend: 0.0067622, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222200 ms, State: 0, Acked bitrate: 1781716 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222250 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222275 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.914091 ms, Trendline slope: 1.78356e-05, Modified trend: 0.00428056, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222250 ms, State: 0, Acked bitrate: 1779800 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222300 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222315 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.922682 ms, Trendline slope: 1.02313e-06, Modified trend: 0.00024555, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222300 ms, State: 0, Acked bitrate: 1782543 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222351 ms, NumPackets: 17, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222354 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.930414 ms, Trendline slope: -2.15931e-05, Modified trend: -0.00518233, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95222394 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.937372 ms, Trendline slope: -4.94789e-05, Modified trend: -0.0118749, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222351 ms, State: 0, Acked bitrate: 1789424 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222402 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222434 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.943635 ms, Trendline slope: -8.21163e-05, Modified trend: -0.0197079, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222402 ms, State: 0, Acked bitrate: 1802688 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222452 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222475 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.949272 ms, Trendline slope: -7.95198e-05, Modified trend: -0.0190847, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222452 ms, State: 0, Acked bitrate: 1802605 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222503 ms, NumPackets: 9, InFlight: 7900 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222515 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.954344 ms, Trendline slope: -8.09467e-05, Modified trend: -0.0194272, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95222555 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.85891 ms, Trendline slope: -5.02864e-05, Modified trend: -0.0120687, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222503 ms, State: 0, Acked bitrate: 1743533 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222553 ms, NumPackets: 15, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222594 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.873019 ms, Trendline slope: -3.02678e-05, Modified trend: -0.00726428, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222553 ms, State: 0, Acked bitrate: 1819541 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222604 ms, NumPackets: 9, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222634 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.785717 ms, Trendline slope: 1.59052e-05, Modified trend: 0.00381724, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222604 ms, State: 0, Acked bitrate: 1826120 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222654 ms, NumPackets: 7, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222675 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.807145 ms, Trendline slope: 4.62333e-05, Modified trend: 0.011096, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222654 ms, State: 0, Acked bitrate: 1819936 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222705 ms, NumPackets: 17, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222714 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.826431 ms, Trendline slope: 6.22711e-05, Modified trend: 0.0149451, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95222755 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.843788 ms, Trendline slope: 6.54512e-05, Modified trend: 0.0157083, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222705 ms, State: 0, Acked bitrate: 1840324 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222755 ms, NumPackets: 7, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222794 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.859409 ms, Trendline slope: 5.70345e-05, Modified trend: 0.0136883, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222755 ms, State: 0, Acked bitrate: 1831584 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222806 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222834 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.873468 ms, Trendline slope: 7.77246e-05, Modified trend: 0.0186539, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222806 ms, State: 0, Acked bitrate: 1834269 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222856 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222875 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.886121 ms, Trendline slope: 8.86838e-05, Modified trend: 0.0212841, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222856 ms, State: 0, Acked bitrate: 1839160 bps, New target: 3506285 bps, Valid: yes
+(quality_scaler.cc:300): Checking average QP 36 (66).
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222907 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222914 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.897509 ms, Trendline slope: 9.10849e-05, Modified trend: 0.0218604, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95222954 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.907758 ms, Trendline slope: 8.58004e-05, Modified trend: 0.0205921, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222907 ms, State: 0, Acked bitrate: 1849683 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95222958 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95222993 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.916982 ms, Trendline slope: 7.35911e-05, Modified trend: 0.0176619, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95222958 ms, State: 0, Acked bitrate: 1846094 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223009 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223034 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.925284 ms, Trendline slope: 5.49374e-05, Modified trend: 0.013185, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223009 ms, State: 0, Acked bitrate: 1845688 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223060 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223075 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.932756 ms, Trendline slope: 3.05665e-05, Modified trend: 0.00733596, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223060 ms, State: 0, Acked bitrate: 1850632 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223111 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223113 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.93948 ms, Trendline slope: 1.24263e-06, Modified trend: 0.000298231, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95223154 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.845532 ms, Trendline slope: 2.99037e-06, Modified trend: 0.000717689, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223111 ms, State: 0, Acked bitrate: 1853080 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223161 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223195 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.860979 ms, Trendline slope: -6.7134e-06, Modified trend: -0.00161122, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223161 ms, State: 0, Acked bitrate: 1850330 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223212 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223234 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.874881 ms, Trendline slope: -2.67778e-05, Modified trend: -0.00642668, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223212 ms, State: 0, Acked bitrate: 1850528 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223262 ms, NumPackets: 9, InFlight: 7714 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223275 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.887393 ms, Trendline slope: -5.60176e-05, Modified trend: -0.0134442, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95223315 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.898654 ms, Trendline slope: -9.35502e-05, Modified trend: -0.0224521, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223262 ms, State: 0, Acked bitrate: 1794224 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223312 ms, NumPackets: 15, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223354 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.908788 ms, Trendline slope: -9.91903e-05, Modified trend: -0.0238057, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223312 ms, State: 0, Acked bitrate: 1855864 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223363 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223394 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.917909 ms, Trendline slope: -0.000111839, Modified trend: -0.0268415, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223363 ms, State: 0, Acked bitrate: 1850000 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223413 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223435 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.926119 ms, Trendline slope: -9.12167e-05, Modified trend: -0.021892, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223413 ms, State: 0, Acked bitrate: 1856241 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223463 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223476 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.933507 ms, Trendline slope: -7.64309e-05, Modified trend: -0.0183434, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95223514 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.940156 ms, Trendline slope: -6.69093e-05, Modified trend: -0.0160582, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223463 ms, State: 0, Acked bitrate: 1861909 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223514 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223555 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.94614 ms, Trendline slope: -6.20927e-05, Modified trend: -0.0149023, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223514 ms, State: 0, Acked bitrate: 1860080 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223565 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223595 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.951526 ms, Trendline slope: -6.15088e-05, Modified trend: -0.0147621, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223565 ms, State: 0, Acked bitrate: 1793486 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223615 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223634 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.956374 ms, Trendline slope: -6.47417e-05, Modified trend: -0.015538, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223615 ms, State: 0, Acked bitrate: 1855328 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223665 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223675 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.960736 ms, Trendline slope: -7.13753e-05, Modified trend: -0.0171301, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95223716 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.864663 ms, Trendline slope: -4.53822e-05, Modified trend: -0.0108917, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223665 ms, State: 0, Acked bitrate: 1857123 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223715 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223756 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.878196 ms, Trendline slope: -2.95331e-05, Modified trend: -0.00708794, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223715 ms, State: 0, Acked bitrate: 1845130 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223766 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223796 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.890377 ms, Trendline slope: -2.28133e-05, Modified trend: -0.00547519, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223766 ms, State: 0, Acked bitrate: 1852070 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223816 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223836 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.801339 ms, Trendline slope: 1.14038e-05, Modified trend: 0.0027369, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223816 ms, State: 0, Acked bitrate: 1852041 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223867 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223877 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.821205 ms, Trendline slope: 3.09807e-05, Modified trend: 0.00743536, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95223916 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.839085 ms, Trendline slope: 3.72652e-05, Modified trend: 0.00894364, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223867 ms, State: 0, Acked bitrate: 1848465 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223918 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223956 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.855176 ms, Trendline slope: 7.10672e-05, Modified trend: 0.0170561, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223918 ms, State: 0, Acked bitrate: 1846348 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95223969 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95223994 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.869659 ms, Trendline slope: 9.39962e-05, Modified trend: 0.0225591, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95223969 ms, State: 0, Acked bitrate: 1855700 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224020 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224034 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.882693 ms, Trendline slope: 0.000107294, Modified trend: 0.0257506, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224020 ms, State: 0, Acked bitrate: 1856208 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224069 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224077 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.894423 ms, Trendline slope: 0.00011148, Modified trend: 0.0267552, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95224117 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.804981 ms, Trendline slope: 0.000143441, Modified trend: 0.034426, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224069 ms, State: 0, Acked bitrate: 1854770 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224121 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224156 ms, Delta: 0 ms, Accumulated delay: 0 ms, Smoothed delay: -0.724483 ms, Trendline slope: 0.000196688, Modified trend: 0.0472051, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224121 ms, State: 0, Acked bitrate: 1855483 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224172 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224197 ms, Delta: 0 ms, Accumulated delay: 0 ms, Smoothed delay: -0.652035 ms, Trendline slope: 0.000265327, Modified trend: 0.0636785, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224172 ms, State: 0, Acked bitrate: 1855543 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224222 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224236 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.686831 ms, Trendline slope: 0.000308233, Modified trend: 0.073976, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224222 ms, State: 0, Acked bitrate: 1856940 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224273 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224277 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.718148 ms, Trendline slope: 0.000327842, Modified trend: 0.0786821, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95224316 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.746333 ms, Trendline slope: 0.00032719, Modified trend: 0.0785257, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224273 ms, State: 0, Acked bitrate: 1860573 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224324 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224354 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.7717 ms, Trendline slope: 0.000308077, Modified trend: 0.0739386, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224324 ms, State: 0, Acked bitrate: 1864199 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224374 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224396 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.79453 ms, Trendline slope: 0.000271747, Modified trend: 0.0652194, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224374 ms, State: 0, Acked bitrate: 1863675 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224425 ms, NumPackets: 8, InFlight: 2342 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224437 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.815077 ms, Trendline slope: 0.000220129, Modified trend: 0.052831, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224425 ms, State: 0, Acked bitrate: 1864024 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224475 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224477 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.833569 ms, Trendline slope: 0.000154814, Modified trend: 0.0371554, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95224515 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.750212 ms, Trendline slope: 0.000152572, Modified trend: 0.0366174, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224475 ms, State: 0, Acked bitrate: 1862468 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224526 ms, NumPackets: 9, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224555 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.775191 ms, Trendline slope: 0.000131776, Modified trend: 0.0316263, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224526 ms, State: 0, Acked bitrate: 1865886 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224576 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224595 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.797672 ms, Trendline slope: 9.42454e-05, Modified trend: 0.0226189, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224576 ms, State: 0, Acked bitrate: 1863552 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224627 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224634 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.817905 ms, Trendline slope: 8.12308e-05, Modified trend: 0.0194954, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95224675 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.836114 ms, Trendline slope: 5.43386e-05, Modified trend: 0.0130413, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224627 ms, State: 0, Acked bitrate: 1818045 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224677 ms, NumPackets: 9, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224715 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.852503 ms, Trendline slope: 1.50944e-05, Modified trend: 0.00362265, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224677 ms, State: 0, Acked bitrate: 1872416 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224727 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224755 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.867253 ms, Trendline slope: -3.52974e-05, Modified trend: -0.00847137, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224727 ms, State: 0, Acked bitrate: 1869869 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224778 ms, NumPackets: 9, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224795 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.880527 ms, Trendline slope: -9.60112e-05, Modified trend: -0.0230427, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224778 ms, State: 0, Acked bitrate: 1875307 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224828 ms, NumPackets: 17, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224836 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.892475 ms, Trendline slope: -0.000165984, Modified trend: -0.0398363, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95224876 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.903227 ms, Trendline slope: -0.000243457, Modified trend: -0.0584297, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224828 ms, State: 0, Acked bitrate: 1876940 bps, New target: 3506285 bps, Valid: yes
+(quality_scaler.cc:300): Checking average QP 32 (60).
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224878 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224915 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.912904 ms, Trendline slope: -0.000288675, Modified trend: -0.0692821, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224878 ms, State: 0, Acked bitrate: 1872840 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224928 ms, NumPackets: 9, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224955 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.921614 ms, Trendline slope: -0.000301269, Modified trend: -0.0723045, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224928 ms, State: 0, Acked bitrate: 1876424 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95224978 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95224994 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.929453 ms, Trendline slope: -0.000280605, Modified trend: -0.0673452, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95224978 ms, State: 0, Acked bitrate: 1874472 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225029 ms, NumPackets: 17, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225037 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.936507 ms, Trendline slope: -0.000265518, Modified trend: -0.0637242, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95225076 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.942857 ms, Trendline slope: -0.00025573, Modified trend: -0.0613753, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225029 ms, State: 0, Acked bitrate: 1879015 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225080 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225115 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.948571 ms, Trendline slope: -0.000250836, Modified trend: -0.0602006, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225080 ms, State: 0, Acked bitrate: 1880537 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225130 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225155 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.953714 ms, Trendline slope: -0.000250386, Modified trend: -0.0600927, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225130 ms, State: 0, Acked bitrate: 1877973 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225181 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225195 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.958342 ms, Trendline slope: -0.000253552, Modified trend: -0.0608524, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225181 ms, State: 0, Acked bitrate: 1879222 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225232 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225237 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.962508 ms, Trendline slope: -0.000259777, Modified trend: -0.0623464, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95225276 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.966257 ms, Trendline slope: -0.000269154, Modified trend: -0.0645969, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225232 ms, State: 0, Acked bitrate: 1878630 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225283 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225315 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.969632 ms, Trendline slope: -0.000242325, Modified trend: -0.0581579, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225283 ms, State: 0, Acked bitrate: 1878614 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225333 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225353 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.972668 ms, Trendline slope: -0.000218362, Modified trend: -0.0524069, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225333 ms, State: 0, Acked bitrate: 1879015 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225383 ms, NumPackets: 17, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225395 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.975402 ms, Trendline slope: -0.000196567, Modified trend: -0.0471761, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95225434 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.977861 ms, Trendline slope: -0.000177062, Modified trend: -0.0424948, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225383 ms, State: 0, Acked bitrate: 1892750 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225433 ms, NumPackets: 9, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225475 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.880075 ms, Trendline slope: -0.000123614, Modified trend: -0.0296674, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225433 ms, State: 0, Acked bitrate: 1893114 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225484 ms, NumPackets: 9, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225514 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.892068 ms, Trendline slope: -7.93471e-05, Modified trend: -0.0190433, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225484 ms, State: 0, Acked bitrate: 1898258 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225534 ms, NumPackets: 9, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225554 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.902861 ms, Trendline slope: -4.32011e-05, Modified trend: -0.0103683, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225534 ms, State: 0, Acked bitrate: 1907147 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225585 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225595 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.912575 ms, Trendline slope: -1.4353e-05, Modified trend: -0.00344471, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95225635 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.921317 ms, Trendline slope: 7.79541e-06, Modified trend: 0.0018709, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225585 ms, State: 0, Acked bitrate: 1911500 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225635 ms, NumPackets: 9, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225676 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.929186 ms, Trendline slope: 2.39271e-05, Modified trend: 0.00574251, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225635 ms, State: 0, Acked bitrate: 1892803 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225686 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225716 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.936267 ms, Trendline slope: 3.46925e-05, Modified trend: 0.0083262, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225686 ms, State: 0, Acked bitrate: 1914039 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225736 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225756 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.94264 ms, Trendline slope: 4.06049e-05, Modified trend: 0.00974518, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225736 ms, State: 0, Acked bitrate: 1917910 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225787 ms, NumPackets: 17, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225796 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.948376 ms, Trendline slope: 4.22025e-05, Modified trend: 0.0101286, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95225836 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.953539 ms, Trendline slope: 3.97662e-05, Modified trend: 0.0095439, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225787 ms, State: 0, Acked bitrate: 1917456 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225837 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225876 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.958185 ms, Trendline slope: 3.38544e-05, Modified trend: 0.00812506, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225837 ms, State: 0, Acked bitrate: 1920108 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225888 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225915 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.862366 ms, Trendline slope: 6.04715e-05, Modified trend: 0.0145132, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225888 ms, State: 0, Acked bitrate: 1919064 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225939 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225953 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.87613 ms, Trendline slope: 7.69359e-05, Modified trend: 0.0184646, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225939 ms, State: 0, Acked bitrate: 1927919 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95225989 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95225994 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.888517 ms, Trendline slope: 8.42815e-05, Modified trend: 0.0202276, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95226037 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.899665 ms, Trendline slope: 8.32225e-05, Modified trend: 0.0199734, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95225989 ms, State: 0, Acked bitrate: 1921456 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226040 ms, NumPackets: 9, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226075 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.909699 ms, Trendline slope: 7.48689e-05, Modified trend: 0.0179685, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226040 ms, State: 0, Acked bitrate: 1922592 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226091 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226114 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.918729 ms, Trendline slope: 5.99144e-05, Modified trend: 0.0143795, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226091 ms, State: 0, Acked bitrate: 1925621 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226141 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226155 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.926856 ms, Trendline slope: 3.88725e-05, Modified trend: 0.0093294, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226141 ms, State: 0, Acked bitrate: 1924600 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226191 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226194 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.93417 ms, Trendline slope: 1.24494e-05, Modified trend: 0.00298787, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95226238 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.940753 ms, Trendline slope: -1.89885e-05, Modified trend: -0.00455724, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226191 ms, State: 0, Acked bitrate: 1929927 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226241 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226275 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.946678 ms, Trendline slope: -1.5236e-05, Modified trend: -0.00365664, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226241 ms, State: 0, Acked bitrate: 1929768 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226292 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226315 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.85201 ms, Trendline slope: 2.00944e-05, Modified trend: 0.00482265, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226292 ms, State: 0, Acked bitrate: 1928199 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226342 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226354 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.866809 ms, Trendline slope: 4.44137e-05, Modified trend: 0.0106593, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226342 ms, State: 0, Acked bitrate: 1933539 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226393 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226395 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.780128 ms, Trendline slope: 9.45587e-05, Modified trend: 0.0226941, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95226434 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.802115 ms, Trendline slope: 0.000128415, Modified trend: 0.0308195, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226393 ms, State: 0, Acked bitrate: 1927896 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226443 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226475 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.821904 ms, Trendline slope: 0.000147524, Modified trend: 0.0354058, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226443 ms, State: 0, Acked bitrate: 1918920 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226493 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226514 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.839713 ms, Trendline slope: 0.00015346, Modified trend: 0.0368303, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226493 ms, State: 0, Acked bitrate: 1917456 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226544 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226554 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.855742 ms, Trendline slope: 0.000147506, Modified trend: 0.0354014, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95226594 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.770168 ms, Trendline slope: 0.000166588, Modified trend: 0.0399811, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226544 ms, State: 0, Acked bitrate: 1905944 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226594 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226634 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.793151 ms, Trendline slope: 0.000168703, Modified trend: 0.0404887, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226594 ms, State: 0, Acked bitrate: 1905569 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226644 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226674 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.813836 ms, Trendline slope: 0.000155556, Modified trend: 0.0373335, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226644 ms, State: 0, Acked bitrate: 1909603 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226694 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226714 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.732452 ms, Trendline slope: 0.000203967, Modified trend: 0.0489521, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226694 ms, State: 0, Acked bitrate: 1902942 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226745 ms, NumPackets: 16, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226754 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.759207 ms, Trendline slope: 0.000232813, Modified trend: 0.0558752, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95226794 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.683286 ms, Trendline slope: 0.000279451, Modified trend: 0.0670682, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226745 ms, State: 0, Acked bitrate: 1902533 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226796 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226834 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.714958 ms, Trendline slope: 0.000302095, Modified trend: 0.0725028, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226796 ms, State: 0, Acked bitrate: 1895167 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226846 ms, NumPackets: 9, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226875 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.743462 ms, Trendline slope: 0.000303742, Modified trend: 0.072898, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226846 ms, State: 0, Acked bitrate: 1900164 bps, New target: 3506285 bps, Valid: yes
+(quality_scaler.cc:300): Checking average QP 38 (56).
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226896 ms, NumPackets: 9, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226915 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.769116 ms, Trendline slope: 0.000286494, Modified trend: 0.0687585, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226896 ms, State: 0, Acked bitrate: 1899180 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226946 ms, NumPackets: 17, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95226955 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.792204 ms, Trendline slope: 0.000252017, Modified trend: 0.0604841, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95226994 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.812984 ms, Trendline slope: 0.000202378, Modified trend: 0.0485708, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226946 ms, State: 0, Acked bitrate: 1924840 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95226997 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95227034 ms, Delta: 1 ms, Accumulated delay: 0 ms, Smoothed delay: -0.731685 ms, Trendline slope: 0.000174579, Modified trend: 0.041899, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95226997 ms, State: 0, Acked bitrate: 1921139 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95227047 ms, NumPackets: 8, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95227075 ms, Delta: -1 ms, Accumulated delay: -1 ms, Smoothed delay: -0.758517 ms, Trendline slope: 0.000127002, Modified trend: 0.0304804, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95227047 ms, State: 0, Acked bitrate: 1913280 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95227098 ms, NumPackets: 6, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95227113 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.782665 ms, Trendline slope: 0.000101235, Modified trend: 0.0242965, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95227098 ms, State: 0, Acked bitrate: 1891259 bps, New target: 3506285 bps, Valid: yes
+(goog_cc_network_control.cc:410): [GCC-INPUT] Received TransportFeedback at 95227149 ms, NumPackets: 12, InFlight: 0 bytes
+(trendline_estimator.cc:276): [Trendline] Time: 95227153 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.804399 ms, Trendline slope: 5.9228e-05, Modified trend: 0.0142147, Threshold: 6, State: Normal
+(trendline_estimator.cc:276): [Trendline] Time: 95227193 ms, Delta: 0 ms, Accumulated delay: -1 ms, Smoothed delay: -0.823959 ms, Trendline slope: 4.20745e-05, Modified trend: 0.0100979, Threshold: 6, State: Normal
+(delay_based_bwe.cc:283): [DelayBWE-Estimate] Time: 95227149 ms, State: 0, Acked bitrate: 1849057 bps, New target: 3506285 bps, Valid: yes
+(file_video_capturer.cc:108): [VIDEO-END] 视频播放完毕，停止传输
+(file_video_capturer.cc:206): [VIDEO-END] 视频播放完毕，退出读取线程

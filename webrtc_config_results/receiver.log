@@ -1,0 +1,827 @@
+(main.cc:141): Using server config from file: localhost:8888 (autoconnect=1, autocall=0)
+(main_wnd.cc:258): SwitchToConnectUI
+(conductor.cc:249): Loaded configuration from: /home/wuq/webrtc-checkout/webrtc_config_results/receiver_config.json
+(webrtc_config.cc:184): === WebRTC Configuration ===
+(webrtc_config.cc:199):   Video Source: Disabled
+(webrtc_config.cc:208):   Save Video: Yes
+(webrtc_config.cc:210):   Output File: /home/wuq/webrtc-checkout/webrtc_config_results/received_quick_test.y4m
+(webrtc_config.cc:211):   Output Resolution: 640x480
+(webrtc_config.cc:212):   Output FPS: 30
+(webrtc_config.cc:216):   Log Level: info
+(webrtc_config.cc:217):   Save Log: Yes
+(webrtc_config.cc:219):   Log File: /home/wuq/webrtc-checkout/webrtc_config_results/receiver_quick.log
+(webrtc_config.cc:223):   Auto Close: Yes
+(webrtc_config.cc:224):   Transmission Time: 12 seconds
+(webrtc_config.cc:227):   Server Host: localhost
+(webrtc_config.cc:228):   Server Port: 8888
+(webrtc_config.cc:229):   Auto Connect: Yes
+(webrtc_config.cc:230):   Auto Call: No
+(webrtc_config.cc:232): ============================
+(peer_connection_client.cc:308): Headers received
+(peer_connection_client.cc:483): OnClose
+(conductor.cc:486): OnSignedIn
+(main_wnd.cc:306): SwitchToPeerList
+(conductor.cc:832): SEND_MESSAGE_TO_PEER
+(peer_connection_client.cc:385): OnHangingGetRead
+(peer_connection_client.cc:308): Headers received
+(peer_connection_client.cc:483): OnClose
+(peer_connection_client.cc:497): Hanging GET connection closed; retrying in 2 seconds
+(conductor.cc:500): OnPeerConnected
+(main_wnd.cc:306): SwitchToPeerList
+(peer_connection_client.cc:385): OnHangingGetRead
+(peer_connection_client.cc:308): Headers received
+(peer_connection_client.cc:483): OnClose
+(webrtc_voice_engine.cc:477): WebRtcVoiceEngine::WebRtcVoiceEngine
+(webrtc_voice_engine.cc:499): WebRtcVoiceEngine::Init
+(audio_device_buffer.cc:72): AudioDeviceBuffer::ctor
+(audio_device_impl.cc:142): current platform is Linux
+(audio_device_impl.cc:165): CreatePlatformSpecificObjects
+(audio_device_impl.cc:905): PlatformAudioLayer
+(audio_device_impl.cc:223): PulseAudio support is enabled.
+(audio_device_impl.cc:228): Linux PulseAudio APIs will be utilized
+(audio_device_impl.cc:272): AttachAudioBuffer
+(audio_device_buffer.cc:202): SetRecordingSampleRate(0)
+(audio_device_buffer.cc:208): SetPlayoutSampleRate(0)
+(audio_device_buffer.cc:222): SetRecordingChannels(0)
+(audio_device_buffer.cc:228): SetPlayoutChannels(0)
+(audio_device_impl.cc:292): Init
+(audio_device_impl.cc:636): SetPlayoutDevice(0)
+(audio_device_impl.cc:325): InitSpeaker
+(audio_device_impl.cc:540): StereoPlayoutIsAvailable
+(audio_device_impl.cc:547): output: 1
+(audio_device_impl.cc:552): SetStereoPlayout(1)
+(audio_device_buffer.cc:228): SetPlayoutChannels(2)
+(audio_device_impl.cc:698): SetRecordingDevice(0)
+(audio_device_impl.cc:331): InitMicrophone
+(audio_device_impl.cc:494): StereoRecordingIsAvailable
+(audio_device_impl.cc:501): output: 1
+(audio_device_impl.cc:506): SetStereoRecording(1)
+(audio_device_buffer.cc:222): SetRecordingChannels(2)
+(audio_device_impl.cc:811): RegisterAudioCallback
+(webrtc_voice_engine.cc:602): WebRtcVoiceEngine::ApplyOptions: AudioOptions {aec: 1, agc: 1, ns: 1, hf: 1, swap: 0, audio_jitter_buffer_max_packets: 200, audio_jitter_buffer_fast_accelerate: 0, audio_jitter_buffer_min_delay_ms: 0, }
+(audio_device_impl.cc:827): BuiltInAECIsAvailable
+(audio_device_impl.cc:830): output: 0
+(audio_device_impl.cc:843): BuiltInAGCIsAvailable
+(audio_device_impl.cc:846): output: 0
+(audio_device_impl.cc:859): BuiltInNSIsAvailable
+(audio_device_impl.cc:862): output: 0
+(peer_connection_factory.cc:411): Using default network controller factory
+(bitrate_prober.cc:54): Bandwidth probing enabled, set to inactive
+(cpu_info.cc:89): Available number of cores: 8
+(transport_sequence_number_feedback_generator.cc:52): Maximum interval between transport feedback RTCP messages: 250 ms
+(aimd_rate_control.cc:88): Using aimd rate control with back off factor 0.85
+(remote_bitrate_estimator_single_stream.cc:59): RemoteBitrateEstimatorSingleStream: Instantiating.
+(openssl_key_pair.cc:36): Making key pair
+(conductor.cc:686): Audio track disabled - only transmitting video for testing
+(conductor.cc:712): Video disabled in configuration
+(conductor.cc:751): No video track created - video disabled in configuration
+(main_wnd.cc:343): SwitchToStreamingUI
+(openssl_key_pair.cc:89): Returning key pair
+(boringssl_certificate.cc:186): Making certificate for WebRTC
+(boringssl_certificate.cc:242): Returning certificate
+(conductor.cc:799): 📺 This is a receiver-only client. No auto-close timer will be set.
+(conductor.cc:588):  Received session description :{
+	"sdp" : "v=0\r\no=- 5523910495828370202 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS stream_id\r\nm=video 9 UDP/TLS/RTP/SAVPF 96 97 98 99 100 101 39 40 103 104 107\r\nc=IN IP4 0.0.0.0\r\na=rtcp:9 IN IP4 0.0.0.0\r\na=ice-ufrag:ntFO\r\na=ice-pwd:uv+C9Lg/zW9M31aYjz8Yz6IA\r\na=ice-options:trickle\r\na=fingerprint:sha-256 23:AF:47:98:03:97:B0:F3:45:76:FB:79:BE:97:A7:7D:23:2D:2C:77:98:1D:25:F5:74:F2:2A:8E:9F:88:74:B8\r\na=setup:actpass\r\na=mid:0\r\na=extmap:1 urn:ietf:params:rtp-hdrext:toffset\r\na=extmap:2 http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time\r\na=extmap:3 urn:3gpp:video-orientation\r\na=extmap:4 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01\r\na=extmap:5 http://www.webrtc.org/experiments/rtp-hdrext/playout-delay\r\na=extmap:6 http://www.webrtc.org/experiments/rtp-hdrext/video-content-type\r\na=extmap:7 http://www.webrtc.org/experiments/rtp-hdrext/video-timing\r\na=extmap:8 http://www.webrtc.org/experiments/rtp-hdrext/color-space\r\na=extmap:9 urn:ietf:params:rtp-hdrext:sdes:mid\r\na=extmap:10 urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id\r\na=extmap:11 urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id\r\na=sendrecv\r\na=msid:stream_id video_label\r\na=rtcp-mux\r\na=rtcp-rsize\r\na=rtpmap:96 VP8/90000\r\na=rtcp-fb:96 goog-remb\r\na=rtcp-fb:96 transport-cc\r\na=rtcp-fb:96 ccm fir\r\na=rtcp-fb:96 nack\r\na=rtcp-fb:96 nack pli\r\na=rtpmap:97 rtx/90000\r\na=fmtp:97 apt=96\r\na=rtpmap:98 VP9/90000\r\na=rtcp-fb:98 goog-remb\r\na=rtcp-fb:98 transport-cc\r\na=rtcp-fb:98 ccm fir\r\na=rtcp-fb:98 nack\r\na=rtcp-fb:98 nack pli\r\na=fmtp:98 profile-id=0\r\na=rtpmap:99 rtx/90000\r\na=fmtp:99 apt=98\r\na=rtpmap:100 VP9/90000\r\na=rtcp-fb:100 goog-remb\r\na=rtcp-fb:100 transport-cc\r\na=rtcp-fb:100 ccm fir\r\na=rtcp-fb:100 nack\r\na=rtcp-fb:100 nack pli\r\na=fmtp:100 profile-id=2\r\na=rtpmap:101 rtx/90000\r\na=fmtp:101 apt=100\r\na=rtpmap:39 AV1/90000\r\na=rtcp-fb:39 goog-remb\r\na=rtcp-fb:39 transport-cc\r\na=rtcp-fb:39 ccm fir\r\na=rtcp-fb:39 nack\r\na=rtcp-fb:39 nack pli\r\na=fmtp:39 level-idx=5;profile=0;tier=0\r\na=rtpmap:40 rtx/90000\r\na=fmtp:40 apt=39\r\na=rtpmap:103 red/90000\r\na=rtpmap:104 rtx/90000\r\na=fmtp:104 apt=103\r\na=rtpmap:107 ulpfec/90000\r\na=ssrc-group:FID 149357837 4196765595\r\na=ssrc:149357837 cname:wFEvVXgddAeqEUde\r\na=ssrc:149357837 msid:stream_id video_label\r\na=ssrc:4196765595 cname:wFEvVXgddAeqEUde\r\na=ssrc:4196765595 msid:stream_id video_label\r\n",
+	"type" : "offer"
+}
+(p2p_transport_channel.cc:552): Set backup connection ping interval to 25000 milliseconds.
+(p2p_transport_channel.cc:561): Set ICE receiving timeout to 2500 milliseconds
+(p2p_transport_channel.cc:568): Set ping most likely connection to 0
+(p2p_transport_channel.cc:575): Set stable_writable_connection_ping_interval to 2500
+(p2p_transport_channel.cc:588): Set presume writable when fully relayed to 0
+(p2p_transport_channel.cc:606): Set regather_on_failed_networks_interval to 300000
+(p2p_transport_channel.cc:613): Set receiving_switching_delay to 1000
+(jsep_transport_controller.cc:1213): Creating DtlsSrtpTransport.
+(dtls_srtp_transport.cc:72): Setting RTP Transport on 0 transport a8002f20
+(p2p_transport_channel.cc:497): Received remote ICE parameters: ufrag=ntFO, renomination disabled
+(sdp_offer_answer.cc:4109): Adding video transceiver for MID=0 at i=0 in response to the remote description.
+(pacing_controller.cc:113): PacedSender paused.
+(sdp_offer_answer.cc:3115): Session: 8603668001699265685 Old state: stable New state: have-remote-offer
+(webrtc_video_engine.cc:3093): ResetUnsignaledRecvStream.
+(channel.cc:1152): Setting remote video description for {mid: 0, media_type: video}
+(webrtc_video_engine.cc:1216): SetSenderParameters: {codecs: [VideoCodec[96:VP8], VideoCodec[97:rtx], VideoCodec[98:VP9], VideoCodec[99:rtx], VideoCodec[100:VP9], VideoCodec[101:rtx], VideoCodec[39:AV1], VideoCodec[40:rtx], VideoCodec[103:red], VideoCodec[104:rtx], VideoCodec[107:ulpfec]], conference_mode: no, extensions: [{uri: http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01, id: 4}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time, id: 2}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/color-space, id: 8}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/playout-delay, id: 5}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/video-content-type, id: 6}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/video-timing, id: 7}, {uri: urn:3gpp:video-orientation, id: 3}, {uri: urn:ietf:params:rtp-hdrext:sdes:mid, id: 9}, {uri: urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id, id: 11}, {uri: urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id, id: 10}, {uri: urn:ietf:params:rtp-hdrext:toffset, id: 1}], extmap-allow-mixed: true, max_bandwidth_bps: -1, mid: 0, rtcp: {reduced_size:1, remote_estimate:0}}
+(webrtc_video_engine.cc:1224): Negotiated codec: VideoCodec[96:VP8]
+(webrtc_video_engine.cc:1224): Negotiated codec: VideoCodec[98:VP9]
+(webrtc_video_engine.cc:1224): Negotiated codec: VideoCodec[100:VP9]
+(webrtc_video_engine.cc:1224): Negotiated codec: VideoCodec[39:AV1]
+(webrtc_video_engine.cc:2982): AddRecvStream: {id:video_label;ssrcs:[149357837,4196765595];ssrc_groups:{semantics:FID;ssrcs:[149357837,4196765595]};cname:wFEvVXgddAeqEUde;stream_ids:stream_id;}
+(corruption_classifier.cc:27): Calculating corruption probability using scale factor.
+(video_receive_stream2.cc:274): VideoReceiveStream2: {decoders: [{payload_type: 96, payload_name: VP8, codec_params: {}}, {payload_type: 98, payload_name: VP9, codec_params: {profile-id: 0}}, {payload_type: 100, payload_name: VP9, codec_params: {profile-id: 2}}, {payload_type: 35, payload_name: VP9, codec_params: {profile-id: 1}}, {payload_type: 37, payload_name: VP9, codec_params: {profile-id: 3}}, {payload_type: 39, payload_name: AV1, codec_params: {level-idx: 5, profile: 0, tier: 0}}, {payload_type: 41, payload_name: AV1, codec_params: {level-idx: 5, profile: 1, tier: 0}}], rtp: {remote_ssrc: 149357837, local_ssrc: 1, rtcp_mode: RtcpMode::kReducedSize, rtcp_xr: {receiver_reference_time_report: off}, lntf: {enabled: false}, nack: {rtp_history_ms: 1000}, ulpfec_payload_type: 107, red_type: 103, rtx_ssrc: 4196765595, rtx_payload_types: {36 (pt) -> 35 (apt), 38 (pt) -> 37 (apt), 40 (pt) -> 39 (apt), 42 (pt) -> 41 (apt), 97 (pt) -> 96 (apt), 99 (pt) -> 98 (apt), 101 (pt) -> 100 (apt), 104 (pt) -> 103 (apt), }, raw_payload_types: {}}, renderer: (renderer), render_delay_ms: 10, sync_group: stream_id}
+(channel.cc:762): Add remote ssrc: 149357837 to {mid: 0, media_type: video}
+(video_receive_stream2.cc:314): ~VideoReceiveStream2: {decoders: [{payload_type: 96, payload_name: VP8, codec_params: {}}, {payload_type: 98, payload_name: VP9, codec_params: {profile-id: 0}}, {payload_type: 100, payload_name: VP9, codec_params: {profile-id: 2}}, {payload_type: 35, payload_name: VP9, codec_params: {profile-id: 1}}, {payload_type: 37, payload_name: VP9, codec_params: {profile-id: 3}}, {payload_type: 39, payload_name: AV1, codec_params: {level-idx: 5, profile: 0, tier: 0}}, {payload_type: 41, payload_name: AV1, codec_params: {level-idx: 5, profile: 1, tier: 0}}], rtp: {remote_ssrc: 149357837, local_ssrc: 1, rtcp_mode: RtcpMode::kReducedSize, rtcp_xr: {receiver_reference_time_report: off}, lntf: {enabled: false}, nack: {rtp_history_ms: 1000}, ulpfec_payload_type: 107, red_type: 103, rtx_ssrc: 4196765595, rtx_payload_types: {36 (pt) -> 35 (apt), 38 (pt) -> 37 (apt), 40 (pt) -> 39 (apt), 42 (pt) -> 41 (apt), 97 (pt) -> 96 (apt), 99 (pt) -> 98 (apt), 101 (pt) -> 100 (apt), 104 (pt) -> 103 (apt), }, raw_payload_types: {}}, renderer: (renderer), render_delay_ms: 10, sync_group: stream_id}
+(corruption_classifier.cc:27): Calculating corruption probability using scale factor.
+(video_receive_stream2.cc:274): VideoReceiveStream2: {decoders: [{payload_type: 96, payload_name: VP8, codec_params: {}}, {payload_type: 98, payload_name: VP9, codec_params: {profile-id: 0}}, {payload_type: 100, payload_name: VP9, codec_params: {profile-id: 2}}, {payload_type: 35, payload_name: VP9, codec_params: {profile-id: 1}}, {payload_type: 37, payload_name: VP9, codec_params: {profile-id: 3}}, {payload_type: 39, payload_name: AV1, codec_params: {level-idx: 5, profile: 0, tier: 0}}, {payload_type: 41, payload_name: AV1, codec_params: {level-idx: 5, profile: 1, tier: 0}}], rtp: {remote_ssrc: 149357837, local_ssrc: 1, rtcp_mode: RtcpMode::kReducedSize, rtcp_xr: {receiver_reference_time_report: off}, lntf: {enabled: false}, nack: {rtp_history_ms: 1000}, ulpfec_payload_type: 107, red_type: 103, rtx_ssrc: 4196765595, rtx_payload_types: {36 (pt) -> 35 (apt), 38 (pt) -> 37 (apt), 40 (pt) -> 39 (apt), 42 (pt) -> 41 (apt), 97 (pt) -> 96 (apt), 99 (pt) -> 98 (apt), 101 (pt) -> 100 (apt), 104 (pt) -> 103 (apt), }, raw_payload_types: {}}, renderer: (renderer), render_delay_ms: 10, sync_group: stream_id}
+(channel.cc:1023): Changing video state, recv=0 send=0 for {mid: 0, media_type: video}
+(sdp_offer_answer.cc:2239): Processing the MSIDs for MID=0 (streams=[stream_id]).
+(sdp_offer_answer.cc:2249): Processing the addition of a remote track for MID=0.
+(webrtc_video_engine.cc:3137): SetSink: ssrc:149357837 (ptr)
+(conductor.cc:411): OnAddTrack video_label
+(conductor.cc:415): Received video track: video_label
+(conductor.cc:419): Video output enabled, creating VideoFrameWriter
+(video_frame_writer.cc:62): VideoFrameWriter initialized with Y4M format. Output file: /home/wuq/webrtc-checkout/webrtc_config_results/received_quick_test.y4m (640x480 @ 30fps)
+(conductor.cc:432): VideoFrameWriter created successfully for OnFrameCallback: /home/wuq/webrtc-checkout/webrtc_config_results/received_quick_test.y4m
+(conductor.cc:438): Using AlphaRTC-style OnFrameCallback for video frame saving
+(conductor.cc:927): Starting video quality stats collection (every 100ms - 10 times per second)
+(webrtc_video_engine.cc:3904): VideoReceiveStreamInterface stats: 201938948, {ssrc: 149357837, total_bps: 0, frameWidth: 0, frameHeight: 0, key: 0, delta: 0, framesAssembledFromMultiplePackets: 0, framesDecoded: 0, framesDropped: 0, network_fps: 0, decode_fps: 0, render_fps: 0, decode_ms: 0, max_decode_ms: 0, first_frame_received_to_decoded_ms: -1, current_delay_ms: 0, target_delay_ms: 0, jitter_delay_ms: 0, totalAssemblyTime: 0, jitterBufferDelay: 0, jitterBufferTargetDelay: 0, jitterBufferEmittedCount: 0, jitterBufferMinimumDelay: 0, totalDecodeTime: 0, totalProcessingDelay: 0, min_playout_delay_ms: 0, sync_offset_ms: 2147483647, cum_loss: 0, nackCount: 0, firCount: 0, pliCount: 0}
+(conductor.cc:105): OnSuccess
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201938948, SSRC: 149357837, Payload Bytes Received: 0, Header Bytes Received: 0, Total Packets Received: 0
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201938948, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201938948, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201938948, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(dtls_srtp_transport.cc:72): Setting RTP Transport on 0 transport a8002f20
+(p2p_transport_channel.cc:486): Set ICE ufrag: T5wR pwd: 343vIJB9h3cKSqmzUHcdmg0y on transport 0
+(openssl_stream_adapter.cc:148): WebRTC-ForceDtls13: 
+(dtls_transport.cc:498): DtlsTransport[0|1|__]: DTLS setup complete, dtls_in_stun: 0
+(rtp_transceiver.cc:502): Changing transceiver (MID=0) current direction from <not set> to kRecvOnly.
+(sdp_offer_answer.cc:3115): Session: 8603668001699265685 Old state: have-remote-offer New state: stable
+(channel.cc:540): Channel enabled: {mid: 0, media_type: video}
+(video_receive_stream2.cc:314): ~VideoReceiveStream2: {decoders: [{payload_type: 96, payload_name: VP8, codec_params: {}}, {payload_type: 98, payload_name: VP9, codec_params: {profile-id: 0}}, {payload_type: 100, payload_name: VP9, codec_params: {profile-id: 2}}, {payload_type: 35, payload_name: VP9, codec_params: {profile-id: 1}}, {payload_type: 37, payload_name: VP9, codec_params: {profile-id: 3}}, {payload_type: 39, payload_name: AV1, codec_params: {level-idx: 5, profile: 0, tier: 0}}, {payload_type: 41, payload_name: AV1, codec_params: {level-idx: 5, profile: 1, tier: 0}}], rtp: {remote_ssrc: 149357837, local_ssrc: 1, rtcp_mode: RtcpMode::kReducedSize, rtcp_xr: {receiver_reference_time_report: off}, lntf: {enabled: false}, nack: {rtp_history_ms: 1000}, ulpfec_payload_type: 107, red_type: 103, rtx_ssrc: 4196765595, rtx_payload_types: {36 (pt) -> 35 (apt), 38 (pt) -> 37 (apt), 40 (pt) -> 39 (apt), 42 (pt) -> 41 (apt), 97 (pt) -> 96 (apt), 99 (pt) -> 98 (apt), 101 (pt) -> 100 (apt), 104 (pt) -> 103 (apt), }, raw_payload_types: {}}, renderer: (renderer), render_delay_ms: 10, sync_group: stream_id}
+(corruption_classifier.cc:27): Calculating corruption probability using scale factor.
+(video_receive_stream2.cc:274): VideoReceiveStream2: {decoders: [{payload_type: 96, payload_name: VP8, codec_params: {}}, {payload_type: 98, payload_name: VP9, codec_params: {profile-id: 0}}, {payload_type: 100, payload_name: VP9, codec_params: {profile-id: 2}}, {payload_type: 35, payload_name: VP9, codec_params: {profile-id: 1}}, {payload_type: 37, payload_name: VP9, codec_params: {profile-id: 3}}, {payload_type: 39, payload_name: AV1, codec_params: {level-idx: 5, profile: 0, tier: 0}}, {payload_type: 41, payload_name: AV1, codec_params: {level-idx: 5, profile: 1, tier: 0}}], rtp: {remote_ssrc: 149357837, local_ssrc: 1, rtcp_mode: RtcpMode::kReducedSize, rtcp_xr: {receiver_reference_time_report: off}, lntf: {enabled: false}, nack: {rtp_history_ms: 1000}, ulpfec_payload_type: 107, red_type: 103, rtx_ssrc: 4196765595, rtx_payload_types: {36 (pt) -> 35 (apt), 38 (pt) -> 37 (apt), 40 (pt) -> 39 (apt), 42 (pt) -> 41 (apt), 97 (pt) -> 96 (apt), 99 (pt) -> 98 (apt), 101 (pt) -> 100 (apt), 104 (pt) -> 103 (apt), }, raw_payload_types: {}}, renderer: (renderer), render_delay_ms: 10, sync_group: stream_id}
+(channel.cc:1023): Changing video state, recv=0 send=0 for {mid: 0, media_type: video}
+(webrtc_video_engine.cc:2885): SetReceiverParameters: {codecs: [VideoCodec[96:VP8], VideoCodec[97:rtx], VideoCodec[98:VP9], VideoCodec[99:rtx], VideoCodec[100:VP9], VideoCodec[101:rtx], VideoCodec[39:AV1], VideoCodec[40:rtx], VideoCodec[103:red], VideoCodec[104:rtx], VideoCodec[107:ulpfec]], extensions: [{uri: http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01, id: 4}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time, id: 2}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/color-space, id: 8}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/playout-delay, id: 5}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/video-content-type, id: 6}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/video-timing, id: 7}, {uri: urn:3gpp:video-orientation, id: 3}, {uri: urn:ietf:params:rtp-hdrext:sdes:mid, id: 9}, {uri: urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id, id: 11}, {uri: urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id, id: 10}, {uri: urn:ietf:params:rtp-hdrext:toffset, id: 1}], rtcp: {reduced_size:1, remote_estimate:0}}
+(video_receive_stream2.cc:314): ~VideoReceiveStream2: {decoders: [{payload_type: 96, payload_name: VP8, codec_params: {}}, {payload_type: 98, payload_name: VP9, codec_params: {profile-id: 0}}, {payload_type: 100, payload_name: VP9, codec_params: {profile-id: 2}}, {payload_type: 35, payload_name: VP9, codec_params: {profile-id: 1}}, {payload_type: 37, payload_name: VP9, codec_params: {profile-id: 3}}, {payload_type: 39, payload_name: AV1, codec_params: {level-idx: 5, profile: 0, tier: 0}}, {payload_type: 41, payload_name: AV1, codec_params: {level-idx: 5, profile: 1, tier: 0}}], rtp: {remote_ssrc: 149357837, local_ssrc: 1, rtcp_mode: RtcpMode::kReducedSize, rtcp_xr: {receiver_reference_time_report: off}, lntf: {enabled: false}, nack: {rtp_history_ms: 1000}, ulpfec_payload_type: 107, red_type: 103, rtx_ssrc: 4196765595, rtx_payload_types: {36 (pt) -> 35 (apt), 38 (pt) -> 37 (apt), 40 (pt) -> 39 (apt), 42 (pt) -> 41 (apt), 97 (pt) -> 96 (apt), 99 (pt) -> 98 (apt), 101 (pt) -> 100 (apt), 104 (pt) -> 103 (apt), }, raw_payload_types: {}}, renderer: (renderer), render_delay_ms: 10, sync_group: stream_id}
+(corruption_classifier.cc:27): Calculating corruption probability using scale factor.
+(video_receive_stream2.cc:274): VideoReceiveStream2: {decoders: [{payload_type: 96, payload_name: VP8, codec_params: {}}, {payload_type: 98, payload_name: VP9, codec_params: {profile-id: 0}}, {payload_type: 100, payload_name: VP9, codec_params: {profile-id: 2}}, {payload_type: 39, payload_name: AV1, codec_params: {level-idx: 5, profile: 0, tier: 0}}], rtp: {remote_ssrc: 149357837, local_ssrc: 1, rtcp_mode: RtcpMode::kReducedSize, rtcp_xr: {receiver_reference_time_report: off}, lntf: {enabled: false}, nack: {rtp_history_ms: 1000}, ulpfec_payload_type: 107, red_type: 103, rtx_ssrc: 4196765595, rtx_payload_types: {40 (pt) -> 39 (apt), 97 (pt) -> 96 (apt), 99 (pt) -> 98 (apt), 101 (pt) -> 100 (apt), 104 (pt) -> 103 (apt), }, raw_payload_types: {}}, renderer: (renderer), render_delay_ms: 10, sync_group: stream_id}
+(webrtc_video_engine.cc:1216): SetSenderParameters: {codecs: [VideoCodec[96:VP8], VideoCodec[97:rtx], VideoCodec[98:VP9], VideoCodec[99:rtx], VideoCodec[100:VP9], VideoCodec[101:rtx], VideoCodec[39:AV1], VideoCodec[40:rtx], VideoCodec[103:red], VideoCodec[104:rtx], VideoCodec[107:ulpfec]], conference_mode: no, extensions: [{uri: http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01, id: 4}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time, id: 2}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/color-space, id: 8}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/playout-delay, id: 5}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/video-content-type, id: 6}, {uri: http://www.webrtc.org/experiments/rtp-hdrext/video-timing, id: 7}, {uri: urn:3gpp:video-orientation, id: 3}, {uri: urn:ietf:params:rtp-hdrext:sdes:mid, id: 9}, {uri: urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id, id: 11}, {uri: urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id, id: 10}, {uri: urn:ietf:params:rtp-hdrext:toffset, id: 1}], extmap-allow-mixed: true, max_bandwidth_bps: -1, mid: 0, rtcp: {reduced_size:1, remote_estimate:0}}
+(channel.cc:1023): Changing video state, recv=1 send=0 for {mid: 0, media_type: video}
+(peer_connection_client.cc:385): OnHangingGetRead
+(basic_port_allocator.cc:370): Start getting ports with turn_port_prune_policy 0
+(peer_connection_client.cc:308): Headers received
+(peer_connection_client.cc:483): OnClose
+(conductor.cc:105): OnSuccess
+(conductor.cc:621):  Received candidate :{
+	"candidate" : "candidate:2953649061 1 udp 2122194687 192.168.1.8 33421 typ host generation 0 ufrag ntFO network-id 3 network-cost 50",
+	"sdpMLineIndex" : 0,
+	"sdpMid" : "0"
+}
+(conductor.cc:832): SEND_MESSAGE_TO_PEER
+(basic_port_allocator.cc:702): Count of networks: 4
+(basic_port_allocator.cc:704): Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]
+(basic_port_allocator.cc:704): Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]
+(basic_port_allocator.cc:704): Net[lo:0:0:0:x:x:x:x:x/128:Loopback:id=2]
+(basic_port_allocator.cc:704): Net[lo:127.0.0.x/8:Loopback:id=1]
+(basic_port_allocator.cc:125): Filtered out ignored networks:
+(basic_port_allocator.cc:127): Net[lo:0:0:0:x:x:x:x:x/128:Loopback:id=2]
+(basic_port_allocator.cc:127): Net[lo:127.0.0.x/8:Loopback:id=1]
+(basic_port_allocator.cc:900): Network manager has started
+(peer_connection_client.cc:385): OnHangingGetRead
+(peer_connection_client.cc:308): Headers received
+(basic_port_allocator.cc:702): Count of networks: 4
+(basic_port_allocator.cc:704): Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]
+(basic_port_allocator.cc:704): Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]
+(basic_port_allocator.cc:704): Net[lo:0:0:0:x:x:x:x:x/128:Loopback:id=2]
+(basic_port_allocator.cc:704): Net[lo:127.0.0.x/8:Loopback:id=1]
+(basic_port_allocator.cc:125): Filtered out ignored networks:
+(basic_port_allocator.cc:127): Net[lo:0:0:0:x:x:x:x:x/128:Loopback:id=2]
+(basic_port_allocator.cc:127): Net[lo:127.0.0.x/8:Loopback:id=1]
+(basic_port_allocator.cc:810): Allocate ports on wlp0s20f3 wlp0s20f3 
+(peer_connection.cc:1874): Changing IceConnectionState 0 => 1
+(peer_connection_client.cc:483): OnClose
+(basic_port_allocator.cc:1409): Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]: Allocation Phase=Udp
+(port.cc:149): Port[a8014340::1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Port created with network cost 50
+(basic_port_allocator.cc:1495): AllocationSequence: UDPPort will be handling the STUN candidate generation.
+(basic_port_allocator.cc:923): Adding allocated port for 0
+(basic_port_allocator.cc:943): Port[a8014340:0:1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Added port to allocator
+(conductor.cc:621):  Received candidate :{
+	"candidate" : "candidate:1223464471 1 udp 2122262783 2409:8a3c:1e13:a010:531:eb25:af6c:3a3c 45556 typ host generation 0 ufrag ntFO network-id 4 network-cost 50",
+	"sdpMLineIndex" : 0,
+	"sdpMid" : "0"
+}
+(basic_port_allocator.cc:960): Port[a8014340:0:1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Gathered candidate: Cand[:1742279913:1:udp:2122194687:192.168.1.x:48869:host::0:T5wR:343vIJB9h3cKSqmzUHcdmg0y:3:50:0]
+(basic_port_allocator.cc:993): Port[a8014340:0:1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Port ready.
+(peer_connection_client.cc:308): Headers received
+(peer_connection_client.cc:483): OnClose
+(connection.cc:260): Conn[a8015150:0:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]:s8OgL33j:1:0:host:udp:192.168.1.x:48869->Ke7OBV57:1:2122194687:host:udp:192.168.1.x:33421|C--W|-|0|0|9114756780654345726|-]: Connection created
+(p2p_transport_channel.cc:1497): Channel[0|1|__]: Created connection with origin: 2, total: 1
+(p2p_transport_channel.cc:1946): Channel[0|1|__]: Transport channel state changed from 0 to 2
+(jsep_transport_controller.cc:1373): 0 Transport 1 state changed. Check if state is complete.
+(conductor.cc:832): SEND_MESSAGE_TO_PEER
+(p2p_transport_channel.cc:1743): Channel[0|1|__]: Have a pingable connection for the first time; starting to ping.
+(peer_connection.cc:1896): Changing standardized IceConnectionState 0 => 1
+(stun_port.cc:446): Port[a8014340:0:1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Starting STUN host lookup for stun.l.google.com:19302
+(conductor.cc:463): OnIceCandidate 0
+(conductor.cc:832): SEND_MESSAGE_TO_PEER
+(basic_port_allocator.cc:1409): Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]: Allocation Phase=Udp
+(port.cc:149): Port[a80174c0::1:0:host:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]]: Port created with network cost 50
+(basic_port_allocator.cc:1495): AllocationSequence: UDPPort will be handling the STUN candidate generation.
+(basic_port_allocator.cc:923): Adding allocated port for 0
+(basic_port_allocator.cc:943): Port[a80174c0:0:1:0:host:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]]: Added port to allocator
+(basic_port_allocator.cc:960): Port[a80174c0:0:1:0:host:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]]: Gathered candidate: Cand[:2671286619:1:udp:2122262783:[2409:8a3c:1e13:x:x:x:x:x]:51237:host::0:T5wR:343vIJB9h3cKSqmzUHcdmg0y:4:50:0]
+(basic_port_allocator.cc:993): Port[a80174c0:0:1:0:host:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]]: Port ready.
+(peer_connection_client.cc:308): Headers received
+(stun_port.cc:446): Port[a80174c0:0:1:0:host:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]]: Starting STUN host lookup for stun.l.google.com:19302
+(conductor.cc:463): OnIceCandidate 0
+(peer_connection_client.cc:483): OnClose
+(connection.cc:260): Conn[a8018cb0:0:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]:jCGIE8iq:1:0:host:udp:[2409:8a3c:1e13:x:x:x:x:x]:51237->5jPVQtr/:1:2122262783:host:udp:[2409:8a3c:1e13:x:x:x:x:x]:45556|C--W|-|0|0|9115049250747470334|-]: Connection created
+(p2p_transport_channel.cc:1497): Channel[0|1|__]: Created connection with origin: 2, total: 2
+(conductor.cc:832): SEND_MESSAGE_TO_PEER
+(conductor.cc:832): SEND_MESSAGE_TO_PEER
+(connection.cc:1628): Conn[a8018cb0:0:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]:jCGIE8iq:1:0:host:udp:[2409:8a3c:1e13:x:x:x:x:x]:51237->5jPVQtr/:1:2122262783:host:udp:[2409:8a3c:1e13:x:x:x:x:x]:45556|C--W|-|0|0|9115049250747470334|-]: Sent STUN BINDING request, id=627746567255535356776264, use_candidate=0, nomination=0
+(peer_connection_client.cc:308): Headers received
+(peer_connection_client.cc:483): OnClose
+(conductor.cc:832): SEND_MESSAGE_TO_PEER
+(connection.cc:1504): Conn[a8018cb0:0:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]:jCGIE8iq:1:0:host:udp:[2409:8a3c:1e13:x:x:x:x:x]:51237->5jPVQtr/:1:2122262783:host:udp:[2409:8a3c:1e13:x:x:x:x:x]:45556|C--I|-|0|0|9115049250747470334|-]: Received STUN BINDING response, id=627746567255535356776264, code=0, rtt=0, pings_since_last_response=627746567255535356776264 
+(wrapping_active_ice_controller.cc:193): Switching selected connection due to: candidate pair state changed
+(p2p_transport_channel.cc:1854): Channel[0|1|__]: New selected connection: Conn[a8018cb0:0:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]:jCGIE8iq:1:0:host:udp:[2409:8a3c:1e13:x:x:x:x:x]:51237->5jPVQtr/:1:2122262783:host:udp:[2409:8a3c:1e13:x:x:x:x:x]:45556|CRWS|S|0|0|9115049250747470334|0]
+(channel.cc:346): Network route changed for {mid: 0, media_type: video}
+(rtp_transport_controller_send.cc:366): Network route changed on transport 0: new_route = [ connected: 1 local: [ 0/4 Unknown turn: 0 ] remote: [ 0/4 Unknown turn: 0 ] packet_overhead_bytes: 48 ]
+(dtls_transport.cc:688): DtlsTransport[0|1|__]: ice_transport writable state changed to 1 dtls_state: kNew
+(dtls_transport.cc:1059): DtlsTransport[0|1|__]: configuring DTLS handshake timeout 50ms based on ICE RTT 0
+(openssl_adapter.cc:798): TLS client start_connect
+(openssl_adapter.cc:798): TLS client enter_early_data
+(openssl_adapter.cc:798): TLS client read_server_hello
+(openssl_adapter.cc:798): TLS client read_server_hello
+(dtls_transport.cc:954): DtlsTransport[0|1|__]: DtlsTransportInternalImpl: Started DTLS handshake active=1 role=client
+(srtp_transport.cc:272): The params in SRTP transport are reset.
+(jsep_transport_controller.cc:1373): 0 Transport 1 state changed. Check if state is complete.
+(basic_port_allocator.cc:1179): All candidates gathered for 0:1:0
+(p2p_transport_channel.cc:970): P2PTransportChannel: 0, component 1 gathering complete
+(peer_connection.cc:1896): Changing standardized IceConnectionState 1 => 2
+(openssl_adapter.cc:798): TLS client read_server_certificate
+(openssl_adapter.cc:798): TLS client read_certificate_status
+(openssl_adapter.cc:798): TLS client verify_server_certificate
+(openssl_adapter.cc:798): TLS client read_server_key_exchange
+(openssl_adapter.cc:798): TLS client read_certificate_request
+(openssl_adapter.cc:798): TLS client read_server_hello_done
+(openssl_adapter.cc:798): TLS client send_client_certificate
+(openssl_adapter.cc:798): TLS client send_client_key_exchange
+(openssl_adapter.cc:798): TLS client send_client_certificate_verify
+(openssl_adapter.cc:798): TLS client send_client_finished
+(openssl_adapter.cc:798): TLS client finish_flight
+(openssl_adapter.cc:798): TLS client read_session_ticket
+(openssl_adapter.cc:798): TLS client process_change_cipher_spec
+(openssl_adapter.cc:798): TLS client process_change_cipher_spec
+(openssl_adapter.cc:798): TLS client read_server_finished
+(openssl_adapter.cc:798): TLS client finish_client_handshake
+(openssl_adapter.cc:798): TLS client done
+(openssl_adapter.cc:798): TLS client done
+(openssl_adapter.cc:798): TLS client done
+(dtls_transport.cc:867): DtlsTransport[0|1|__]: DTLS handshake complete.
+(jsep_transport_controller.cc:1312):  Transport 0 writability changed to 1.
+(dtls_srtp_transport.cc:217): Extracting keys from transport: 0
+(peer_connection.cc:2391): Changing to ICE connected state because all transports are writable.
+(peer_connection.cc:1874): Changing IceConnectionState 1 => 2
+(call.cc:1261): UpdateAggregateNetworkState: aggregate_state change to up
+(pacing_controller.cc:120): PacedSender resumed.
+(rtp_transport_controller_send.cc:713): Creating fallback congestion controller
+(send_side_bandwidth_estimation.cc:136): [RttBWE-Config] RTT-based backoff initialized, Disabled: false, RttLimit: 3000 ms, DropFraction: 0.8, DropInterval: 1000 ms, BandwidthFloor: 5000 bps
+(alr_experiment.cc:69): Using ALR experiment settings: pacing factor: 1, max pacer queue length: 2875, ALR bandwidth usage percent: 80, ALR start budget level percent: 40, ALR end budget level percent: -60, ALR experiment group ID: 3
+(trendline_estimator.cc:187): Using Trendline filter for delay change estimation with settings sort:false,cap:false,beginning_packets:7,end_packets:7,cap_uncertainty:0,window_size:20 and no network state predictor
+(trendline_estimator.cc:187): Using Trendline filter for delay change estimation with settings sort:false,cap:false,beginning_packets:7,end_packets:7,cap_uncertainty:0,window_size:20 and no network state predictor
+(aimd_rate_control.cc:88): Using aimd rate control with back off factor 0.85
+(delay_based_bwe.cc:93): Initialized DelayBasedBwe with separate audio overuse detectionenabled:false,packet_threshold:10,time_threshold:1 s
+(delay_based_bwe.cc:313): BWE Setting start bitrate to: 300 kbps
+(goog_cc_network_control.cc:682): [GCC-OUTPUT] TargetRateUpdate at 201938956 ms, DelayBasedBps: 0, LossBasedBps: 300000, FinalTargetBps: 300000
+(bitrate_allocator.cc:500): Current BWE 300000
+(bitrate_prober.cc:130): Probe cluster (bitrate_bps:min bytes:min packets): (900 kbps:1688:5, Inactive)
+(bitrate_prober.cc:130): Probe cluster (bitrate_bps:min bytes:min packets): (1800 kbps:3375:5, Inactive)
+(srtp_transport.cc:217): SRTP activated with negotiated parameters: send crypto_suite 1 recv crypto_suite 1
+(channel.cc:570): Channel writable ({mid: 0, media_type: video}) for the first time
+(channel.cc:1023): Changing video state, recv=1 send=0 for {mid: 0, media_type: video}
+(rtp_video_stream_receiver2.cc:1489): Packet received on SSRC: 149357837 with payload type: 96, timestamp: 198434570, sequence number: 19324, arrival time: -inf ms, abs send time: 8617856
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201939048, SSRC: 149357837, Payload Bytes Received: 1040, Header Bytes Received: 311, Total Packets Received: 2
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201939048, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201939048, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201939048, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(basic_port_allocator.cc:1105): Port[a80174c0:0:1:0:host:Net[wlp0s20f3:2409:8a3c:1e13:x:x:x:x:x/64:Unknown:id=4]]: Port completed gathering candidates.
+(generic_decoder.cc:309): Decoder implementation: DecoderInfo { prefers_late_decoding = implementation_name = 'libvpx', is_hardware_accelerated = false }
+(connection.cc:1628): Conn[a8015150:0:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]:s8OgL33j:1:0:host:udp:192.168.1.x:48869->Ke7OBV57:1:2122194687:host:udp:192.168.1.x:33421|C--W|-|0|0|9114756780654345726|-]: Sent STUN BINDING request, id=475a79524f72395749365232, use_candidate=0, nomination=0
+(connection.cc:555): Conn[a8015150:0:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]:s8OgL33j:1:0:host:udp:192.168.1.x:48869->Ke7OBV57:1:2122194687:host:udp:192.168.1.x:33421|C--I|-|0|0|9114756780654345726|-]: Received STUN BINDING request, id=475441695253324e48587652
+(connection.cc:875): Conn[a8015150:0:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]:s8OgL33j:1:0:host:udp:192.168.1.x:48869->Ke7OBV57:1:2122194687:host:udp:192.168.1.x:33421|CR-I|-|0|0|9114756780654345726|-]: Sent STUN BINDING response, to=192.168.1.x:33421, id=475441695253324e48587652
+(connection.cc:1504): Conn[a8015150:0:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]:s8OgL33j:1:0:host:udp:192.168.1.x:48869->Ke7OBV57:1:2122194687:host:udp:192.168.1.x:33421|CR-I|-|0|0|9114756780654345726|-]: Received STUN BINDING response, id=475a79524f72395749365232, code=0, rtt=1, pings_since_last_response=475a79524f72395749365232 
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201939149, SSRC: 149357837, Payload Bytes Received: 8732, Header Bytes Received: 2058, Total Packets Received: 16
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201939149, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201939149, SSRC: 149357837, Jitter (ms): 1
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201939149, SSRC: 149357837, Frames Received: 3, Frames Decoded: 3, Frames Dropped: 0, Decoded FPS: 35, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201939149, SSRC: 149357837, QP Sum: 226, Average QP: 75.3333
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201939149, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(basic_port_allocator.cc:960): Port[a8014340:0:1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Gathered candidate: Cand[:1117838083:1:udp:1685987071:223.98.101.x:1684:srflx:192.168.1.x:48869:T5wR:343vIJB9h3cKSqmzUHcdmg0y:3:50:0]
+(basic_port_allocator.cc:965): Discarding candidate because port is already done gathering.
+(basic_port_allocator.cc:1105): Port[a8014340:0:1:0:host:Net[wlp0s20f3:192.168.1.x/24:Unknown:id=3]]: Port completed gathering candidates.
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201939249, SSRC: 149357837, Payload Bytes Received: 11415, Header Bytes Received: 2720, Total Packets Received: 21
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201939249, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201939249, SSRC: 149357837, Jitter (ms): 1
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201939249, SSRC: 149357837, Frames Received: 7, Frames Decoded: 7, Frames Dropped: 0, Decoded FPS: 38, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201939249, SSRC: 149357837, QP Sum: 474, Average QP: 67.7143
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201939249, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201939348, SSRC: 149357837, Payload Bytes Received: 15376, Header Bytes Received: 2888, Total Packets Received: 27
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201939349, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201939349, SSRC: 149357837, Jitter (ms): 1
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201939349, SSRC: 149357837, Frames Received: 9, Frames Decoded: 9, Frames Dropped: 0, Decoded FPS: 31, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201939349, SSRC: 149357837, QP Sum: 567, Average QP: 63
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201939349, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201939449, SSRC: 149357837, Payload Bytes Received: 20299, Header Bytes Received: 3068, Total Packets Received: 33
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201939449, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201939449, SSRC: 149357837, Jitter (ms): 1
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201939449, SSRC: 149357837, Frames Received: 12, Frames Decoded: 12, Frames Dropped: 0, Decoded FPS: 31, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201939449, SSRC: 149357837, QP Sum: 683, Average QP: 56.9167
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201939449, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201939549, SSRC: 149357837, Payload Bytes Received: 25492, Header Bytes Received: 3212, Total Packets Received: 39
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201939549, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201939549, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201939549, SSRC: 149357837, Frames Received: 15, Frames Decoded: 15, Frames Dropped: 0, Decoded FPS: 31, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201939549, SSRC: 149357837, QP Sum: 788, Average QP: 52.5333
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201939549, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201939649, SSRC: 149357837, Payload Bytes Received: 30935, Header Bytes Received: 3372, Total Packets Received: 45
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201939649, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201939649, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201939649, SSRC: 149357837, Frames Received: 18, Frames Decoded: 18, Frames Dropped: 0, Decoded FPS: 31, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201939649, SSRC: 149357837, QP Sum: 887, Average QP: 49.2778
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201939649, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201939749, SSRC: 149357837, Payload Bytes Received: 36289, Header Bytes Received: 3516, Total Packets Received: 51
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201939749, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201939749, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201939749, SSRC: 149357837, Frames Received: 21, Frames Decoded: 21, Frames Dropped: 0, Decoded FPS: 31, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201939749, SSRC: 149357837, QP Sum: 982, Average QP: 46.7619
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201939749, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201939849, SSRC: 149357837, Payload Bytes Received: 41512, Header Bytes Received: 3676, Total Packets Received: 57
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201939849, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201939849, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201939849, SSRC: 149357837, Frames Received: 24, Frames Decoded: 24, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201939849, SSRC: 149357837, QP Sum: 1076, Average QP: 44.8333
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201939849, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201939949, SSRC: 149357837, Payload Bytes Received: 47106, Header Bytes Received: 3844, Total Packets Received: 64
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201939949, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201939949, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201939949, SSRC: 149357837, Frames Received: 27, Frames Decoded: 27, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201939949, SSRC: 149357837, QP Sum: 1163, Average QP: 43.0741
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201939949, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(probe_controller.cc:499): kWaitingForProbingResult: timeout
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201940049, SSRC: 149357837, Payload Bytes Received: 53019, Header Bytes Received: 4012, Total Packets Received: 71
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201940049, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201940049, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201940049, SSRC: 149357837, Frames Received: 31, Frames Decoded: 31, Frames Dropped: 0, Decoded FPS: 31, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201940049, SSRC: 149357837, QP Sum: 1274, Average QP: 41.0968
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201940049, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201940149, SSRC: 149357837, Payload Bytes Received: 59390, Header Bytes Received: 4196, Total Packets Received: 78
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201940149, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201940149, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201940149, SSRC: 149357837, Frames Received: 33, Frames Decoded: 33, Frames Dropped: 0, Decoded FPS: 29, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201940149, SSRC: 149357837, QP Sum: 1322, Average QP: 40.0606
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201940149, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201940249, SSRC: 149357837, Payload Bytes Received: 64761, Header Bytes Received: 4340, Total Packets Received: 84
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201940249, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201940249, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201940249, SSRC: 149357837, Frames Received: 36, Frames Decoded: 36, Frames Dropped: 0, Decoded FPS: 29, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201940249, SSRC: 149357837, QP Sum: 1391, Average QP: 38.6389
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201940249, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201940349, SSRC: 149357837, Payload Bytes Received: 71760, Header Bytes Received: 4548, Total Packets Received: 92
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201940349, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201940349, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201940349, SSRC: 149357837, Frames Received: 39, Frames Decoded: 39, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201940349, SSRC: 149357837, QP Sum: 1452, Average QP: 37.2308
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201940349, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201940448, SSRC: 149357837, Payload Bytes Received: 78728, Header Bytes Received: 4716, Total Packets Received: 99
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201940449, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201940449, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201940449, SSRC: 149357837, Frames Received: 42, Frames Decoded: 42, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201940449, SSRC: 149357837, QP Sum: 1511, Average QP: 35.9762
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201940449, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201940549, SSRC: 149357837, Payload Bytes Received: 85985, Header Bytes Received: 4900, Total Packets Received: 106
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201940549, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201940549, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201940549, SSRC: 149357837, Frames Received: 45, Frames Decoded: 45, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201940549, SSRC: 149357837, QP Sum: 1572, Average QP: 34.9333
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201940549, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201940649, SSRC: 149357837, Payload Bytes Received: 93356, Header Bytes Received: 5116, Total Packets Received: 115
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201940649, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201940649, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201940649, SSRC: 149357837, Frames Received: 48, Frames Decoded: 48, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201940649, SSRC: 149357837, QP Sum: 1636, Average QP: 34.0833
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201940649, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201940749, SSRC: 149357837, Payload Bytes Received: 99645, Header Bytes Received: 5276, Total Packets Received: 121
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201940749, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201940749, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201940749, SSRC: 149357837, Frames Received: 51, Frames Decoded: 51, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201940749, SSRC: 149357837, QP Sum: 1700, Average QP: 33.3333
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201940749, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201940849, SSRC: 149357837, Payload Bytes Received: 106787, Header Bytes Received: 5444, Total Packets Received: 128
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201940849, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201940849, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201940849, SSRC: 149357837, Frames Received: 54, Frames Decoded: 54, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201940849, SSRC: 149357837, QP Sum: 1763, Average QP: 32.6481
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201940849, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201940949, SSRC: 149357837, Payload Bytes Received: 114129, Header Bytes Received: 5652, Total Packets Received: 136
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201940949, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201940949, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201940949, SSRC: 149357837, Frames Received: 57, Frames Decoded: 57, Frames Dropped: 0, Decoded FPS: 29, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201940949, SSRC: 149357837, QP Sum: 1826, Average QP: 32.0351
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201940949, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201941049, SSRC: 149357837, Payload Bytes Received: 121384, Header Bytes Received: 5820, Total Packets Received: 143
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201941049, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201941049, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201941049, SSRC: 149357837, Frames Received: 60, Frames Decoded: 60, Frames Dropped: 0, Decoded FPS: 29, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201941049, SSRC: 149357837, QP Sum: 1891, Average QP: 31.5167
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201941049, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201941149, SSRC: 149357837, Payload Bytes Received: 128763, Header Bytes Received: 6028, Total Packets Received: 151
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201941149, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201941149, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201941149, SSRC: 149357837, Frames Received: 63, Frames Decoded: 63, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201941149, SSRC: 149357837, QP Sum: 1958, Average QP: 31.0794
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201941149, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201941248, SSRC: 149357837, Payload Bytes Received: 135240, Header Bytes Received: 6196, Total Packets Received: 158
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201941248, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201941248, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201941248, SSRC: 149357837, Frames Received: 66, Frames Decoded: 66, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201941248, SSRC: 149357837, QP Sum: 2025, Average QP: 30.6818
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201941248, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201941349, SSRC: 149357837, Payload Bytes Received: 142516, Header Bytes Received: 6380, Total Packets Received: 165
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201941349, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201941349, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201941349, SSRC: 149357837, Frames Received: 69, Frames Decoded: 69, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201941349, SSRC: 149357837, QP Sum: 2091, Average QP: 30.3043
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201941349, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201941449, SSRC: 149357837, Payload Bytes Received: 150139, Header Bytes Received: 6596, Total Packets Received: 174
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201941449, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201941449, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201941449, SSRC: 149357837, Frames Received: 72, Frames Decoded: 72, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201941449, SSRC: 149357837, QP Sum: 2155, Average QP: 29.9306
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201941449, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201941548, SSRC: 149357837, Payload Bytes Received: 157094, Header Bytes Received: 6780, Total Packets Received: 181
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201941548, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201941548, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201941548, SSRC: 149357837, Frames Received: 75, Frames Decoded: 75, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201941549, SSRC: 149357837, QP Sum: 2223, Average QP: 29.64
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201941549, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201941649, SSRC: 149357837, Payload Bytes Received: 164384, Header Bytes Received: 6948, Total Packets Received: 188
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201941649, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201941649, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201941649, SSRC: 149357837, Frames Received: 78, Frames Decoded: 78, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201941649, SSRC: 149357837, QP Sum: 2289, Average QP: 29.3462
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201941649, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201941749, SSRC: 149357837, Payload Bytes Received: 170928, Header Bytes Received: 7132, Total Packets Received: 195
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201941749, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201941749, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201941749, SSRC: 149357837, Frames Received: 81, Frames Decoded: 81, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201941749, SSRC: 149357837, QP Sum: 2353, Average QP: 29.0494
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201941749, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201941849, SSRC: 149357837, Payload Bytes Received: 178403, Header Bytes Received: 7300, Total Packets Received: 202
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201941849, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201941849, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201941849, SSRC: 149357837, Frames Received: 84, Frames Decoded: 84, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201941849, SSRC: 149357837, QP Sum: 2416, Average QP: 28.7619
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201941849, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201941949, SSRC: 149357837, Payload Bytes Received: 186089, Header Bytes Received: 7508, Total Packets Received: 210
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201941949, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201941949, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201941949, SSRC: 149357837, Frames Received: 87, Frames Decoded: 87, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201941949, SSRC: 149357837, QP Sum: 2477, Average QP: 28.4713
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201941949, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201942049, SSRC: 149357837, Payload Bytes Received: 193363, Header Bytes Received: 7700, Total Packets Received: 218
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201942049, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201942049, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201942049, SSRC: 149357837, Frames Received: 90, Frames Decoded: 90, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201942049, SSRC: 149357837, QP Sum: 2541, Average QP: 28.2333
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201942049, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201942149, SSRC: 149357837, Payload Bytes Received: 200992, Header Bytes Received: 7908, Total Packets Received: 226
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201942149, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201942149, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201942149, SSRC: 149357837, Frames Received: 93, Frames Decoded: 93, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201942149, SSRC: 149357837, QP Sum: 2605, Average QP: 28.0108
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201942149, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201942249, SSRC: 149357837, Payload Bytes Received: 207678, Header Bytes Received: 8100, Total Packets Received: 234
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201942249, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201942249, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201942249, SSRC: 149357837, Frames Received: 96, Frames Decoded: 96, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201942249, SSRC: 149357837, QP Sum: 2669, Average QP: 27.8021
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201942249, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201942349, SSRC: 149357837, Payload Bytes Received: 215311, Header Bytes Received: 8308, Total Packets Received: 242
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201942349, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201942349, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201942349, SSRC: 149357837, Frames Received: 99, Frames Decoded: 99, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201942349, SSRC: 149357837, QP Sum: 2733, Average QP: 27.6061
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201942349, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201942449, SSRC: 149357837, Payload Bytes Received: 223439, Header Bytes Received: 8524, Total Packets Received: 251
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201942449, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201942449, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201942449, SSRC: 149357837, Frames Received: 102, Frames Decoded: 102, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201942449, SSRC: 149357837, QP Sum: 2795, Average QP: 27.402
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201942449, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201942549, SSRC: 149357837, Payload Bytes Received: 231301, Header Bytes Received: 8756, Total Packets Received: 260
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201942549, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201942549, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201942549, SSRC: 149357837, Frames Received: 105, Frames Decoded: 105, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201942549, SSRC: 149357837, QP Sum: 2864, Average QP: 27.2762
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201942549, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201942649, SSRC: 149357837, Payload Bytes Received: 239153, Header Bytes Received: 8948, Total Packets Received: 268
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201942649, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201942649, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201942649, SSRC: 149357837, Frames Received: 108, Frames Decoded: 108, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201942649, SSRC: 149357837, QP Sum: 2939, Average QP: 27.213
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201942649, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201942749, SSRC: 149357837, Payload Bytes Received: 246172, Header Bytes Received: 9180, Total Packets Received: 277
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201942749, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201942749, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201942749, SSRC: 149357837, Frames Received: 111, Frames Decoded: 111, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201942749, SSRC: 149357837, QP Sum: 3016, Average QP: 27.1712
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201942749, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201942849, SSRC: 149357837, Payload Bytes Received: 252662, Header Bytes Received: 9348, Total Packets Received: 284
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201942849, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201942849, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201942849, SSRC: 149357837, Frames Received: 114, Frames Decoded: 114, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201942849, SSRC: 149357837, QP Sum: 3095, Average QP: 27.1491
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201942849, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201942949, SSRC: 149357837, Payload Bytes Received: 260105, Header Bytes Received: 9556, Total Packets Received: 292
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201942949, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201942949, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201942949, SSRC: 149357837, Frames Received: 117, Frames Decoded: 117, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201942949, SSRC: 149357837, QP Sum: 3165, Average QP: 27.0513
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201942949, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201943049, SSRC: 149357837, Payload Bytes Received: 267519, Header Bytes Received: 9748, Total Packets Received: 300
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201943049, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201943049, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201943049, SSRC: 149357837, Frames Received: 120, Frames Decoded: 120, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201943049, SSRC: 149357837, QP Sum: 3235, Average QP: 26.9583
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201943049, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201943149, SSRC: 149357837, Payload Bytes Received: 274937, Header Bytes Received: 9956, Total Packets Received: 308
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201943149, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201943149, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201943149, SSRC: 149357837, Frames Received: 123, Frames Decoded: 123, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201943149, SSRC: 149357837, QP Sum: 3306, Average QP: 26.878
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201943149, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201943249, SSRC: 149357837, Payload Bytes Received: 281240, Header Bytes Received: 10124, Total Packets Received: 315
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201943249, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201943249, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201943249, SSRC: 149357837, Frames Received: 126, Frames Decoded: 126, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201943249, SSRC: 149357837, QP Sum: 3373, Average QP: 26.7698
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201943249, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201943349, SSRC: 149357837, Payload Bytes Received: 288664, Header Bytes Received: 10332, Total Packets Received: 323
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201943349, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201943349, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201943349, SSRC: 149357837, Frames Received: 129, Frames Decoded: 129, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201943349, SSRC: 149357837, QP Sum: 3435, Average QP: 26.6279
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201943349, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201943449, SSRC: 149357837, Payload Bytes Received: 296677, Header Bytes Received: 10572, Total Packets Received: 333
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201943449, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201943449, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201943449, SSRC: 149357837, Frames Received: 132, Frames Decoded: 132, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201943449, SSRC: 149357837, QP Sum: 3494, Average QP: 26.4697
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201943449, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201943548, SSRC: 149357837, Payload Bytes Received: 304478, Header Bytes Received: 10780, Total Packets Received: 341
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201943548, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201943548, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201943548, SSRC: 149357837, Frames Received: 135, Frames Decoded: 135, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201943548, SSRC: 149357837, QP Sum: 3556, Average QP: 26.3407
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201943548, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201943649, SSRC: 149357837, Payload Bytes Received: 312152, Header Bytes Received: 10996, Total Packets Received: 350
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201943649, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201943649, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201943649, SSRC: 149357837, Frames Received: 138, Frames Decoded: 138, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201943649, SSRC: 149357837, QP Sum: 3622, Average QP: 26.2464
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201943649, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201943749, SSRC: 149357837, Payload Bytes Received: 319029, Header Bytes Received: 11204, Total Packets Received: 358
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201943749, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201943749, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201943749, SSRC: 149357837, Frames Received: 141, Frames Decoded: 141, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201943749, SSRC: 149357837, QP Sum: 3686, Average QP: 26.1418
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201943749, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201943849, SSRC: 149357837, Payload Bytes Received: 326978, Header Bytes Received: 11420, Total Packets Received: 367
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201943849, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201943849, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201943849, SSRC: 149357837, Frames Received: 144, Frames Decoded: 144, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201943849, SSRC: 149357837, QP Sum: 3750, Average QP: 26.0417
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201943849, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201943949, SSRC: 149357837, Payload Bytes Received: 334641, Header Bytes Received: 11628, Total Packets Received: 375
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201943949, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201943949, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201943949, SSRC: 149357837, Frames Received: 147, Frames Decoded: 147, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201943949, SSRC: 149357837, QP Sum: 3813, Average QP: 25.9388
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201943949, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201944049, SSRC: 149357837, Payload Bytes Received: 341889, Header Bytes Received: 11796, Total Packets Received: 382
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201944049, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201944049, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201944049, SSRC: 149357837, Frames Received: 150, Frames Decoded: 150, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201944049, SSRC: 149357837, QP Sum: 3876, Average QP: 25.84
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201944049, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201944149, SSRC: 149357837, Payload Bytes Received: 349782, Header Bytes Received: 12028, Total Packets Received: 391
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201944149, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201944149, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201944149, SSRC: 149357837, Frames Received: 153, Frames Decoded: 153, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201944149, SSRC: 149357837, QP Sum: 3938, Average QP: 25.7386
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201944149, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201944249, SSRC: 149357837, Payload Bytes Received: 355995, Header Bytes Received: 12172, Total Packets Received: 397
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201944249, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201944249, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201944249, SSRC: 149357837, Frames Received: 156, Frames Decoded: 156, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201944249, SSRC: 149357837, QP Sum: 3999, Average QP: 25.6346
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201944249, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201944349, SSRC: 149357837, Payload Bytes Received: 363733, Header Bytes Received: 12364, Total Packets Received: 405
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201944349, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201944349, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201944349, SSRC: 149357837, Frames Received: 159, Frames Decoded: 159, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201944349, SSRC: 149357837, QP Sum: 4056, Average QP: 25.5094
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201944349, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201944449, SSRC: 149357837, Payload Bytes Received: 372030, Header Bytes Received: 12620, Total Packets Received: 415
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201944449, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201944449, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201944449, SSRC: 149357837, Frames Received: 162, Frames Decoded: 162, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201944449, SSRC: 149357837, QP Sum: 4111, Average QP: 25.3765
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201944449, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201944549, SSRC: 149357837, Payload Bytes Received: 380037, Header Bytes Received: 12812, Total Packets Received: 423
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201944549, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201944549, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201944549, SSRC: 149357837, Frames Received: 165, Frames Decoded: 165, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201944549, SSRC: 149357837, QP Sum: 4170, Average QP: 25.2727
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201944549, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201944649, SSRC: 149357837, Payload Bytes Received: 388248, Header Bytes Received: 13068, Total Packets Received: 433
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201944649, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201944649, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201944649, SSRC: 149357837, Frames Received: 168, Frames Decoded: 168, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201944649, SSRC: 149357837, QP Sum: 4233, Average QP: 25.1964
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201944649, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201944749, SSRC: 149357837, Payload Bytes Received: 394879, Header Bytes Received: 13260, Total Packets Received: 441
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201944749, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201944749, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201944749, SSRC: 149357837, Frames Received: 171, Frames Decoded: 171, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201944749, SSRC: 149357837, QP Sum: 4296, Average QP: 25.1228
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201944749, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201944849, SSRC: 149357837, Payload Bytes Received: 402512, Header Bytes Received: 13468, Total Packets Received: 449
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201944849, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201944849, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201944849, SSRC: 149357837, Frames Received: 174, Frames Decoded: 174, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201944849, SSRC: 149357837, QP Sum: 4359, Average QP: 25.0517
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201944849, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201944948, SSRC: 149357837, Payload Bytes Received: 410356, Header Bytes Received: 13684, Total Packets Received: 458
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201944948, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201944948, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201944948, SSRC: 149357837, Frames Received: 177, Frames Decoded: 177, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201944948, SSRC: 149357837, QP Sum: 4420, Average QP: 24.9718
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201944949, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201945049, SSRC: 149357837, Payload Bytes Received: 418190, Header Bytes Received: 13916, Total Packets Received: 467
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201945049, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201945049, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201945049, SSRC: 149357837, Frames Received: 180, Frames Decoded: 180, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201945049, SSRC: 149357837, QP Sum: 4484, Average QP: 24.9111
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201945049, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201945149, SSRC: 149357837, Payload Bytes Received: 426185, Header Bytes Received: 14156, Total Packets Received: 477
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201945149, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201945149, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201945149, SSRC: 149357837, Frames Received: 183, Frames Decoded: 183, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201945149, SSRC: 149357837, QP Sum: 4551, Average QP: 24.8689
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201945149, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201945249, SSRC: 149357837, Payload Bytes Received: 432988, Header Bytes Received: 14340, Total Packets Received: 484
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201945249, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201945249, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201945249, SSRC: 149357837, Frames Received: 186, Frames Decoded: 186, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201945249, SSRC: 149357837, QP Sum: 4617, Average QP: 24.8226
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201945249, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201945349, SSRC: 149357837, Payload Bytes Received: 440887, Header Bytes Received: 14556, Total Packets Received: 493
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201945349, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201945349, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201945349, SSRC: 149357837, Frames Received: 189, Frames Decoded: 189, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201945349, SSRC: 149357837, QP Sum: 4683, Average QP: 24.7778
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201945349, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201945449, SSRC: 149357837, Payload Bytes Received: 448620, Header Bytes Received: 14764, Total Packets Received: 501
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201945449, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201945449, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201945449, SSRC: 149357837, Frames Received: 192, Frames Decoded: 192, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201945449, SSRC: 149357837, QP Sum: 4749, Average QP: 24.7344
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201945449, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201945549, SSRC: 149357837, Payload Bytes Received: 456420, Header Bytes Received: 14956, Total Packets Received: 509
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201945549, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201945549, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201945549, SSRC: 149357837, Frames Received: 195, Frames Decoded: 195, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201945549, SSRC: 149357837, QP Sum: 4818, Average QP: 24.7077
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201945549, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully
+(conductor.cc:955): Video quality stats collection executed
+(rtc_stats_collector.cc:407): [VideoQuality-Bitrate] Time: 201945649, SSRC: 149357837, Payload Bytes Received: 464491, Header Bytes Received: 15212, Total Packets Received: 519
+(rtc_stats_collector.cc:611): [VideoQuality-PacketLoss] Time: 201945649, SSRC: 149357837, Packets Lost: 0
+(rtc_stats_collector.cc:632): [VideoQuality-Jitter] Time: 201945649, SSRC: 149357837, Jitter (ms): 0
+(rtc_stats_collector.cc:655): [VideoQuality-FrameRate] Time: 201945649, SSRC: 149357837, Frames Received: 198, Frames Decoded: 198, Frames Dropped: 0, Decoded FPS: 30, Frame Size: 320x240
+(rtc_stats_collector.cc:671): [VideoQuality-QP] Time: 201945649, SSRC: 149357837, QP Sum: 4890, Average QP: 24.697
+(rtc_stats_collector.cc:712): [VideoQuality-FreezeRate] Time: 201945649, SSRC: 149357837, Freeze Count: 0, Total Freezes Duration (ms): 0, Pause Count: 0, Total Pauses Duration (ms): 0, Session Experienced Freezes: NO
+(conductor.cc:971): Video quality stats collected successfully

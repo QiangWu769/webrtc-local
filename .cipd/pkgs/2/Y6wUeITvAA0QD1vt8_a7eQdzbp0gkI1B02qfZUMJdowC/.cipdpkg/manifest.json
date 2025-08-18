@@ -1,0 +1,289 @@
+{
+  "format_version": "1.1",
+  "package_name": "chromium/third_party/pipewire-media-session/linux-amd64",
+  "install_mode": "copy",
+  "actual_install_mode": "copy",
+  "files": [
+    {
+      "name": "bin/pipewire-media-session",
+      "size": 1324712,
+      "executable": true,
+      "hash": "35K7W0BhOcscRUpH2yfzEpJIoHVUDokHytUjhHqZNAMC"
+    },
+    {
+      "name": "share/locale/af/LC_MESSAGES/media-session.mo",
+      "size": 628,
+      "hash": "vly--wyy_ka-2FIOUxj7nkyUllgBgAU1Z7X4pvpooQIC"
+    },
+    {
+      "name": "share/locale/as/LC_MESSAGES/media-session.mo",
+      "size": 659,
+      "hash": "Ny6Cp4bl2u2vya0EPbEfivhlTmZIPRiY7g0_xIztocEC"
+    },
+    {
+      "name": "share/locale/be/LC_MESSAGES/media-session.mo",
+      "size": 706,
+      "hash": "yXzz8oWJGHRmj71sTMubSI3XUdCWWIiPIGSoiGd1uQgC"
+    },
+    {
+      "name": "share/locale/bg/LC_MESSAGES/media-session.mo",
+      "size": 594,
+      "hash": "6AD7AXzwFOtCQR30lYYLc1antLVxAUmDuocI4emyTxUC"
+    },
+    {
+      "name": "share/locale/bn_IN/LC_MESSAGES/media-session.mo",
+      "size": 684,
+      "hash": "HtDcMINsDuOGIDy50rd3es346G87Fus6rGKwGdTM8SoC"
+    },
+    {
+      "name": "share/locale/ca/LC_MESSAGES/media-session.mo",
+      "size": 558,
+      "hash": "AtndlmAgwX4_HYlREPIdC0XS5EpOYfv01xwM9BjmFngC"
+    },
+    {
+      "name": "share/locale/cs/LC_MESSAGES/media-session.mo",
+      "size": 720,
+      "hash": "PcQ-Qn7VY0Mvrl2nfyKAvYmuMnJ3aEvRlMRB76tZovYC"
+    },
+    {
+      "name": "share/locale/da/LC_MESSAGES/media-session.mo",
+      "size": 595,
+      "hash": "OAq1fe6JYc4lm3QRrJLPn5KSLLbWPVSAaYj9-lPumFAC"
+    },
+    {
+      "name": "share/locale/de/LC_MESSAGES/media-session.mo",
+      "size": 671,
+      "hash": "Pcu2kgvV8zucjWx-FnC4SbFysiZ42Hip6ze40DONrZQC"
+    },
+    {
+      "name": "share/locale/de_CH/LC_MESSAGES/media-session.mo",
+      "size": 626,
+      "hash": "uLWyw-l5lflaGXEONF5mNTG01bV2ONAOKu_rrSDGCNwC"
+    },
+    {
+      "name": "share/locale/el/LC_MESSAGES/media-session.mo",
+      "size": 658,
+      "hash": "djEI7csG2UUx2OndNUMlze1IGiR_2E1MY5mVs4HWH_QC"
+    },
+    {
+      "name": "share/locale/eo/LC_MESSAGES/media-session.mo",
+      "size": 646,
+      "hash": "2E8rJdpYIP9aXoZ2UH2g-lGHesrXEoNHAqG1b95Aja8C"
+    },
+    {
+      "name": "share/locale/es/LC_MESSAGES/media-session.mo",
+      "size": 700,
+      "hash": "H588rFYAIC_7ZPkOGvGXAsw-DbafbkHA6MkEylmu2s4C"
+    },
+    {
+      "name": "share/locale/fi/LC_MESSAGES/media-session.mo",
+      "size": 720,
+      "hash": "529tuAO8E1ML50wLnvBMO4pQVUJtnKV6sVlvb2FhnPAC"
+    },
+    {
+      "name": "share/locale/fr/LC_MESSAGES/media-session.mo",
+      "size": 666,
+      "hash": "9vW-nKpVibnfFiteKxMsHIC23Oy58f1vKT5TcXHRHA0C"
+    },
+    {
+      "name": "share/locale/gl/LC_MESSAGES/media-session.mo",
+      "size": 597,
+      "hash": "O0WbmCJsNyCYo44Ijt6ijZ_CT6Q2b0kOFZCJ6CI_kPcC"
+    },
+    {
+      "name": "share/locale/gu/LC_MESSAGES/media-session.mo",
+      "size": 622,
+      "hash": "7Wdjzv6JPRRCserA5Z6If6tNdyydZcGF9MDGPM6TlkwC"
+    },
+    {
+      "name": "share/locale/he/LC_MESSAGES/media-session.mo",
+      "size": 724,
+      "hash": "9tN1PR5rx-y31ntYZgTtvNHLFI6RWWxPg5SAM4psn9sC"
+    },
+    {
+      "name": "share/locale/hi/LC_MESSAGES/media-session.mo",
+      "size": 653,
+      "hash": "c4t04pR1bXP_Za2zjA0hI_n404b7-8V869BjnVDkEqsC"
+    },
+    {
+      "name": "share/locale/hr/LC_MESSAGES/media-session.mo",
+      "size": 821,
+      "hash": "ju7MBj1WUjLmPXxTqKSLRGp8-lWvenAJjfHTsrQajPQC"
+    },
+    {
+      "name": "share/locale/hu/LC_MESSAGES/media-session.mo",
+      "size": 765,
+      "hash": "2xrzbC79wvxsKOQnQo7XJlcnrOSY-RkNXXp5fpjMzMUC"
+    },
+    {
+      "name": "share/locale/id/LC_MESSAGES/media-session.mo",
+      "size": 661,
+      "hash": "exQ1K6J-2JeHY1ujP3FuOwSG7ppQTEY6ipE_mERMeWkC"
+    },
+    {
+      "name": "share/locale/it/LC_MESSAGES/media-session.mo",
+      "size": 688,
+      "hash": "9UeECuhPoreic1HOIcUPqXTIdEF3iQ-0JnutVZhxnl0C"
+    },
+    {
+      "name": "share/locale/ja/LC_MESSAGES/media-session.mo",
+      "size": 634,
+      "hash": "o7QoCpVG43Br0FUJ9ESDGBigke9asCKUGDpdi88BFroC"
+    },
+    {
+      "name": "share/locale/kk/LC_MESSAGES/media-session.mo",
+      "size": 615,
+      "hash": "0I34vGAA1D_tPQL86zfJdDlmlpI4ggKYqq89RZPz8tcC"
+    },
+    {
+      "name": "share/locale/kn/LC_MESSAGES/media-session.mo",
+      "size": 664,
+      "hash": "-ZNN7Ok9vrl7bFRWSOhZKbHqSdRSAxMWapNUFQ2HYdUC"
+    },
+    {
+      "name": "share/locale/ko/LC_MESSAGES/media-session.mo",
+      "size": 593,
+      "hash": "RHaCpGSBDvkoLiq9p_2Zum4HLYu2bkV5zcLjuSgX9w0C"
+    },
+    {
+      "name": "share/locale/lt/LC_MESSAGES/media-session.mo",
+      "size": 615,
+      "hash": "Fwbea7ByUBHEqkxUWXApTpaC4oq6F-uJaXfVfOJDFugC"
+    },
+    {
+      "name": "share/locale/ml/LC_MESSAGES/media-session.mo",
+      "size": 578,
+      "hash": "1q7ILfldPuqIo_l-fcUQfeMvUeF8ekR60Vx4Gg0wVZgC"
+    },
+    {
+      "name": "share/locale/mr/LC_MESSAGES/media-session.mo",
+      "size": 662,
+      "hash": "BM520DPAtDJyOjVzDXaC2leJKBeqoTEbPw4TTTXbrJ0C"
+    },
+    {
+      "name": "share/locale/my/LC_MESSAGES/media-session.mo",
+      "size": 769,
+      "hash": "3bEDSsGcwJLtPVt8LsfkC_KpuImzd3Na-rFndMceiRYC"
+    },
+    {
+      "name": "share/locale/nl/LC_MESSAGES/media-session.mo",
+      "size": 718,
+      "hash": "EYeEd7e1bvsKON5Jjk9zqq70w71SEqW-XXfikEjfXaAC"
+    },
+    {
+      "name": "share/locale/nn/LC_MESSAGES/media-session.mo",
+      "size": 709,
+      "hash": "J8QFxRuCOEX52IRd6vzUKA1k9f7HHlSeWMAgZEBoVfQC"
+    },
+    {
+      "name": "share/locale/oc/LC_MESSAGES/media-session.mo",
+      "size": 665,
+      "hash": "RcjwMoxutDKagOL-JN8avwRa9_GME1TPQrKL8MWKi4IC"
+    },
+    {
+      "name": "share/locale/or/LC_MESSAGES/media-session.mo",
+      "size": 688,
+      "hash": "y_kZpX7GByR4BjxVctAhCOPdvH_aZv_VBQjjUvz-PQQC"
+    },
+    {
+      "name": "share/locale/pa/LC_MESSAGES/media-session.mo",
+      "size": 662,
+      "hash": "iRWeMsVpg_lKW6HVO6os_Hf8ZLxcm2gZkWuVT3s-UrkC"
+    },
+    {
+      "name": "share/locale/pl/LC_MESSAGES/media-session.mo",
+      "size": 708,
+      "hash": "RW6ic4akNot7idW_haIjtv7PmBna3rMoi6w_7518exMC"
+    },
+    {
+      "name": "share/locale/pt/LC_MESSAGES/media-session.mo",
+      "size": 691,
+      "hash": "_mM3YdRDD2lQP3mSr8QrTbPClzClcVIAbIHEuyQPgNQC"
+    },
+    {
+      "name": "share/locale/pt_BR/LC_MESSAGES/media-session.mo",
+      "size": 700,
+      "hash": "noKGeUc_-Sz7OwIv_6jvDks_GKkXluRMmGE2wI2ZCzgC"
+    },
+    {
+      "name": "share/locale/ru/LC_MESSAGES/media-session.mo",
+      "size": 758,
+      "hash": "SXi_jHV98M6I-MdKwS6lK4lsSyIMOKxA7cUNz-VGovAC"
+    },
+    {
+      "name": "share/locale/si/LC_MESSAGES/media-session.mo",
+      "size": 468,
+      "hash": "BlldZJ9SGgx01gHgwuWkmBCOuxYbq2szE1D7b1SsUCIC"
+    },
+    {
+      "name": "share/locale/sk/LC_MESSAGES/media-session.mo",
+      "size": 696,
+      "hash": "9oDDm8zTHCnCimMiqwG95yjy8RLi4ttVUuXhT0x4UX8C"
+    },
+    {
+      "name": "share/locale/sr/LC_MESSAGES/media-session.mo",
+      "size": 693,
+      "hash": "S3ElOcz_ZRYYzORSki2l4twSYOl_jANEQZBZFb9HHrEC"
+    },
+    {
+      "name": "share/locale/sr@latin/LC_MESSAGES/media-session.mo",
+      "size": 677,
+      "hash": "omUb1pR747GrgdH__PeuB-PY8rFFHqeRvfNXpsQLrvsC"
+    },
+    {
+      "name": "share/locale/sv/LC_MESSAGES/media-session.mo",
+      "size": 668,
+      "hash": "6vTaWkAtBoeMzUFmYlw40pK1TzsxhDjxFf_woAGgdh8C"
+    },
+    {
+      "name": "share/locale/ta/LC_MESSAGES/media-session.mo",
+      "size": 683,
+      "hash": "HJn33-wFPB01XxZbPLEkwOUrqbtMzq1pS4r2ie0H_4kC"
+    },
+    {
+      "name": "share/locale/te/LC_MESSAGES/media-session.mo",
+      "size": 662,
+      "hash": "PPTM3PPBRVVXEHnSVJPMSCQpNd2KSTnbhIPXaenA3QIC"
+    },
+    {
+      "name": "share/locale/tr/LC_MESSAGES/media-session.mo",
+      "size": 712,
+      "hash": "X9M5iDfJ2hmFLY9J8IYvurjURF5bECoXH2AKn5hsH5kC"
+    },
+    {
+      "name": "share/locale/uk/LC_MESSAGES/media-session.mo",
+      "size": 792,
+      "hash": "BqNL6nb19nV5SBii2BCOdueFsH3kJeAEzyMJyIlMrA0C"
+    },
+    {
+      "name": "share/locale/zh_CN/LC_MESSAGES/media-session.mo",
+      "size": 709,
+      "hash": "51cLkzmq3F2epATgzs1kbZaFPA_8nFbZfas3m12SQYkC"
+    },
+    {
+      "name": "share/locale/zh_TW/LC_MESSAGES/media-session.mo",
+      "size": 634,
+      "hash": "jyDoZ8yYz12UTwMF5HAGgNiks4FhaRDdwmmZWFI79VQC"
+    },
+    {
+      "name": "share/pipewire/media-session.d/alsa-monitor.conf",
+      "size": 5228,
+      "hash": "RxdlGgk5XIMuIuNR78qRAjBsJ3UrJZd-RObycBv3KkwC"
+    },
+    {
+      "name": "share/pipewire/media-session.d/bluez-monitor.conf",
+      "size": 5360,
+      "hash": "Kh6WL5qewOo6O06Jxlv-BrzI6fWk7D6qGGBL4fADYkEC"
+    },
+    {
+      "name": "share/pipewire/media-session.d/media-session.conf",
+      "size": 3956,
+      "hash": "serRKB2KNlFgdcPbzI7ASisM_xbRNflBsJIJOhluy-YC"
+    },
+    {
+      "name": "share/pipewire/media-session.d/v4l2-monitor.conf",
+      "size": 1539,
+      "hash": "ieNDK8APNTLwnwbUBdhx9PhIiZ-mRkqI62bEz0emibMC"
+    }
+  ]
+}

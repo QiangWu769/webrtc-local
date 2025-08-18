@@ -1,0 +1,15 @@
+# 测试时长 (秒)
+duration: 60
+
+# 结果保存目录
+results_dir: "test_results_real_network"
+
+# 信令服务器的 IP 地址
+# - 如果在一台机器上测试，使用 "localhost"
+# - 如果在两台机器上测试，使用运行服务器那台机器的局域网 IP, e.g., "192.168.1.10"
+signaling_server_ip: "localhost"
+signaling_server_port: 8888
+
+# 你的 libwebrtc 编译输出目录的绝对路径
+# !!! 请务必修改成你自己的实际路径 !!!
+webrtc_build_dir: "/home/wuq/webrtc-checkout/src/out/Release" 

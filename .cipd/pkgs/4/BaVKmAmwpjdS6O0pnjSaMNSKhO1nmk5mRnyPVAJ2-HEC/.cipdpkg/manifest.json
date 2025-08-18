@@ -1,0 +1,1430 @@
+{
+  "format_version": "1.1",
+  "package_name": "chromium/third_party/pipewire/linux-amd64",
+  "install_mode": "copy",
+  "actual_install_mode": "copy",
+  "files": [
+    {
+      "name": "bin/pipewire",
+      "size": 18112,
+      "executable": true,
+      "hash": "Uvo0YhSN_CqO8D8aNJVMBI4X785q70vpx4DvntXJUBcC"
+    },
+    {
+      "name": "bin/pipewire-avb",
+      "size": 18112,
+      "executable": true,
+      "hash": "Uvo0YhSN_CqO8D8aNJVMBI4X785q70vpx4DvntXJUBcC"
+    },
+    {
+      "name": "bin/pipewire-pulse",
+      "size": 18112,
+      "executable": true,
+      "hash": "Uvo0YhSN_CqO8D8aNJVMBI4X785q70vpx4DvntXJUBcC"
+    },
+    {
+      "name": "bin/pw-cli",
+      "size": 159512,
+      "executable": true,
+      "hash": "AEldnc8f-tkpy5MCGEw0_qYOHAWNqXVmzw6UmdoKFTMC"
+    },
+    {
+      "name": "bin/pw-dot",
+      "size": 102424,
+      "executable": true,
+      "hash": "AIfSxf4pB0YMWiHiTEaEGZYuvIXSdb9bLKSloiew8TcC"
+    },
+    {
+      "name": "bin/pw-dump",
+      "size": 118280,
+      "executable": true,
+      "hash": "HVklfECnJ-WLlTgDSi18zB7wGddOgcZ9C-5JcthmlGwC"
+    },
+    {
+      "name": "bin/pw-jack",
+      "size": 2316,
+      "executable": true,
+      "hash": "Mk4MhcGpynNuyZ6DdMqgsTcQNTtx-RYqVaaFGJ_7CXQC"
+    },
+    {
+      "name": "bin/pw-link",
+      "size": 37016,
+      "executable": true,
+      "hash": "Vm2DgYbrkzTmiQaV7Njy00QaDKhd5jH0diiZ25G6-sIC"
+    },
+    {
+      "name": "bin/pw-loopback",
+      "size": 22928,
+      "executable": true,
+      "hash": "7_dUO6rudxRrpjBr_eo9jMbY-v4l7GlfGRqcxtuP_dMC"
+    },
+    {
+      "name": "bin/pw-metadata",
+      "size": 23024,
+      "executable": true,
+      "hash": "0YhDxXj0-KoBsEKiQbt7TCsP2_FKRi89serCp0gjbQkC"
+    },
+    {
+      "name": "bin/pw-mididump",
+      "size": 44944,
+      "executable": true,
+      "hash": "L2M5pMxD-nzkgotjys-Ngzev5_9OfA74sMMcJuhHJGYC"
+    },
+    {
+      "name": "bin/pw-mon",
+      "size": 107536,
+      "executable": true,
+      "hash": "RdViO6oQUAP8Jq-Z3Cw6GyLQoOZqStSYatHVsFbY4JAC"
+    },
+    {
+      "name": "bin/pw-profiler",
+      "size": 92496,
+      "executable": true,
+      "hash": "6kSozHYYrQypBvip3tWhEJecydbDliJPG4rl4xtsQ24C"
+    },
+    {
+      "name": "bin/pw-reserve",
+      "size": 37552,
+      "executable": true,
+      "hash": "yn6_feT4vHCPA0BGh3bOkQoZyKhIvg77OnywtaTrgqQC"
+    },
+    {
+      "name": "bin/pw-top",
+      "size": 97712,
+      "executable": true,
+      "hash": "SMj0xIOgi8quf_5q57AEFQl67LujH6O_w_N4dGtkX7EC"
+    },
+    {
+      "name": "bin/spa-inspect",
+      "size": 92224,
+      "executable": true,
+      "hash": "S4GTudALbrJijQtP4ccxEcFeyMQxZDZiBLLBbqmJ0fgC"
+    },
+    {
+      "name": "bin/spa-json-dump",
+      "size": 22640,
+      "executable": true,
+      "hash": "q9wQSiAUGBlvYeqSiTtk6ip7SxhbuTpdEo2ta3wGsb4C"
+    },
+    {
+      "name": "bin/spa-monitor",
+      "size": 69208,
+      "executable": true,
+      "hash": "NIENwONwJ1IOTipTJYgA5MlbYKHMtyVwznjWDUML6agC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/array.h",
+      "size": 5015,
+      "hash": "jtO77_tVS6wy0O5w7Iuc5no2GEweFfxGi-cxf8Oir-MC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/buffers.h",
+      "size": 2315,
+      "hash": "2T4yN28r9kixPi3n0TgBHPck0NHoVzasgZNz_7LftUUC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/client.h",
+      "size": 5717,
+      "hash": "siQz0CBvEx0LL55Np5PGo0VYTuTmwcINJdBW-ZoK1oMC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/conf.h",
+      "size": 1622,
+      "hash": "EUqOiXeWW8LMti0Uw0p-TxbUE5H7p9JybY-MbethoMsC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/context.h",
+      "size": 7447,
+      "hash": "Ekaxq979FCTrFjaFZ6JG7CdzZ9aC0K2pcWrEulAG_JkC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/control.h",
+      "size": 2357,
+      "hash": "P4rR1n0NRnhCdQOLcL_oG383XohU9CK6RWaxbWCrmn8C"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/core.h",
+      "size": 19661,
+      "hash": "UUgPg1ZBN46zl4foE9JD9FELV9nO5s5UPRsqAK0gK4wC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/data-loop.h",
+      "size": 3611,
+      "hash": "kid2uqcDRwl0_4XCiIoiOZ6YbfJ0jpGKHqHgHE99RXcC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/device.h",
+      "size": 5501,
+      "hash": "ntW2VjCcBGw7H-nztZO7_nqALW1a-7SZoZr4hJonqWcC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/extensions/client-node.h",
+      "size": 10710,
+      "hash": "oDeKbg_C5Fyhp1X1PTZg5BrYg2ddc3mmwwwHswCPAsUC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/extensions/metadata.h",
+      "size": 3115,
+      "hash": "Jnqo40UzPxacSwqadQJlBvAPzR4qZLpZ9ON-kBg-1WUC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/extensions/profiler.h",
+      "size": 2673,
+      "hash": "oI6gjf2FAmdwCBTf4iyWB4A9haRAHp995gtyp20tRsIC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/extensions/protocol-native.h",
+      "size": 4031,
+      "hash": "skcHAB9zg1TzW78RCSXsyOJiPHIKpnUD2Exh8D95CI0C"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/extensions/session-manager.h",
+      "size": 1663,
+      "hash": "_1WjC1S8C-GJudvSlUYBJaklaZ-14kyoLFrxGC_9MzcC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/extensions/session-manager/impl-interfaces.h",
+      "size": 10366,
+      "hash": "XrUBnDw5nCGiZqo2BuWxa1_8s5eLLjNz0Oe9_wMPNs0C"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/extensions/session-manager/interfaces.h",
+      "size": 14803,
+      "hash": "4NIRdm7INo0Z8SNRkN6ggz7MxYRIk2rx5SOWvP6rwaoC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/extensions/session-manager/introspect-funcs.h",
+      "size": 9152,
+      "hash": "4foAqWZw7mw7uhhI3wP3q2DCMRELuqhPD5oOFKvLuvAC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/extensions/session-manager/introspect.h",
+      "size": 5325,
+      "hash": "yC39sRk0KkHFmJnlTuM4MU-FmuZVBW4JhApr5BHXTnUC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/extensions/session-manager/keys.h",
+      "size": 2965,
+      "hash": "1syI-atNVh41zPqOnXuAkaTmgqcJjdpsinKQi1BWqg4C"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/factory.h",
+      "size": 3521,
+      "hash": "IbdTBmWM0Ox_GMyEuia4mzn-HahhGdAHyiFkBABhSZ0C"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/filter.h",
+      "size": 9467,
+      "hash": "788xXRxg2EKD3fE2aOt31RnCRTAxDTs01ZOnlVSlQZgC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/global.h",
+      "size": 5667,
+      "hash": "pLty6-jXgpHnEu8JjUd8ZKURJ1AFqzWipxffIhtHQ4cC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/i18n.h",
+      "size": 1717,
+      "hash": "u8_14BGlEn6uxKlgWVY6ecmJvwSnAsA2XiuDY2nmM4oC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/impl-client.h",
+      "size": 6596,
+      "hash": "GvdQzZkBy72jzY_Q261_iyYPIMgkTR3hZBxFqSkWNf0C"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/impl-core.h",
+      "size": 3151,
+      "hash": "ErXjP7OKUSIU4J9A5xX_KCEzKwV-VxJ978FmpZRl3pcC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/impl-device.h",
+      "size": 3836,
+      "hash": "d27AqLS5BfVIq88FKwsIJVB_glIC1T1q9uarmnGYUFcC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/impl-factory.h",
+      "size": 4158,
+      "hash": "pY9KGvT2frYfZrhPBylZTAuxvqtoLCEdqUMtdJuM5roC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/impl-link.h",
+      "size": 4049,
+      "hash": "PlkH_6QIk0sPW71bE_3anVVCpDKiShHC4ZURPYoZLQYC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/impl-metadata.h",
+      "size": 3618,
+      "hash": "tieNhQMNgJn3cK-t2SfgNd72OZbx0Kqee7E67esizkYC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/impl-module.h",
+      "size": 3734,
+      "hash": "g0lLpvWITDv8DNc7d6nKV7oGbUkLGNGLruPLZnZKkn8C"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/impl-node.h",
+      "size": 6812,
+      "hash": "P_kYnKe5z8IU1c4SnYw7TgyWV2H1MKXyOz3sThMkd7IC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/impl-port.h",
+      "size": 4492,
+      "hash": "sV6Fu_yC26YQjcODACeI6AdkD382GpsZGEAFfU48EzQC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/impl.h",
+      "size": 1924,
+      "hash": "eDQVjEQ_ulk8JMXtoYZuCg5sVNDYFQxkX7wU50iG5CMC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/keys.h",
+      "size": 19077,
+      "hash": "3mzZ2zSDduQSjojgRz84tLp40ZcGNCrpwoHuw9RtHpQC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/link.h",
+      "size": 4469,
+      "hash": "NbxZc5qGsJoqTDcjZjeCU3LwAZF4CmQleX1gcUdF_b4C"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/log.h",
+      "size": 5688,
+      "hash": "hZiselbsw1Wp68ezWuVkUdC2y8VteELNpWt15RvO7V0C"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/loop.h",
+      "size": 3439,
+      "hash": "4KJR55JdRze8pu9n6lKiwBhlJ4baQ7x-hjR57iNYRAsC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/main-loop.h",
+      "size": 2409,
+      "hash": "aDaTFy2JskLdxtuUYXCqcoKa2fpHuI8t6VU0lkoia3gC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/map.h",
+      "size": 8284,
+      "hash": "HiF-9RtwYqQThiejRtVJAYG2E3RC_xaUGxpAU_3zC8QC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/mem.h",
+      "size": 6967,
+      "hash": "XybaoOnl9tT9eczSSlu4kIaALS6Dh6BBGfmcdxo4AP0C"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/module.h",
+      "size": 3580,
+      "hash": "a5-JUeEebKVAXq32COord4GsWTDq3RbAt2Tkr5FKjiIC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/node.h",
+      "size": 6678,
+      "hash": "KzA6iuAyevtHm2OoIBg7ROnh_XN69A6FSTBNfy3sQRIC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/permission.h",
+      "size": 2846,
+      "hash": "SyQ4k68nIB9FfRT4V8k1jgBGJbNFwET3FjhFj3vRIeIC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/pipewire.h",
+      "size": 3147,
+      "hash": "ynDnRTiavD5hmEYZcULVy6FoTfiGbOJBRDMk7UcRBjsC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/port.h",
+      "size": 5180,
+      "hash": "jB8SChCSI6FD7lFWMDK9AOArNTs1Y2wStOenoZTF-wsC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/properties.h",
+      "size": 5998,
+      "hash": "jXkCxSfhUTKXiOXxe4yTzAL22twT7N0GW0Zq-uucDA4C"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/protocol.h",
+      "size": 5499,
+      "hash": "ZAGLsod0kgyuYS3uM4pLzS5UBHUYxjOBbYvhrLTXVBsC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/proxy.h",
+      "size": 7553,
+      "hash": "C5ZaB1GpLvpRCEtLZw_A24EEAA9mrKu33lMn7fX70cgC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/resource.h",
+      "size": 6071,
+      "hash": "sVpjOd4lQa_rn_5qBh0Tet12H1V77rgK85c5-cWyAqsC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/stream.h",
+      "size": 21544,
+      "hash": "gK3Tfh6DAJlLhchKik0JGDkDqU6MBVYm2HugXT1zVPcC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/thread-loop.h",
+      "size": 6367,
+      "hash": "afLt1595ulr3QhE4YfGKtlVjmCH_5W_nXOrix0JUH0AC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/thread.h",
+      "size": 2181,
+      "hash": "lWla5uilZfu1KUl-4sVwRr5K_DKZEVD4YR7XMUQSXdkC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/type.h",
+      "size": 1833,
+      "hash": "2ug_yODiriY8c0iStR0ac69dyKsD4bOIB3mePRHBmGoC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/utils.h",
+      "size": 2745,
+      "hash": "vNl8h1S7HhZTb638CGC9VDWkqQUY0JWZqnpULyAIKG8C"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/version.h",
+      "size": 2525,
+      "hash": "7flh3lUB1nwtH0NKjbWuLJ0NdC3IQOdQmVspX_DGcVEC"
+    },
+    {
+      "name": "include/pipewire-0.3/pipewire/work-queue.h",
+      "size": 2010,
+      "hash": "jEyg51j4GDTVZGENtydla9OIR3sMt-SNGAJA1UVJzZYC"
+    },
+    {
+      "name": "include/spa-0.2/spa/buffer/alloc.h",
+      "size": 11920,
+      "hash": "FavCkPN6K-51cERtxtF65Q6QB2ny-SeFfPWrPj9RIUYC"
+    },
+    {
+      "name": "include/spa-0.2/spa/buffer/buffer.h",
+      "size": 4463,
+      "hash": "Wt_NlEpcVroihDJ4O5xdV5XLgo3v6YSOjeKnYT-P-SUC"
+    },
+    {
+      "name": "include/spa-0.2/spa/buffer/meta.h",
+      "size": 5827,
+      "hash": "yKUA939p0EXcw_eqLXqkWmPdaNPhm5VVzYxAQP78k7wC"
+    },
+    {
+      "name": "include/spa-0.2/spa/buffer/type-info.h",
+      "size": 3733,
+      "hash": "gGGpwBCvGjs446mBMNPIYvdxnl3aoya0Q8MM2HmWKXgC"
+    },
+    {
+      "name": "include/spa-0.2/spa/control/control.h",
+      "size": 1862,
+      "hash": "qKGjOCWNF3O029NsQG98tPcpnKAZKm4ZmmK_oM9fzBwC"
+    },
+    {
+      "name": "include/spa-0.2/spa/control/type-info.h",
+      "size": 2086,
+      "hash": "OC2SHBVz28Iew9v9BaB8w8Vq6UAJGJ-7IvNIa7R-HeUC"
+    },
+    {
+      "name": "include/spa-0.2/spa/debug/buffer.h",
+      "size": 4654,
+      "hash": "X86qpAPEUH2wKLOFONzeOQksjEXU6ElFy_pB-QormXwC"
+    },
+    {
+      "name": "include/spa-0.2/spa/debug/dict.h",
+      "size": 1761,
+      "hash": "AOgQ9SfMwb6uy6v_7dyw2_B5qIIws-pZioOn40_7NN8C"
+    },
+    {
+      "name": "include/spa-0.2/spa/debug/format.h",
+      "size": 5416,
+      "hash": "it0Kf-jqvyIAc79mpOL3qFfRo47cpdQP--7GcULLLqQC"
+    },
+    {
+      "name": "include/spa-0.2/spa/debug/log.h",
+      "size": 1591,
+      "hash": "9BZiCjKs1mUkeMkzACm2I1pj7rIWARX9ZRRfyhsqmJ4C"
+    },
+    {
+      "name": "include/spa-0.2/spa/debug/mem.h",
+      "size": 1850,
+      "hash": "z_1kNggdoC3Gn3qfbDzE7l2VikugyiSTpbAbbuHwlgkC"
+    },
+    {
+      "name": "include/spa-0.2/spa/debug/node.h",
+      "size": 2018,
+      "hash": "lZlUndCAYXDy79MFa7eYRTbGPoQRzaOC_2siuL-0mVYC"
+    },
+    {
+      "name": "include/spa-0.2/spa/debug/pod.h",
+      "size": 6478,
+      "hash": "BCl4xXqnVM3IVKjzmTqQQIxZ5b1_bkEekL0uPQ-XV9gC"
+    },
+    {
+      "name": "include/spa-0.2/spa/debug/types.h",
+      "size": 3487,
+      "hash": "jn_UIa3r-0TdtrO6uziK74gA_E_CGA9-pfN1F5FHrcAC"
+    },
+    {
+      "name": "include/spa-0.2/spa/graph/graph.h",
+      "size": 10571,
+      "hash": "Ot01soRgZPcrB7IbdLtDfgAp2x7FMR9D41LNqBsegFUC"
+    },
+    {
+      "name": "include/spa-0.2/spa/interfaces/audio/aec.h",
+      "size": 3178,
+      "hash": "MwbAwYKJmUn6ucxd0BAz7nbqOTzj7EGu4JL6OrgBOqAC"
+    },
+    {
+      "name": "include/spa-0.2/spa/monitor/device.h",
+      "size": 10994,
+      "hash": "jlj1yRh_2NKFDK7AnbLCJJY5-Nl2QxLcADmQ8fd3cbkC"
+    },
+    {
+      "name": "include/spa-0.2/spa/monitor/event.h",
+      "size": 1907,
+      "hash": "FeiRORH8ahRVhsvd7xGg0N1WvxAmVbHO53aSy4Uv6h0C"
+    },
+    {
+      "name": "include/spa-0.2/spa/monitor/type-info.h",
+      "size": 2366,
+      "hash": "MEozaFGOFJR6XgSNjF9SD_OapJyaHHuE1Y3WUkjkCMcC"
+    },
+    {
+      "name": "include/spa-0.2/spa/monitor/utils.h",
+      "size": 3388,
+      "hash": "haDfMPdkwL2w4YSbTZlPHbCVqohGC-fp70lYM6Mfr-0C"
+    },
+    {
+      "name": "include/spa-0.2/spa/node/command.h",
+      "size": 2495,
+      "hash": "8D1BWCajlZ9IcldJUkLwEa1fA1hzPR-YzkvL6MIJV0UC"
+    },
+    {
+      "name": "include/spa-0.2/spa/node/event.h",
+      "size": 1895,
+      "hash": "qo5d1YhX2dH3HnuWbGkUFb8II59fc611LlXx8xJkmqQC"
+    },
+    {
+      "name": "include/spa-0.2/spa/node/io.h",
+      "size": 11086,
+      "hash": "OR5tBIeRctXzaN6sByzbgXshQjZ7NxZk5JVwJRf6oFQC"
+    },
+    {
+      "name": "include/spa-0.2/spa/node/keys.h",
+      "size": 2274,
+      "hash": "lZB5KnLGRqS6dSexc-h7eNy4T-RY7s_za8vzV5uFCgsC"
+    },
+    {
+      "name": "include/spa-0.2/spa/node/node.h",
+      "size": 23856,
+      "hash": "CCD4eQobWyWiILQ5f990I-0Rc7WrhnkHEsnvvDKHsc8C"
+    },
+    {
+      "name": "include/spa-0.2/spa/node/type-info.h",
+      "size": 4812,
+      "hash": "fhLvCWPvDcJHVkWzhNlFVsVpYFzoOVoOryEIoQE_8jMC"
+    },
+    {
+      "name": "include/spa-0.2/spa/node/utils.h",
+      "size": 4768,
+      "hash": "6P6-FAVleeUVCRjeZjVDZLrsrEjtezRfMF8kNIG2doUC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/audio/dsd.h",
+      "size": 2583,
+      "hash": "DW6mwMIQ5f11U8lXlODVhWkzrcdQ12EGiYYrDsFQwZ0C"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/audio/format-utils.h",
+      "size": 7080,
+      "hash": "LUNF6T43V_kDv0WXMkc0zu1cEziZUE4Yx383nSjaBZYC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/audio/format.h",
+      "size": 1783,
+      "hash": "m0N8VMJo_RIeq867jg73tmEG_fK8Vn_Mc9rY1JosxRgC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/audio/iec958.h",
+      "size": 2154,
+      "hash": "hTSm2TqeRKL3wKK5ca-wprkZPFKY9mUomu04jiR4vXUC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/audio/layout.h",
+      "size": 9653,
+      "hash": "EmauIANRwxAii9UkWtTGMsmeJY1IRS5jmMFni56mrkIC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/audio/raw.h",
+      "size": 11743,
+      "hash": "ql6iQOQWhQLio4EwNDw4kk_Ufd8uvyZAeZhH5ugpYqoC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/audio/type-info.h",
+      "size": 21640,
+      "hash": "5xOX8TAWraiPxgjHjvFkpkdm-48OmqRLqPoZe7uyt70C"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/bluetooth/audio.h",
+      "size": 2016,
+      "hash": "tMXhoeelOxhkqgXgEapskTnqFcXKPu8NdGXQKCoOWGsC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/bluetooth/type-info.h",
+      "size": 3305,
+      "hash": "_VfHkSE9Et0EC1K7gTaPwQ1JhjSsdhtjCiAwst2IJQsC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/format-utils.h",
+      "size": 1771,
+      "hash": "uh-DLCkHMgK4KMmoFOFllnBcIrH3llXr5I7jWXY1uKcC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/format.h",
+      "size": 5571,
+      "hash": "Vt1_jKgX9AgUxf09B5frCiFDwTzeReSXpdCzzYdjxfcC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/latency-utils.h",
+      "size": 6210,
+      "hash": "gWozEOJs5c1OafcwCktoc_kAOowGgwbZtthKIVyQQ4cC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/param.h",
+      "size": 9024,
+      "hash": "N-WkxIba-_WS9bp9zkK9kZpoNSrgRNnLvH_NZiXzC_8C"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/profiler.h",
+      "size": 3179,
+      "hash": "-Cru8lfAcweir1Pw2LNrw16HUw3nIk9nly_2_I6Ws6oC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/props.h",
+      "size": 4132,
+      "hash": "KGYvZ6VwTkzNpHHJg6Rp1tvmzFKMX50U3d-eIoz3kGUC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/type-info.h",
+      "size": 27061,
+      "hash": "CWZB7rgKSEozNN2ZIaZogdkhQ3SCq_yEJ4opKAAUkvMC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/video/chroma.h",
+      "size": 2367,
+      "hash": "9626WW8Zl_XUpkB9_H0PO2YqTKYI_SfFvutKrW_ZyMAC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/video/color.h",
+      "size": 4992,
+      "hash": "jL2OHqdYb-k6oifB5utCPbr8Rq7Gd-VAyTdvIV58UIoC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/video/encoded.h",
+      "size": 2048,
+      "hash": "jjp1Dm6GkJ8IUJXvpJbpn4NxB5lyWdkrP7b9t5s1jCEC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/video/format-utils.h",
+      "size": 9337,
+      "hash": "-9w9VjT9pQlOcjOT958WKGFM3QkQKbJ3EjvubU0ebxQC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/video/format.h",
+      "size": 1718,
+      "hash": "c6lmOE13hI7cKl4gwm5N7aLlXohITfY_zqTaUT6Tn2QC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/video/multiview.h",
+      "size": 5942,
+      "hash": "V4CrC6U9Vs6FV9X5bby_szliUl1p4mnW3fc2wzBtKAEC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/video/raw.h",
+      "size": 7912,
+      "hash": "7tLmcFo2V9vUF7PQPy46tqGNG2yqSmjEcp_z3pN7-XYC"
+    },
+    {
+      "name": "include/spa-0.2/spa/param/video/type-info.h",
+      "size": 9764,
+      "hash": "-ZSug1lFTCFIryQeR2H_2R25VtnvUt2G-2Bby3vD4i8C"
+    },
+    {
+      "name": "include/spa-0.2/spa/pod/builder.h",
+      "size": 20930,
+      "hash": "mDylH66Lw6FfcBsxYj0EvQ98lUWO1QhkyUDwJDuS8o8C"
+    },
+    {
+      "name": "include/spa-0.2/spa/pod/command.h",
+      "size": 2019,
+      "hash": "4w1sGz0eQueFkTm5Xdd6UVl4q42V0FwHj-CrjvXvPPwC"
+    },
+    {
+      "name": "include/spa-0.2/spa/pod/compare.h",
+      "size": 4936,
+      "hash": "ROttvV9BtzqwGCagMbubZaGCdLqfA6M9pJuFhDiRNK0C"
+    },
+    {
+      "name": "include/spa-0.2/spa/pod/dynamic.h",
+      "size": 2683,
+      "hash": "qFsUPfMUnXat2VYIiiocdWLCU4t6izuR5IodmV79Xz0C"
+    },
+    {
+      "name": "include/spa-0.2/spa/pod/event.h",
+      "size": 1957,
+      "hash": "nJV8faIZUR4UR9S_HfEooEgQA5E1d6YhYaWRPk3o2x0C"
+    },
+    {
+      "name": "include/spa-0.2/spa/pod/filter.h",
+      "size": 11335,
+      "hash": "OgWSav5v1EiiFj6w2k1IFElhkZR8miYSJy19HNhYtKUC"
+    },
+    {
+      "name": "include/spa-0.2/spa/pod/iter.h",
+      "size": 14616,
+      "hash": "I6esIqA8vtzxx1P4FSLq4rdfBQycqI0a6Gi3r3tYuUcC"
+    },
+    {
+      "name": "include/spa-0.2/spa/pod/parser.h",
+      "size": 17150,
+      "hash": "TioxXgyYUBkLRxyUpqRuaz1fsMj_A5_ryum6WHEC5JYC"
+    },
+    {
+      "name": "include/spa-0.2/spa/pod/pod.h",
+      "size": 7371,
+      "hash": "JLhxb1mTYPPLVRwXZrseXXTphIXbuIQ_ai_z9Zqq24cC"
+    },
+    {
+      "name": "include/spa-0.2/spa/pod/vararg.h",
+      "size": 4653,
+      "hash": "2kC1MiUHqeNeg-yZWUMc2WjsSu6u0TwrVsoYrIunqCsC"
+    },
+    {
+      "name": "include/spa-0.2/spa/support/cpu.h",
+      "size": 5728,
+      "hash": "Uk41RJksGVEAB9kzs0TO79-PAiEabIYbJfm1_UyxY2oC"
+    },
+    {
+      "name": "include/spa-0.2/spa/support/dbus.h",
+      "size": 4931,
+      "hash": "Ig5KQqkiTc2SZ5j5hI7DtqVcTeHrL94MRMEJgxBSyGQC"
+    },
+    {
+      "name": "include/spa-0.2/spa/support/i18n.h",
+      "size": 3016,
+      "hash": "HEYISA7i8ST3UCZP-9bzzEh7FWyTV7jiAPCsVhR2NiQC"
+    },
+    {
+      "name": "include/spa-0.2/spa/support/log-impl.h",
+      "size": 3980,
+      "hash": "YQzdVAf2sN4AdJ3JQneL5dWzU3gHScd88NrqqUT0Lv0C"
+    },
+    {
+      "name": "include/spa-0.2/spa/support/log.h",
+      "size": 9857,
+      "hash": "e9vt8kk-EF0oho4Sf3qkPUOR6JCUZXTJry0kTRTT1U8C"
+    },
+    {
+      "name": "include/spa-0.2/spa/support/loop.h",
+      "size": 10742,
+      "hash": "x5gy6-kK54mqDq4ibIzdv-DGqPcyP03cKiCKf0F4QkYC"
+    },
+    {
+      "name": "include/spa-0.2/spa/support/plugin-loader.h",
+      "size": 2957,
+      "hash": "ft5RK0pTWQWM0duQllfg2qclvKOmmYwmjyfy5ADuRrEC"
+    },
+    {
+      "name": "include/spa-0.2/spa/support/plugin.h",
+      "size": 7280,
+      "hash": "vLVxiQNf07qBz6KiMU78RCm1xM9iQBqtTxwPe4CvrLMC"
+    },
+    {
+      "name": "include/spa-0.2/spa/support/system.h",
+      "size": 5883,
+      "hash": "3qVRumXB8QPUJ-AZoG4rOw6p_ZpAyItJX-DoQTvmI8IC"
+    },
+    {
+      "name": "include/spa-0.2/spa/support/thread.h",
+      "size": 4756,
+      "hash": "vfmZL9jjfKTwtVHUrpXrVmQ9Acs2PzLEiJq2EISS8M8C"
+    },
+    {
+      "name": "include/spa-0.2/spa/utils/ansi.h",
+      "size": 3813,
+      "hash": "fFbA9f2Ah5yVo93Xmq3EKaA_-t3GwTHCe-3pKHfD3p8C"
+    },
+    {
+      "name": "include/spa-0.2/spa/utils/defs.h",
+      "size": 10192,
+      "hash": "Cg36gLu43TJYJKAh8tUaM4-9mext82NxsJtbl4Izsr4C"
+    },
+    {
+      "name": "include/spa-0.2/spa/utils/dict.h",
+      "size": 3387,
+      "hash": "SfoXfAlgDnSFYm2ayPebTPsZHueqf4Qv9gS1rmVIVTwC"
+    },
+    {
+      "name": "include/spa-0.2/spa/utils/dll.h",
+      "size": 2070,
+      "hash": "afu-GmxxOnPVN5JaFsn31Z8VTeipn4zK2CUWQ20uGsAC"
+    },
+    {
+      "name": "include/spa-0.2/spa/utils/hook.h",
+      "size": 14909,
+      "hash": "ogH49JjeFd2i0QGhn9ICNmSAjVsWmyTHvtgkVNxYcfQC"
+    },
+    {
+      "name": "include/spa-0.2/spa/utils/json-pod.h",
+      "size": 4936,
+      "hash": "zvB-eGlseR8L4l1UFJPtOEDiK2lSRKCUQR2wG4DV1N4C"
+    },
+    {
+      "name": "include/spa-0.2/spa/utils/json.h",
+      "size": 11357,
+      "hash": "nxLeRPfASTDH8VWIFmy7N33Lm6Ou9viZuIFgIXl-87wC"
+    },
+    {
+      "name": "include/spa-0.2/spa/utils/keys.h",
+      "size": 7249,
+      "hash": "vL4YwOkatwTCMTd-LTqp0ZKsfzSjmMo7iDflx0KGTYcC"
+    },
+    {
+      "name": "include/spa-0.2/spa/utils/list.h",
+      "size": 5145,
+      "hash": "x2G-PAaVSX4hCGNHAjbosLLHMI86ptBqW_ij8WK8De8C"
+    },
+    {
+      "name": "include/spa-0.2/spa/utils/names.h",
+      "size": 7402,
+      "hash": "K2TSNgdeRthzXfJV12txZsQ2gY2URef-g10CidgcOvgC"
+    },
+    {
+      "name": "include/spa-0.2/spa/utils/result.h",
+      "size": 2123,
+      "hash": "2gFKJItdfEaHZj7vNz3meh53Amw1_HoZ71t0y6IXX1kC"
+    },
+    {
+      "name": "include/spa-0.2/spa/utils/ringbuffer.h",
+      "size": 5690,
+      "hash": "7UKvgSMJl-FU8mE1AzhsH9gWLDk2KfIrCvnie03J0TsC"
+    },
+    {
+      "name": "include/spa-0.2/spa/utils/string.h",
+      "size": 8651,
+      "hash": "OtOX_jsuqlZhiHIknI7iSippAUasM0ePW_eLusuuVokC"
+    },
+    {
+      "name": "include/spa-0.2/spa/utils/type-info.h",
+      "size": 6609,
+      "hash": "GC0wG4fYu-nuc7mX99cfwSdVcNBY5da3OIGnOWBvsuYC"
+    },
+    {
+      "name": "include/spa-0.2/spa/utils/type.h",
+      "size": 4212,
+      "hash": "APu3otQMazL9EnbuqcHY3e9BnSJUQiewNp59JqkLB1wC"
+    },
+    {
+      "name": "lib64/libpipewire-0.3.so",
+      "size": 0,
+      "symlink": "libpipewire-0.3.so.0"
+    },
+    {
+      "name": "lib64/libpipewire-0.3.so.0",
+      "size": 0,
+      "symlink": "libpipewire-0.3.so.0.356.0"
+    },
+    {
+      "name": "lib64/libpipewire-0.3.so.0.356.0",
+      "size": 2046112,
+      "executable": true,
+      "hash": "tIdgY8DgbYi6BHJZ1fgGLI5zH_I1GxYlAXk33vHBNbMC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/jack/libjack.so",
+      "size": 0,
+      "symlink": "libjack.so.0"
+    },
+    {
+      "name": "lib64/pipewire-0.3/jack/libjack.so.0",
+      "size": 0,
+      "symlink": "libjack.so.0.356.0"
+    },
+    {
+      "name": "lib64/pipewire-0.3/jack/libjack.so.0.356.0",
+      "size": 287512,
+      "executable": true,
+      "hash": "M0cHpHcu3JX0DYrqQIDzIJ9HuMO5d0TX0DmkRkSGzUsC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/jack/libjacknet.so",
+      "size": 0,
+      "symlink": "libjacknet.so.0"
+    },
+    {
+      "name": "lib64/pipewire-0.3/jack/libjacknet.so.0",
+      "size": 0,
+      "symlink": "libjacknet.so.0.356.0"
+    },
+    {
+      "name": "lib64/pipewire-0.3/jack/libjacknet.so.0.356.0",
+      "size": 16640,
+      "executable": true,
+      "hash": "OssHZ6JjQIUmv5B_7gdmzk-2TMsTNHpbyxDbuqCuzvkC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/jack/libjackserver.so",
+      "size": 0,
+      "symlink": "libjackserver.so.0"
+    },
+    {
+      "name": "lib64/pipewire-0.3/jack/libjackserver.so.0",
+      "size": 0,
+      "symlink": "libjackserver.so.0.356.0"
+    },
+    {
+      "name": "lib64/pipewire-0.3/jack/libjackserver.so.0.356.0",
+      "size": 307624,
+      "executable": true,
+      "hash": "twNiTxEcD3jAdB-87MvgicO51c-sJ8QLVJbmnnWeIB8C"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-access.so",
+      "size": 81944,
+      "executable": true,
+      "hash": "ukmXet0lC3KNY37QUB0ykZebUwV_PBuc31Kh7lPga1UC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-adapter.so",
+      "size": 182280,
+      "executable": true,
+      "hash": "pCqA2YEWLjogCMToMM8GA9qDHnzs3Kw7jFqTzhMbepkC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-client-device.so",
+      "size": 112760,
+      "executable": true,
+      "hash": "E6gHJ8yks8Ct8cx3oXMOUZTBVzWQbiar75GuxkSygwQC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-client-node.so",
+      "size": 569984,
+      "executable": true,
+      "hash": "v2ir7i-Jtk0LiaCrjLqxKdCo2l--eQCeeEW6jJuM3pMC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-echo-cancel.so",
+      "size": 120072,
+      "executable": true,
+      "hash": "qSGNI4_IiKn1sQn-o3iW0WwpxFL0yV9orfNYCFRqA5AC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-fallback-sink.so",
+      "size": 23048,
+      "executable": true,
+      "hash": "jta56afLCJ9T83NxqyZUngVYm1eIM6BZ06L3l9WdPJMC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-filter-chain.so",
+      "size": 242720,
+      "executable": true,
+      "hash": "d7Pp3kbSsuBWVrE0YB19GybFW_6WK-Otd1CRJAsDJ6UC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-link-factory.so",
+      "size": 28736,
+      "executable": true,
+      "hash": "xinw5qkgeD-YMy6px7b2ugi4e_vXHj-LYNqWIqMgHrQC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-loopback.so",
+      "size": 102696,
+      "executable": true,
+      "hash": "4DXG0l1clqs6-2ANyFCIDVUoztvliVCZJnYSv6d62PYC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-metadata.so",
+      "size": 55352,
+      "executable": true,
+      "hash": "hcjH3weJlFYDTc0sFQujbFEzHdsGhSalSrzfgu4Lu6AC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-pipe-tunnel.so",
+      "size": 93200,
+      "executable": true,
+      "hash": "fNJIGZR99Qya2veRCcwdhndphdK0xVS5Hbg9uLoodXoC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-portal.so",
+      "size": 74240,
+      "executable": true,
+      "hash": "2QmLY1IUMyXWYSeREOb4WJmQqfFfgrmbMN6tkjjBM3sC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-profiler.so",
+      "size": 107392,
+      "executable": true,
+      "hash": "Zjo_uCpsjKOoo1kun9tUR2cbEAs8mRybH-xJRAS8wT0C"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-protocol-native.so",
+      "size": 446688,
+      "executable": true,
+      "hash": "kkz-YeSFkUOY945aQNyhU7fj09dkgCPn7uzvHgFvkb0C"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-protocol-pulse.so",
+      "size": 2308984,
+      "executable": true,
+      "hash": "NqF5eqnD7y_wMZ5ephWBt-Aml1T72RGTStf0Pfu60RQC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-protocol-simple.so",
+      "size": 102496,
+      "executable": true,
+      "hash": "hv5X0fw-QWquaI2Ca9Qc7WIa8cORqoVpANjTP9LjyskC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-rt.so",
+      "size": 37600,
+      "executable": true,
+      "hash": "4uSc8kqgZ_EJjIQBwAte3BbyES1LMO59W9Y-Yv-q2wgC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-rtkit.so",
+      "size": 37600,
+      "executable": true,
+      "hash": "ox3Rmyhsg-sBXtMZXRVR5dsr3SZoZYW7X_0Jv02nkc4C"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-session-manager.so",
+      "size": 284792,
+      "executable": true,
+      "hash": "c8ti72AmmQ8YGMVuCCbzL0U0bb_fXKrWPtQYIPNELyQC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-spa-device-factory.so",
+      "size": 74472,
+      "executable": true,
+      "hash": "kMTMKiZZjwnileeUdPN9vdcIfGPZflQVFZCJ7nwJofAC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-spa-device.so",
+      "size": 68784,
+      "executable": true,
+      "hash": "xYQJZxmHmwx2DVwkor6GAgyr9cwBV2vKmgisjh1qCpwC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-spa-node-factory.so",
+      "size": 88880,
+      "executable": true,
+      "hash": "Dx3ieYgHoMbsQmVnhPQguCZPwrtbVE7krPSPDvE5JhcC"
+    },
+    {
+      "name": "lib64/pipewire-0.3/libpipewire-module-spa-node.so",
+      "size": 79112,
+      "executable": true,
+      "hash": "fkF0PY8pJi5MenNNfWMY80EfJ0iPnoByq1Gu4f1nx2kC"
+    },
+    {
+      "name": "lib64/pkgconfig/libpipewire-0.3.pc",
+      "size": 282,
+      "hash": "VtUJ4skZch1rV40C15w-DreLj8E910NnOFS5ZYSv1gkC"
+    },
+    {
+      "name": "lib64/pkgconfig/libspa-0.2.pc",
+      "size": 209,
+      "hash": "nPZzdgKru7-ypIyufUxV47ZGsogacGh6FyqpYR5qIq0C"
+    },
+    {
+      "name": "lib64/spa-0.2/aec/libspa-aec-null.so",
+      "size": 16992,
+      "executable": true,
+      "hash": "W9SfGaQNyAjGLZXFCGSSZweNoxjMNCl9qvtsTvrsK7gC"
+    },
+    {
+      "name": "lib64/spa-0.2/audioconvert/libspa-audioconvert.so",
+      "size": 500744,
+      "executable": true,
+      "hash": "Wzq_U5gtq8sHYTz-AkCwOIdBYUw1k_Z7x5qFASgCSt8C"
+    },
+    {
+      "name": "lib64/spa-0.2/audiomixer/libspa-audiomixer.so",
+      "size": 118168,
+      "executable": true,
+      "hash": "-wfOXwOXXQuZF7wNrYCYjxDE_bR6liGsXne9hoiPR7kC"
+    },
+    {
+      "name": "lib64/spa-0.2/control/libspa-control.so",
+      "size": 59448,
+      "executable": true,
+      "hash": "BMDfjEBRnsQPdTr2VBaGuXNtEXsef_apq9a6sNiIU88C"
+    },
+    {
+      "name": "lib64/spa-0.2/support/libspa-dbus.so",
+      "size": 32664,
+      "executable": true,
+      "hash": "6ABVLAkkcbMO2VWY_wTw-R3cIWq1Epjei2vqY17yIiIC"
+    },
+    {
+      "name": "lib64/spa-0.2/support/libspa-support.so",
+      "size": 208040,
+      "executable": true,
+      "hash": "JsGMPKYPO6jt9kRO0OJc5qVN158cQeoKixO5DHgmDqYC"
+    },
+    {
+      "name": "lib64/spa-0.2/videoconvert/libspa-videoconvert.so",
+      "size": 123880,
+      "executable": true,
+      "hash": "jEAlm53J82Xk2HtTNER4DSu5hq8dFwRySvCLBt7rMfoC"
+    },
+    {
+      "name": "share/locale/af/LC_MESSAGES/pipewire.mo",
+      "size": 4596,
+      "hash": "TRfMKy7Yn7tpQ8IDC6sUVbMG_boPPOj8mj1yN3tjVXgC"
+    },
+    {
+      "name": "share/locale/as/LC_MESSAGES/pipewire.mo",
+      "size": 4169,
+      "hash": "ENiM0Ig7MBoRCgb9eEgGOYyusx1OPGsnvLxJk4KANP0C"
+    },
+    {
+      "name": "share/locale/be/LC_MESSAGES/pipewire.mo",
+      "size": 6133,
+      "hash": "CwKLa4nduTGuyI1YfhC0sDABdbKgy657P7ymylCoBlsC"
+    },
+    {
+      "name": "share/locale/bg/LC_MESSAGES/pipewire.mo",
+      "size": 580,
+      "hash": "5eecGPHNiIn5SPRf0GIqbphyZBGjqzn8WuUAU7nqBnEC"
+    },
+    {
+      "name": "share/locale/bn_IN/LC_MESSAGES/pipewire.mo",
+      "size": 4441,
+      "hash": "Inzr-8JPIe8ec1QD7NJOKSnEpCeyv6nCzqCsTY-Q3c8C"
+    },
+    {
+      "name": "share/locale/ca/LC_MESSAGES/pipewire.mo",
+      "size": 4677,
+      "hash": "Sp5jn98XIuOnFzAFvBIe-efqweu6dKVj3JAk9HN1s2wC"
+    },
+    {
+      "name": "share/locale/cs/LC_MESSAGES/pipewire.mo",
+      "size": 14883,
+      "hash": "nDYL-T2q_v_kVbVqqp31bXre5YWl2jn-nuBUB-JA7-kC"
+    },
+    {
+      "name": "share/locale/da/LC_MESSAGES/pipewire.mo",
+      "size": 13406,
+      "hash": "HxwpNOnv4BP2bWNokGbtXXQNe_adCH3YH3PGMVRD2-EC"
+    },
+    {
+      "name": "share/locale/de/LC_MESSAGES/pipewire.mo",
+      "size": 5013,
+      "hash": "8X4qIOd74BehyN5ROUDyKLjqG0lNVUTkGfTczLPsrq8C"
+    },
+    {
+      "name": "share/locale/de_CH/LC_MESSAGES/pipewire.mo",
+      "size": 1482,
+      "hash": "Jh-TxMv8QAzmo3OUqaB1kG-8tF7keeja7qC3lfUrq3sC"
+    },
+    {
+      "name": "share/locale/el/LC_MESSAGES/pipewire.mo",
+      "size": 6381,
+      "hash": "hsObL-P-auK0v6Z9jwUfwjC6wJohYiiKN5mYnfPPGIgC"
+    },
+    {
+      "name": "share/locale/eo/LC_MESSAGES/pipewire.mo",
+      "size": 4734,
+      "hash": "nqLgQFRZJh5_EfEhv1rol8lbjgbkh36lx8AGFdXEXzMC"
+    },
+    {
+      "name": "share/locale/es/LC_MESSAGES/pipewire.mo",
+      "size": 5065,
+      "hash": "tPwtBqazl2PKIlxCW5hy8fWIn6jG737W7ZvUQB2flBcC"
+    },
+    {
+      "name": "share/locale/fi/LC_MESSAGES/pipewire.mo",
+      "size": 13928,
+      "hash": "D0nfJbrCklG5h5GwA9hEvVQXjPTsh2rfEzIhHOdVPcYC"
+    },
+    {
+      "name": "share/locale/fr/LC_MESSAGES/pipewire.mo",
+      "size": 4989,
+      "hash": "EHgfnlgwdvZcMpWcmha1PuZPUhwk9hKikRZnJvp52OEC"
+    },
+    {
+      "name": "share/locale/gl/LC_MESSAGES/pipewire.mo",
+      "size": 7871,
+      "hash": "TSuYb1InX2BHg8r5_NdEfJgnTv5jEuYp9U-6JKnXsLUC"
+    },
+    {
+      "name": "share/locale/gu/LC_MESSAGES/pipewire.mo",
+      "size": 3888,
+      "hash": "jVqIBLutj29F8aNkqldDwlXER3ztRieHNbiEnnM_gXsC"
+    },
+    {
+      "name": "share/locale/he/LC_MESSAGES/pipewire.mo",
+      "size": 5385,
+      "hash": "1AvWKHF0Vnr3Hf7TsFqa-huILc8mHwG_EDXwAgRktZwC"
+    },
+    {
+      "name": "share/locale/hi/LC_MESSAGES/pipewire.mo",
+      "size": 4161,
+      "hash": "qckH5BLZGpxjQLpc8B414G_PMX-MITGqFWe-CzbSGBgC"
+    },
+    {
+      "name": "share/locale/hr/LC_MESSAGES/pipewire.mo",
+      "size": 14585,
+      "hash": "yXKlR-Nnj9ZjJxA0A3qHbTRSmDSIOoAFce81xw0js7QC"
+    },
+    {
+      "name": "share/locale/hu/LC_MESSAGES/pipewire.mo",
+      "size": 5298,
+      "hash": "13MEJYa0wZeh1p_Rip3kvfCMNSUzaNaGxO6pTTeMzXQC"
+    },
+    {
+      "name": "share/locale/id/LC_MESSAGES/pipewire.mo",
+      "size": 13551,
+      "hash": "ybDxaTBjszgsqfUqxmwsr1018vjvGK0Jxlg6w8SIMVoC"
+    },
+    {
+      "name": "share/locale/it/LC_MESSAGES/pipewire.mo",
+      "size": 8820,
+      "hash": "rGLcNxFtImzEfWbnViWPifUDY4zJpDzzoC5-e-CjZEIC"
+    },
+    {
+      "name": "share/locale/ja/LC_MESSAGES/pipewire.mo",
+      "size": 5331,
+      "hash": "jlD712vjappKNY-rrRU2C4fkzVgasa-5G6aZqwnYBuoC"
+    },
+    {
+      "name": "share/locale/kk/LC_MESSAGES/pipewire.mo",
+      "size": 5694,
+      "hash": "g3crtAiS4ZVz5o5AQm5mNxMmEUljgiTCo2y-hI9y-jwC"
+    },
+    {
+      "name": "share/locale/kn/LC_MESSAGES/pipewire.mo",
+      "size": 4284,
+      "hash": "nM-uCr1ZffDG2DsY25xo7yVA5k1X452lEF-TBabjumUC"
+    },
+    {
+      "name": "share/locale/ko/LC_MESSAGES/pipewire.mo",
+      "size": 4656,
+      "hash": "5XNkJYesPjKml7hKR4YA2FdRn1iZ6Fc-g0icrM5fgyUC"
+    },
+    {
+      "name": "share/locale/lt/LC_MESSAGES/pipewire.mo",
+      "size": 8340,
+      "hash": "TxZC6YNLTgE9HbXXQZUMQAUsehgTHsxgC1aBJ4sJ5LkC"
+    },
+    {
+      "name": "share/locale/ml/LC_MESSAGES/pipewire.mo",
+      "size": 4454,
+      "hash": "fK-qGhA4EBuez-u7PeJMR16X3e2NH9VN2vr9tIOq-6sC"
+    },
+    {
+      "name": "share/locale/mr/LC_MESSAGES/pipewire.mo",
+      "size": 4078,
+      "hash": "MO4WejPcMkZcrJo6epa1wqNdIg_9qDTEjEl_J5m6k1IC"
+    },
+    {
+      "name": "share/locale/my/LC_MESSAGES/pipewire.mo",
+      "size": 10104,
+      "hash": "eL-1CPrsXRpe9FVUTb8pK04MRcVcBvxrgLesJv3an0EC"
+    },
+    {
+      "name": "share/locale/nl/LC_MESSAGES/pipewire.mo",
+      "size": 5391,
+      "hash": "Pv99WMpjKwQ7QbZ747OkJAkbRmjleDuoUZu2I6Zl8_QC"
+    },
+    {
+      "name": "share/locale/nn/LC_MESSAGES/pipewire.mo",
+      "size": 13068,
+      "hash": "vlS55An1jQh60Csx4Z1IdYSBea37KpRfoXawwc3I3FAC"
+    },
+    {
+      "name": "share/locale/oc/LC_MESSAGES/pipewire.mo",
+      "size": 4837,
+      "hash": "I51O9eRCOduSg7dV2o1hlTDS62hu4K1GQgsDV1AvtEsC"
+    },
+    {
+      "name": "share/locale/or/LC_MESSAGES/pipewire.mo",
+      "size": 4360,
+      "hash": "Cfo5XWZ9aHZgmnkpRXc5KeBVfasZiIyLRtG0R553VTUC"
+    },
+    {
+      "name": "share/locale/pa/LC_MESSAGES/pipewire.mo",
+      "size": 4005,
+      "hash": "cLnAQTAXa8zkO7jf7WSWLhitDJ58vA7MjNQtM7eujTwC"
+    },
+    {
+      "name": "share/locale/pl/LC_MESSAGES/pipewire.mo",
+      "size": 15149,
+      "hash": "rhywNo5E0KKs2UaZVOehihjUUtor2TW9AB3ucEDvUL8C"
+    },
+    {
+      "name": "share/locale/pt/LC_MESSAGES/pipewire.mo",
+      "size": 14021,
+      "hash": "uexMsGbmxhiLksf18iEGL-wTcdns8VhFZgCTgwwbaDcC"
+    },
+    {
+      "name": "share/locale/pt_BR/LC_MESSAGES/pipewire.mo",
+      "size": 14325,
+      "hash": "qobTPFyqK_5WcOnhvi2F5T-N0gGiedfZwq15r0WzUW0C"
+    },
+    {
+      "name": "share/locale/ro/LC_MESSAGES/pipewire.mo",
+      "size": 14687,
+      "hash": "pkTUSLfV1v1enV300rHrO1vAjzQOeMl7iEgGi-367O0C"
+    },
+    {
+      "name": "share/locale/ru/LC_MESSAGES/pipewire.mo",
+      "size": 18244,
+      "hash": "arSWvzM3l3hx8kBRZvmfKL_D_UkrMbShxnZCz-kZvHcC"
+    },
+    {
+      "name": "share/locale/si/LC_MESSAGES/pipewire.mo",
+      "size": 454,
+      "hash": "J06lX3qYheO9FeWdQz-QdvcQz7fGCrld6lb_-waafOkC"
+    },
+    {
+      "name": "share/locale/sk/LC_MESSAGES/pipewire.mo",
+      "size": 4807,
+      "hash": "fktn_mGznQADyVYDVmK4Int7wksaKfdMXs35iIsgSjYC"
+    },
+    {
+      "name": "share/locale/sr/LC_MESSAGES/pipewire.mo",
+      "size": 3787,
+      "hash": "NF2T6-OBFwm15PBFTNvsP8VV7PVuSSRUWuGqgtVRnV8C"
+    },
+    {
+      "name": "share/locale/sr@latin/LC_MESSAGES/pipewire.mo",
+      "size": 3170,
+      "hash": "TLzsx5WC9Mst4VgbPEj0f0DqAKvThnoPjVgBsW5wJZEC"
+    },
+    {
+      "name": "share/locale/sv/LC_MESSAGES/pipewire.mo",
+      "size": 13900,
+      "hash": "MyqtMLPYkHqKYhWts965Wq9B5gn-ul5i-CW5zmwO13AC"
+    },
+    {
+      "name": "share/locale/ta/LC_MESSAGES/pipewire.mo",
+      "size": 3766,
+      "hash": "r58FzpaBtM8hQ1aFCyFXKnyDjM39bNj2RLp083p5yUYC"
+    },
+    {
+      "name": "share/locale/te/LC_MESSAGES/pipewire.mo",
+      "size": 4204,
+      "hash": "zSjv3hGDlkS7v9q4Ep4gjEsPZ0lvizYrivpssi5QUnQC"
+    },
+    {
+      "name": "share/locale/tr/LC_MESSAGES/pipewire.mo",
+      "size": 13558,
+      "hash": "GDSTDhjMhuiTH-5iUUIYABGunXNHHmdPvfrBobwQBHwC"
+    },
+    {
+      "name": "share/locale/uk/LC_MESSAGES/pipewire.mo",
+      "size": 18580,
+      "hash": "UwhtBAI_rKrQKjWkeNNAXHMViHNcxW7lDtgLyjvS4_gC"
+    },
+    {
+      "name": "share/locale/zh_CN/LC_MESSAGES/pipewire.mo",
+      "size": 12784,
+      "hash": "3C0zXdgDlDFqYLLwV2a57prmyRn1IwMYgLbUy8RpQpQC"
+    },
+    {
+      "name": "share/locale/zh_TW/LC_MESSAGES/pipewire.mo",
+      "size": 6696,
+      "hash": "UgeKbHp51a_8nCKiWUjzgcjrYAcUn1osoSwIjJC8hxgC"
+    },
+    {
+      "name": "share/pipewire/client-rt.conf",
+      "size": 2914,
+      "hash": "NSs3RUugTks22wN8n2BxLjNyE6eb8Vdu5Ucme7dIfJYC"
+    },
+    {
+      "name": "share/pipewire/client.conf",
+      "size": 2633,
+      "hash": "UOTwDP2CZs9iYmZwizk8kNsllCspEBlvWxoiEtFpkEMC"
+    },
+    {
+      "name": "share/pipewire/filter-chain.conf",
+      "size": 1876,
+      "hash": "2I2oeOhzPLR70Z8G_8fnQ8HQrvYZrUC_KwVmwt0gOYkC"
+    },
+    {
+      "name": "share/pipewire/filter-chain/demonic.conf",
+      "size": 2197,
+      "hash": "brsBFC5Q4fSFCLvpsQuKU-RinYMYMlbqPqCMAhtJjZkC"
+    },
+    {
+      "name": "share/pipewire/filter-chain/sink-dolby-surround.conf",
+      "size": 1577,
+      "hash": "ZHW37JTJYm1rHG5AK1wGUJ5pUyrCkSD9sneYcZBkIOMC"
+    },
+    {
+      "name": "share/pipewire/filter-chain/sink-eq6.conf",
+      "size": 2604,
+      "hash": "iqD8qK2yV72AWUWrx3cpiLRFS_oe7ylNjgrlzYJ5FYUC"
+    },
+    {
+      "name": "share/pipewire/filter-chain/sink-make-LFE.conf",
+      "size": 2114,
+      "hash": "vLda1tTZLDF-3bBzDcBFyJIlBbo6t-BEjgNvcp-yXtwC"
+    },
+    {
+      "name": "share/pipewire/filter-chain/sink-matrix-spatialiser.conf",
+      "size": 1305,
+      "hash": "4JLo2vYU68uVKyFM2WUWXpXaWtfvjCKXp5CKX0lkxP4C"
+    },
+    {
+      "name": "share/pipewire/filter-chain/sink-mix-FL-FR.conf",
+      "size": 1318,
+      "hash": "augbMT8ElZ2s2xrdZHicbOWgydlcyNK9WrtGH3IPQ1AC"
+    },
+    {
+      "name": "share/pipewire/filter-chain/sink-virtual-surround-5.1-kemar.conf",
+      "size": 6794,
+      "hash": "1aWBxQRmotArM2TUO6Tk2GzPUbU0muXolbeZ3c0OJwwC"
+    },
+    {
+      "name": "share/pipewire/filter-chain/sink-virtual-surround-7.1-hesuvi.conf",
+      "size": 6409,
+      "hash": "n5TuZbmdhZLXsuFbxQatPlV4OkKj_g966y3cOjwqynIC"
+    },
+    {
+      "name": "share/pipewire/filter-chain/source-duplicate-FL.conf",
+      "size": 1780,
+      "hash": "qonZ1s1DttovSJ-63HXAXnJ4DcghFYDEKiyEVCWqdmcC"
+    },
+    {
+      "name": "share/pipewire/filter-chain/source-rnnoise.conf",
+      "size": 1078,
+      "hash": "RbKD8fDQ7Tz4XSuV9QZGxDsY2skFM-GryzEcyOpbk1AC"
+    },
+    {
+      "name": "share/pipewire/jack.conf",
+      "size": 3211,
+      "hash": "HuLuNAaBFKcRTgYqYo29yIizV2IOMnAkLipaxKBeSPQC"
+    },
+    {
+      "name": "share/pipewire/minimal.conf",
+      "size": 12919,
+      "hash": "8TO7PwheSVaS65Wed1uJXlPJ1EcaAYegdBYr-ezxf-QC"
+    },
+    {
+      "name": "share/pipewire/pipewire-avb.conf",
+      "size": 2052,
+      "hash": "w1xMGp-sJDLOg5njzR7odWqUjSo7aaDO9_RSv0zKyPYC"
+    },
+    {
+      "name": "share/pipewire/pipewire-pulse.conf",
+      "size": 5062,
+      "hash": "Xcu8AoXCpqGDZE-_LJkC6hIRmxCWwTf65s-oelRhY0sC"
+    },
+    {
+      "name": "share/pipewire/pipewire.conf",
+      "size": 9546,
+      "hash": "fD7TvAp83VCvm-mh8BGHNi4WuC-0Ec4imLCpdnJMpCkC"
+    }
+  ]
+}

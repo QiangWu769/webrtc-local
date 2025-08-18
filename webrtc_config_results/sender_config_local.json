@@ -1,0 +1,26 @@
+{
+  "video_source": {
+    "camera": {"enabled": false},
+    "video_file": {
+      "enabled": true,
+      "file_path": "/home/wuq/webrtc-checkout/VCD_th_1920x1080_30_120s_compressed.yuv",
+      "width": 1920, "height": 1080, "fps": 30
+    },
+    "video_disabled": {"enabled": false}
+  },
+  "video_output": {
+    "enabled": false
+  },
+  "logging": {
+    "level": "info", "save_to_file": true,
+    "log_output_path": "/home/wuq/webrtc-checkout/webrtc_config_results/sender_local.log"
+  },
+  "server": {
+    "host": "110.42.33.160",
+    "port": 8888,
+    "auto_connect": true,
+    "auto_call": true
+  },
+  "auto_close_on_completion": true,
+  "transmission_time_seconds": 15
+}

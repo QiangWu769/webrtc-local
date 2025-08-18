@@ -1,0 +1,9 @@
+(field_trial.cc:140): Setting field trial string:
+(main_wnd.cc:276): SwitchToConnectUI
+(conductor.cc:268): 🎬 Professional video writer initialized: /home/wuq/webrtc-checkout/alphartc_config_results/output_video.y4m (640x480 @ 30fps)
+(peer_connection_client.cc:298): Headers received
+(peer_connection_client.cc:474): OnClose
+(conductor.cc:487): OnPeerConnected
+(conductor.cc:473): OnSignedIn
+(main_wnd.cc:332): SwitchToPeerList
+(conductor.cc:764): SEND_MESSAGE_TO_PEER
