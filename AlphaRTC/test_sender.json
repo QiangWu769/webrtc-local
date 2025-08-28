@@ -1,0 +1,36 @@
+{
+    "bwe_feedback_duration": 200,
+    "onnx": {
+        "onnx_model_path": "examples/peerconnection/serverless/corpus/onnx-model.onnx"
+    },
+    "video_source": {
+        "video_disabled": {
+            "enabled": false
+        },
+        "webcam": {
+            "enabled": false
+        },
+        "video_file": {
+            "enabled": true,
+            "height": 720,
+            "width": 1280,
+            "fps": 30,
+            "file_path": "/home/wuq/webrtc-checkout/test_video.yuv"
+        }
+    },
+    "audio_source": {
+        "microphone": {
+            "enabled": false
+        },
+        "audio_file": {
+            "enabled": false,
+            "file_path": ""
+        }
+    },
+    "save_to_file": {
+        "enabled": false
+    },
+    "logging": {
+        "enabled": false
+    }
+}

@@ -1,0 +1,43 @@
+# Enhanced WebRTC Client Network Test Configuration
+# 增强版WebRTC客户端网络测试配置文件
+
+# WebRTC构建目录 - 包含编译好的可执行文件
+webrtc_build_dir: /home/wuq/webrtc-checkout/src/out/Default
+
+# 测试结果保存目录
+results_dir: ./enhanced_test_results
+
+# 测试持续时间（秒）
+duration: 60
+
+# 信令服务器配置
+signaling_server_ip: localhost
+signaling_server_port: 8888
+
+# 视频配置
+video:
+  # 视频分辨率
+  width: 640
+  height: 480
+  
+  # 帧率
+  fps: 30
+  
+  # 视频文件路径（发送端使用）
+  # 支持 .yuv 和 .y4m 格式
+  # 如果文件不存在或太小，将使用摄像头/假视频生成器
+  file_path: /home/wuq/webrtc-checkout/test_video.yuv
+  
+  # 是否循环播放视频文件
+  loop: false
+
+# 高级设置（可选）
+advanced:
+  # 是否启用详细日志
+  verbose_logging: true
+  
+  # 自动关闭设置
+  auto_close_on_completion: true
+  
+  # 检查间隔（秒）
+  status_check_interval: 5

@@ -1,0 +1,41 @@
+{
+  "video_source": {
+    "camera": {
+      "enabled": false
+    },
+    "video_file": {
+      "enabled": true,
+      "file_path": "/home/wuq/webrtc-checkout/test_video.yuv",
+      "width": 640,
+      "height": 480,
+      "fps": 30
+    },
+    "video_disabled": {
+      "enabled": false
+    }
+  },
+  
+  "video_output": {
+    "enabled": true,
+    "file_path": "/home/wuq/webrtc-checkout/src/output_video.yuv",
+    "width": 640,
+    "height": 480,
+    "fps": 30
+  },
+  
+  "logging": {
+    "level": "info",
+    "save_to_file": true,
+    "log_output_path": "/home/wuq/webrtc-checkout/src/sender_webrtc.log"
+  },
+  
+  "auto_close_on_completion": true,
+  "transmission_time_seconds": 20,
+  
+  "server": {
+    "host": "localhost",
+    "port": 8888,
+    "auto_connect": true,
+    "auto_call": true
+  }
+}

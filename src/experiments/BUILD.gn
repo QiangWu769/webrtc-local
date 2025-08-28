@@ -1,0 +1,12 @@
+import("../webrtc.gni")
+
+rtc_library("registered_field_trials") {
+  sources = [
+    "registered_field_trials.cc",
+    "registered_field_trials.h",
+  ]
+  deps = [
+    "../rtc_base:logging",
+    "//third_party/abseil-cpp/absl/strings",
+  ]
+} 

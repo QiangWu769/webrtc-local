@@ -1,0 +1,47 @@
+{
+    "serverless_connection": {
+        "autoclose": 20,
+        "sender": {
+            "enabled": true,
+            "dest_ip": "0.0.0.0",
+            "dest_port": 8000
+        },
+        "receiver": {
+            "enabled": false
+        }
+    },
+    "bwe_feedback_duration": 200,
+    "onnx": {
+        "onnx_model_path": "onnx-model.onnx"
+    },
+    "video_source": {
+        "video_disabled": {
+            "enabled": false
+        },
+        "webcam": {
+            "enabled": false
+        },
+        "video_file": {
+            "enabled": true,
+            "height": 720,
+            "width": 1280,
+            "fps": 30,
+            "file_path": "/home/wuq/webrtc-checkout/test_video.yuv"
+        }
+    },
+    "audio_source": {
+        "microphone": {
+            "enabled": false
+        },
+        "audio_file": {
+            "enabled": false,
+            "file_path": ""
+        }
+    },
+    "save_to_file": {
+        "enabled": false
+    },
+    "logging": {
+        "enabled": false
+    }
+}

@@ -1,0 +1,53 @@
+{
+    "server_connection": {
+        "ip": "127.0.0.1",
+        "port": 8888,
+        "autoconnect": true,
+        "autocall": false,
+        "autoclose": 60
+    },
+    "bwe_feedback_duration": 200,
+    "onnx": {
+        "onnx_model_path": "examples/peerconnection/serverless/corpus/onnx-model.onnx"
+    },
+    "video_source": {
+        "video_disabled": {
+            "enabled": true
+        },
+        "webcam": {
+            "enabled": false
+        },
+        "video_file": {
+            "enabled": false,
+            "height": 720,
+            "width": 1280,
+            "fps": 30,
+            "file_path": ""
+        }
+    },
+    "audio_source": {
+        "microphone": {
+            "enabled": false
+        },
+        "audio_file": {
+            "enabled": false,
+            "file_path": ""
+        }
+    },
+    "save_to_file": {
+        "enabled": true,
+        "video": {
+            "width": 1280,
+            "height": 720,
+            "fps": 30,
+            "file_path": "/tmp/received_video.yuv"
+        },
+        "audio": {
+            "file_path": "/tmp/received_audio.wav"
+        }
+    },
+    "logging": {
+        "enabled": true,
+        "log_output_path": "/tmp/receiver.log"
+    }
+}
