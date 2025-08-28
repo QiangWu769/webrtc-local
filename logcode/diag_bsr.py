@@ -5,6 +5,8 @@ from datetime import datetime, timedelta, timezone
 import sys
 import struct
 import os
+import threading
+import errno
 from hdlc import HDLC
 
 # Note: Use time.clock_gettime(time.CLOCK_REALTIME) instead of time.time()
@@ -14,7 +16,23 @@ from hdlc import HDLC
 # - RAN event timestamp: Hardware clock format (based on 1980, 52.4MHz tick frequency)
 # - Bridge timestamp: Unix timestamp format (seconds since 1970)
 # - Python timestamp: Unix timestamp format (CLOCK_REALTIME)
-# RAN timestamps must be converted to Unix format for correct latency calculation 
+# RAN timestamps must be converted to Unix format for correct latency calculation
+
+# Define operating mode enumeration
+class OperatingMode:
+    UNKNOWN = "unknown"
+    LEGACY = "legacy"  # Drain handled by C bridge, has timestamp headers
+    SOCKET = "socket"  # Drain handled by Python, no timestamp headers
+
+# Global variables for mode detection and drain control
+current_mode = OperatingMode.UNKNOWN
+drain_thread_running = False
+client_socket_lock = None  # Will be initialized in main()
+client_socket_global = None  # Will be initialized in main()
+fatal_error_occurred = False  # Flag to indicate a fatal error occurred
+
+# Drain buffer command for socket mode
+DRAIN_BUFFER_COMMAND = b'\x24\x00\x00\x00\x00\x00\x00\x00' 
 
 def get_tbs_index_string(tbs_index):
     TBS_MAP = {
@@ -58,6 +76,13 @@ class DiagDataParser:
             31: 0
         }
         
+        # Maps for B139 decoding
+        self.CARRIER_INDEX_MAP = {0: "pcc", 1: "scc1", 2: "scc2"}
+        self.RETX_INDEX_MAP = {
+            0: "First", 1: "Second", 2: "Third", 3: "Fourth",
+            4: "Fifth", 5: "Sixth", 6: "Seventh", 7: "Eighth"
+        }
+        
     def convert_timestamp(self, ts):
         if ts == 0: return "N/A"
         try:
@@ -79,7 +104,7 @@ class DiagDataParser:
         except (OverflowError, ValueError):
             return 0.0
     
-    def decode_b16c_payload(self, payload, timestamp, logcode):
+    def _decode_b16c_v48(self, payload, timestamp, logcode):
         parsed_records = []
         if len(payload) < 4: return []
         version = payload[0]
@@ -116,6 +141,164 @@ class DiagDataParser:
                 parsed_records.append(record_data)
             cursor += 126
         return parsed_records
+    
+    def _decode_b16c_v49(self, payload, timestamp, logcode):
+        """Decode B16C payload for version 49"""
+        parsed_records = []
+        if len(payload) < 4: 
+            return []
+        
+        # Parse S_H header (4 bytes)
+        version = payload[0]
+        # v49: num_record spans across 2 bytes
+        num_records = ((payload[1] & 0x07) << 2) | ((payload[2] & 0xC0) >> 6)
+        
+        readable_timestamp = self.convert_timestamp(timestamp)
+        payload_view = memoryview(payload)
+        cursor = 4  # Skip S_H header
+        
+        for _ in range(num_records):
+            if cursor + 4 > len(payload_view):  # R_H is 4 bytes in v49
+                break
+                
+            # Parse Record Header (4 bytes in v49)
+            r_h = payload_view[cursor : cursor + 4]
+            num_ul_grant = ((r_h[1] & 0x01) << 2) | ((r_h[2] & 0xC0) >> 6)
+            subfn = (r_h[2] & 0x3C) >> 2
+            sysfn = ((r_h[2] & 0x03) << 8) | r_h[3]
+            cursor += 4
+            
+            if num_ul_grant != 0:
+                # UL Grant (16 bytes in v49)
+                if cursor + 16 > len(payload_view):
+                    break
+                    
+                ul_grant_view = payload_view[cursor : cursor + 16]
+                
+                # Parse UL grant fields (different positions in v49)
+                tbs_index = (ul_grant_view[2] & 0xFC) >> 2
+                mcs_index = ((ul_grant_view[2] & 0x03) << 3) | ((ul_grant_view[3] & 0xE0) >> 5)
+                redundancy_version = (ul_grant_view[3] & 0x18) >> 3
+                num_of_resource_blocks = (ul_grant_view[5] & 0xFC) >> 2
+                
+                record_data = {
+                    "logcode": logcode,
+                    "timestamp": timestamp, 
+                    "readable_timestamp": readable_timestamp,
+                    "version": version,
+                    "subfn": subfn, 
+                    "sysfn": sysfn, 
+                    "mcs_index": mcs_index,
+                    "redundancy_version": redundancy_version, 
+                    "tbs_string": get_tbs_index_string(tbs_index),
+                    "num_of_resource_blocks": num_of_resource_blocks, 
+                    "is_ul_grant": 1
+                }
+                parsed_records.append(record_data)
+                cursor += 16  # UL grant is 16 bytes in v49
+            else:
+                # DL Grant (8 bytes in v49)
+                cursor += 8
+                
+        return parsed_records
+    
+    def decode_b16c_payload(self, payload, timestamp, logcode):
+        """
+        Central dispatcher for B16C decoding based on version.
+        Routes to appropriate version-specific decoder.
+        """
+        if len(payload) < 1:
+            return []
+            
+        # Extract version from first byte
+        version = payload[0]
+        
+        # Route to appropriate decoder based on version
+        if version == 48:
+            return self._decode_b16c_v48(payload, timestamp, logcode)
+        elif version == 49:
+            return self._decode_b16c_v49(payload, timestamp, logcode)
+        else:
+            # Handle unknown versions gracefully
+            print(f"[WARNING] Unsupported B16C version detected: {version}")
+            return []
+    
+    def _decode_b139_v161(self, payload, timestamp, logcode):
+        """Decode B139 payload for version 161 (PUSCH transmission info)"""
+        parsed_records = []
+        if len(payload) < 8:
+            return []
+        
+        # Parse S_H header (8 bytes)
+        version = payload[0]
+        num_of_records = (payload[2] & 0xFE) >> 1
+        payload_view = memoryview(payload)
+        dispatch_sfn_sf = struct.unpack('<H', payload_view[4:6])[0]
+        
+        readable_timestamp = self.convert_timestamp(timestamp)
+        cursor = 8  # Skip S_H header
+        
+        for _ in range(num_of_records):
+            if cursor + 100 > len(payload_view):  # Each record is 100 bytes
+                break
+                
+            # Parse record
+            record_view = payload_view[cursor : cursor + 100]
+            
+            # Extract fields according to C code
+            current_sfn_sf = struct.unpack('<H', record_view[0:2])[0]
+            redund_ver = (record_view[2] & 0x30) >> 4
+            re_tx_index = ((record_view[2] & 0x0F) << 1) | ((record_view[3] & 0x80) >> 7)
+            ul_carrier_index = record_view[3] & 0x03
+            num_of_rb = ((record_view[5] & 0x3F) << 1) | ((record_view[6] & 0x80) >> 7)
+            pusch_tb_size = struct.unpack('<H', record_view[8:10])[0]
+            dl_carrier_index = (record_view[7] & 0x06) >> 1
+            
+            # Convert indices to strings
+            re_tx_index_str = self.RETX_INDEX_MAP.get(re_tx_index, "invalid")
+            ul_carrier_str = self.CARRIER_INDEX_MAP.get(ul_carrier_index, "invalid")
+            dl_carrier_str = self.CARRIER_INDEX_MAP.get(dl_carrier_index, "invalid")
+            
+            record_data = {
+                "logcode": logcode,
+                "timestamp": timestamp,
+                "readable_timestamp": readable_timestamp,
+                "version": version,
+                "dispatch_sfn_sf": dispatch_sfn_sf,
+                "current_sfn_sf": current_sfn_sf,
+                "redund_ver": redund_ver,
+                "re_tx_index": re_tx_index,
+                "re_tx_index_str": re_tx_index_str,
+                "ul_carrier_index": ul_carrier_index,
+                "ul_carrier_str": ul_carrier_str,
+                "num_of_rb": num_of_rb,
+                "pusch_tb_size": pusch_tb_size,
+                "dl_carrier_index": dl_carrier_index,
+                "dl_carrier_str": dl_carrier_str
+            }
+            parsed_records.append(record_data)
+            cursor += 100  # Each record is 100 bytes
+            
+        return parsed_records
+    
+    def decode_b139_payload(self, payload, timestamp, logcode):
+        """
+        Central dispatcher for B139 decoding based on version.
+        Routes to appropriate version-specific decoder.
+        """
+        if len(payload) < 1:
+            return []
+            
+        # Extract version from first byte
+        version = payload[0]
+        
+        # Route to appropriate decoder based on version
+        if version == 161:
+            return self._decode_b139_v161(payload, timestamp, logcode)
+        else:
+            # Handle unknown versions gracefully
+            print(f"[WARNING] Unsupported B139 version detected: {version}")
+            return []
 
     def buffer_data(self, results, logcode):
         """Buffer data by timestamp for later writing to file"""
@@ -175,21 +358,32 @@ class DiagDataParser:
             if ts_ran_event > 0:
                 pipeline_latency_ms = (ts_bridge_read - ts_ran_event) * 1000
             
-            # Create unique key for the timestamp with subfn/sysfn to preserve multiple records
-            unique_key = f"{timestamp}_{record['subfn']}_{record['sysfn']}"
+            # For B139, use current_sfn_sf as part of unique key
+            if logcode == 0xB139:
+                sfn_sf = record.get('current_sfn_sf', 0)
+                subfn = sfn_sf & 0x000F
+                sysfn = (sfn_sf >> 4) & 0x3FF
+                unique_key = f"{timestamp}_{subfn}_{sysfn}_{record.get('re_tx_index', 0)}"
+            else:
+                # For B064 and B16C, use subfn/sysfn directly
+                unique_key = f"{timestamp}_{record['subfn']}_{record['sysfn']}"
+                subfn = record['subfn']
+                sysfn = record['sysfn']
             
             if unique_key not in self._data_buffer:
                 self._data_buffer[unique_key] = {
                     'timestamp': timestamp,
                     'unix_timestamp': ts_ran_event,
-                    'subfn': record['subfn'],
-                    'sysfn': record['sysfn'],
+                    'subfn': subfn,
+                    'sysfn': sysfn,
                     'lcg_0': '-', 
                     'lcg_1': '-', 
                     'lcg_2': '-', 
                     'lcg_3': '-', 
                     'num_rbs': '-',
                     'tbs_index': '-',
+                    'pusch_tb_size': '-',
+                    'redund_ver': '-',
                     'bridge_timestamp': ts_bridge_read,
                     'python_recv_timestamp': ts_python_recv,
                     'pipeline_latency_ms': pipeline_latency_ms
@@ -212,6 +406,12 @@ class DiagDataParser:
                 # Store the number of resource blocks and TBS index
                 self._data_buffer[unique_key]['num_rbs'] = record['num_of_resource_blocks']
                 self._data_buffer[unique_key]['tbs_index'] = record['tbs_string']
+            
+            elif logcode == 0xB139:
+                # Store PUSCH transmission info (only C code output fields)
+                # Note: subfn and sysfn are already extracted and stored above
+                self._data_buffer[unique_key]['redund_ver'] = record['redund_ver']
+                self._data_buffer[unique_key]['pusch_tb_size'] = record['pusch_tb_size']
         
         # Write buffered data to file when it exceeds a certain size
         if len(self._data_buffer) > 100:
@@ -230,6 +430,7 @@ class DiagDataParser:
                     if f.tell() == 0:  # If file is empty
                         header = ["RAN_Event_Unix_Timestamp", "Bridge_Read_Timestamp", "Python_Recv_Timestamp", "Cellular_Precise_Timestamp", "SubFN", "SysFN", 
                                 "LCG_0", "LCG_1", "LCG_2", "LCG_3", "Num_RBs", "TBS_Index", 
+                                "Redund_Ver", "PUSCH_TB_Size",
                                 "Pipeline_Latency_ms"]
                         f.write("\t".join(header) + "\n")
                     self._header_written = True
@@ -251,7 +452,9 @@ class DiagDataParser:
                         
                         line = f"{data.get('unix_timestamp', 0.0):.6f}\t{data['bridge_timestamp']:.6f}\t{python_recv_ts:.6f}\t{cellular_precise_ts:.6f}\t{data['subfn']}\t{data['sysfn']}\t"
                         line += f"{data['lcg_0']}\t{data['lcg_1']}\t{data['lcg_2']}\t{data['lcg_3']}\t"
-                        line += f"{data['num_rbs']}\t{data['tbs_index']}\t{data['pipeline_latency_ms']:.3f}"
+                        line += f"{data['num_rbs']}\t{data['tbs_index']}\t"
+                        line += f"{data.get('redund_ver', '-')}\t{data.get('pusch_tb_size', '-')}\t"
+                        line += f"{data['pipeline_latency_ms']:.3f}"
                         f.write(line + "\n")
             
             print(f"Successfully wrote {len(self._data_buffer)} records to file")
@@ -426,9 +629,15 @@ class DiagDataParser:
                 print(f"Diag Pipeline Latency: {diag_pipeline_latency_ms:.3f}ms")
             
             if logcode == 0xB16C:
-                results = self.decode_b16c_payload(payload, timestamp, logcode)
+                results = self.decode_b16c_payload(payload, timestamp, logcode)  # Using central dispatcher
                 if results:
                     self.buffer_data_with_bridge_ts(results, logcode, ts_bridge_read, ts_python_recv)
+            elif logcode == 0xB139:
+                results = self.decode_b139_payload(payload, timestamp, logcode)  # Using central dispatcher
+                if results:
+                    self.buffer_data_with_bridge_ts(results, logcode, ts_bridge_read, ts_python_recv)
+                    # Also write to B139_report.txt to match C code output format
+                    self._write_b139_report(results)
             elif logcode == 0xB064:
                 # Use the new C-style parsing for B064
                 b064_records = self.decode_b064_payload(payload, timestamp, logcode)
@@ -470,6 +679,18 @@ class DiagDataParser:
         return pd.DataFrame(refined_data)
 
 
+    def _write_b139_report(self, results):
+        """Write B139 data to separate report file matching C code format"""
+        try:
+            with open('B139_report.txt', 'a+') as fp:
+                for record in results:
+                    # Match C code format exactly: logcode, timestamp, current_sfn_sf, redund_ver, pusch_tb_size
+                    fp.write(f"{record['logcode']:02X}\t{int(record['timestamp'])}\t"
+                            f"{record['current_sfn_sf']}\t{record['redund_ver']}\t"
+                            f"{record['pusch_tb_size']}\n")
+        except IOError as e:
+            print(f"Error writing to B139_report.txt: {e}")
+    
     def _calculate_cellular_timestamp(self, current_sysfn, current_subfn, python_recv_timestamp):
         """Calculate precise cellular timestamp based on Python_Recv_Timestamp baseline and SysFN/SubFN
         
@@ -510,6 +731,45 @@ class DiagDataParser:
         """Ensure all buffered data is written when the parser is destroyed"""
         self.write_buffered_data()
 
+def drain_buffer_thread():
+    """Thread function that sends drain buffer command periodically for socket mode"""
+    global drain_thread_running, client_socket_global, client_socket_lock, fatal_error_occurred
+    
+    print("Drain buffer thread started - sending drain commands periodically")
+    drain_count = 0
+    start_time = time.time()
+    
+    while drain_thread_running:
+        try:
+            # Send drain command with thread-safe socket access
+            with client_socket_lock:
+                if client_socket_global and client_socket_global.fileno() != -1:
+                    client_socket_global.sendall(DRAIN_BUFFER_COMMAND)
+                    drain_count += 1
+                    
+                    # Print stats every 10000 commands
+                    if drain_count % 10000 == 0:
+                        elapsed = time.time() - start_time
+                        rate = drain_count / elapsed if elapsed > 0 else 0
+                        print(f"Sent {drain_count} drain commands ({rate:.2f} commands/sec)")
+            
+            # Control the rate (adjust as needed)
+            time.sleep(0.0001)  # ~10000 times per second
+            
+        except socket.error as e:
+            if e.errno == errno.EPIPE or str(e).find("Broken pipe") >= 0:
+                print(f"Error in drain thread: [Errno 32] Broken pipe")
+                fatal_error_occurred = True
+                break
+            else:
+                print(f"Error in drain thread: {e}")
+                time.sleep(0.1)
+        except Exception as e:
+            print(f"Error in drain thread: {e}")
+            time.sleep(0.1)
+    
+    print("Drain buffer thread stopped")
+
 HOST = '127.0.0.1'
 PORT = 43555
 INIT_MESSAGES = [
@@ -521,7 +781,7 @@ INIT_MESSAGES = [
     b'\x73\x00\x00\x00\x00\x00\x00\x00\xda\x81\x7e',
 ]
 FINAL_MESSAGE = b'\x60\x00\x12\x6a\x7e'
-DEFAULT_LOGCODES = [0xB064, 0xB16C]
+DEFAULT_LOGCODES = [0xB064, 0xB16C, 0xB139]  # Added B139 for PUSCH transmission info
 def hex_dump(data):
     return ' '.join(f"{b:02x}" for b in data)
 def generate_logcode_command(logcodes):
@@ -614,15 +874,55 @@ def parse_0x1d_response(response_data, parser):
                 print(f"[0x1D INIT RESPONSE] Warning: Payload too short ({len(payload)} bytes)")
             return  # Found and processed 0x1D response
 def main():
+    global drain_thread_running, client_socket_global, client_socket_lock, current_mode, fatal_error_occurred
+    
+    # Initialize lock for thread-safe socket access
+    client_socket_lock = threading.Lock()
+    
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket_global = client_socket
     parser = DiagDataParser()
+    
+    # Thread object
+    drain_thread = None
+    
     try:
         print(f"Connecting to {HOST}:{PORT}...")
         client_socket.connect((HOST, PORT))
         print("Connection successful!")
-        welcome = client_socket.recv(1024)
-        print(f"Server welcome message: {welcome.strip()}")
+        
+        # Receive and analyze welcome message to determine mode
+        welcome_bytes = client_socket.recv(1024)
+        welcome_message = welcome_bytes.decode('utf-8', errors='ignore').strip()
+        print(f"Server welcome message: {welcome_message}")
+        
+        # Detect operating mode from welcome message
+        if "Socket mode" in welcome_message:
+            current_mode = OperatingMode.SOCKET
+            print("[INFO] Detected SOCKET mode. Python-side drain will be activated.")
+        elif "Legacy mode" in welcome_message or "bridge_diag_client connected" in welcome_message:
+            current_mode = OperatingMode.LEGACY
+            print("[INFO] Detected LEGACY mode. Drain is handled by the bridge. Python will not send drain commands.")
+        else:
+            current_mode = OperatingMode.UNKNOWN
+            print("[WARNING] Could not determine operating mode from welcome message. Assuming LEGACY mode.")
         print("\nStarting initialization messages...")
+        
+        # Add extra init messages for socket mode
+        if current_mode == OperatingMode.SOCKET:
+            socket_mode_init_messages = [
+                b'\x28\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x40\x78\x7d\x01',
+                b'\x29\x00\x00\x00\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00',
+                b'\x07\x00\x00\x00\x05\x00\x00\x00\xff\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\xb6\x78\x00\x00',
+                b'\x23\x00\x00\x00\x00\x00\x00\x00',
+            ]
+            print("[INFO] Sending socket mode specific initialization messages...")
+            for msg in socket_mode_init_messages:
+                print(f"Sending socket init message ({len(msg)} bytes): {msg.hex()}")
+                client_socket.sendall(msg)
+                time.sleep(0.1)
+            print("Socket mode initialization messages sent.")
+        
         for i, message in enumerate(INIT_MESSAGES, 1):
             # Pass parser for the first message to handle 0x1D response
             if i == 1:
@@ -639,9 +939,19 @@ def main():
             print("\nSending final configuration message...")
             send_message(client_socket, FINAL_MESSAGE)
             print("[+] All configuration messages sent! Bridge should start drain thread now.")
+        # Start drain thread if in SOCKET mode
+        if current_mode == OperatingMode.SOCKET:
+            print("\nStarting Python-side drain thread for SOCKET mode...")
+            drain_thread_running = True
+            drain_thread = threading.Thread(target=drain_buffer_thread, daemon=True)
+            drain_thread.start()
+            print("Drain buffer thread started successfully.")
+        else:
+            print("\nDrain thread is not required for LEGACY mode (handled by C bridge).")
+        
         print("\nStarting continuous monitoring and parsing mode...")
         print("Press Ctrl-C to exit. Parsed data will be saved to diag_report.txt")
-        print("Now with latency analysis")
+        print(f"Operating in {current_mode} mode")
         
         # Buffer for processing TCP stream
         receive_buffer = b''
@@ -667,7 +977,7 @@ def main():
                 # Add new data to receive buffer
                 receive_buffer += new_data
                 
-                # Process data in buffer
+                # Process data in buffer (same format for both modes)
                 header_size = 8  # sizeof(double)
                 
                 while len(receive_buffer) >= header_size:
@@ -682,7 +992,7 @@ def main():
                         # Calculate network forwarding latency
                         net_forward_latency_ms = (ts_python_recv - ts_bridge_read) * 1000
                         
-                        print(f"--- New Data Block ---")
+                        print(f"--- New Data Block ({current_mode} mode) ---")
                         print(f"T_bridge_read: {ts_bridge_read}")
                         print(f"T_python_recv: {ts_python_recv}")
                         print(f"Net Forward Latency: {net_forward_latency_ms:.3f}ms")
@@ -708,7 +1018,18 @@ def main():
     except Exception as e:
         print(f"An error occurred: {e}")
     finally:
-        client_socket.close()
+        # Stop drain thread if running
+        if drain_thread_running:
+            print("Stopping drain thread...")
+            drain_thread_running = False
+            if drain_thread:
+                drain_thread.join(timeout=2.0)  # Wait up to 2 seconds for thread to stop
+        
+        # Close socket with thread safety
+        with client_socket_lock:
+            client_socket.close()
+            client_socket_global = None
+        
         print("Connection closed.")
 
 if __name__ == "__main__":
