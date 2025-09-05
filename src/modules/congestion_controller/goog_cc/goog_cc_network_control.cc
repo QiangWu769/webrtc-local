@@ -152,9 +152,36 @@ std::string GetWallClockTimestampString() {
        env_.field_trials().Lookup("WebRTC-Bwe-SafeResetOnRouteChange"));
    if (delay_based_bwe_)
      delay_based_bwe_->SetMinBitrate(kCongestionControllerMinBitrate);
+   
+   // Initialize cellular ratio receiver for testing
+   // TODO: Make this configurable via field trial
+   bool enable_cellular_ratio = true; // Always enable for testing
+   if (enable_cellular_ratio && delay_based_bwe_) {
+     RTC_LOG(LS_INFO) << "[GoogCC] Initializing CellularRatioReceiver";
+     // Create a task queue for the cellular ratio receiver
+     auto task_queue = env_.task_queue_factory().CreateTaskQueue(
+         "cellular_ratio", TaskQueueFactory::Priority::NORMAL);
+     cellular_ratio_receiver_ = std::make_unique<CellularRatioReceiver>(
+         task_queue.get(), delay_based_bwe_.get());
+     
+     if (!cellular_ratio_receiver_->Start()) {
+       RTC_LOG(LS_ERROR) << "[GoogCC] Failed to start CellularRatioReceiver";
+       cellular_ratio_receiver_.reset();
+     } else {
+       RTC_LOG(LS_INFO) << "[GoogCC] CellularRatioReceiver started successfully";
+       // Keep the task queue alive
+       cellular_task_queue_ = std::move(task_queue);
+     }
+   }
  }
  
- GoogCcNetworkController::~GoogCcNetworkController() {}
+ GoogCcNetworkController::~GoogCcNetworkController() {
+  // Stop cellular receiver if running
+  if (cellular_ratio_receiver_) {
+    RTC_LOG(LS_INFO) << "[GoogCC] Stopping CellularRatioReceiver";
+    cellular_ratio_receiver_->Stop();
+  }
+}
  
  NetworkControlUpdate GoogCcNetworkController::OnNetworkAvailability(
      NetworkAvailability msg) {

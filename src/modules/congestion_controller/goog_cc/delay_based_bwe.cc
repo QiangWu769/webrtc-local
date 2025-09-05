@@ -447,4 +447,23 @@ TimeDelta DelayBasedBwe::GetExpectedBwePeriod() const {
   return rate_control_.GetExpectedBandwidthPeriod();
 }
 
+void DelayBasedBwe::UpdateCellularResourceRatio(double ratio, Timestamp at_time) {
+  // Log the received data
+  RTC_LOG(LS_INFO) << "================================================";
+  RTC_LOG(LS_INFO) << "[DelayBWE-Cellular] ✅ DATA RECEIVED!";
+  RTC_LOG(LS_INFO) << "  Ratio: " << ratio;
+  RTC_LOG(LS_INFO) << "  Time: " << at_time.ms() << " ms";
+  RTC_LOG(LS_INFO) << "  Status: " << (ratio < 0.5 ? "⚠️ CONGESTED" : 
+                                       ratio < 0.8 ? "⚡ WARNING" : 
+                                       "✅ NORMAL");
+  RTC_LOG(LS_INFO) << "================================================";
+  
+  // Pass the ratio to AIMD rate control
+  rate_control_.SetCellularResourceRatio(ratio, at_time);
+  
+  // Log the impact on AIMD
+  RTC_LOG(LS_INFO) << "[DelayBWE-Cellular] Ratio forwarded to AIMD. "
+                   << "Current estimate: " << rate_control_.LatestEstimate().bps() << " bps";
+}
+
 }  // namespace webrtc

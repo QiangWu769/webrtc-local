@@ -309,11 +309,32 @@ void AimdRateControl::ChangeBitrate(const RateControlInput& input,
 
       if (current_bitrate_ < increase_limit) {
         DataRate increased_bitrate = DataRate::MinusInfinity();
-        if (link_capacity_.has_estimate()) {
-          // The link_capacity estimate is reset if the measured throughput
-          // is too far from the estimate. We can therefore assume that our
-          // target rate is reasonably close to link capacity and use additive
-          // increase.
+        
+        // Check cellular ratio strategies
+        bool force_additive = false;
+        bool force_multiplicative = false;
+        
+        if (HasFreshCellularData(at_time)) {
+          if (ShouldForceMultiplicativeGrowth()) {
+            // Fourth layer: force multiplicative growth when ratio consistently high
+            force_multiplicative = true;
+            link_capacity_.Reset();  // Reset to allow multiplicative growth
+            RTC_LOG(LS_INFO) << "[AIMD-Cellular-L4] ✅ FORCING MULTIPLICATIVE GROWTH! " 
+                             << "Ratio: " << smoothed_cellular_ratio_ 
+                             << ", Consecutive count: " << consecutive_high_ratio_count_
+                             << " - Link capacity reset to trigger multiplicative increase";
+          } else if (ShouldLimitIncrease()) {
+            force_additive = true;
+            RTC_LOG(LS_INFO) << "[AIMD-Cellular-L3] Limiting to additive increase due to ratio: " 
+                             << smoothed_cellular_ratio_;
+          }
+        }
+        
+        if ((link_capacity_.has_estimate() || force_additive) && !force_multiplicative) {
+          // Use additive increase when:
+          // 1. We have link capacity estimate (normal case), OR
+          // 2. Cellular ratio suggests conservative increase
+          // BUT NOT when cellular L4 forces multiplicative growth
           DataRate additive_increase =
               AdditiveRateIncrease(at_time, time_last_bitrate_change_);
           increased_bitrate = current_bitrate_ + additive_increase;
@@ -324,12 +345,20 @@ void AimdRateControl::ChangeBitrate(const RateControlInput& input,
           RTC_LOG(LS_INFO) << "[AIMD-Additive] Base increase: " << additive_increase.bps()
                            << " bps, Near max rate: " << increase_rate_bps_per_sec
                            << " bps/s, Time delta: " << time_delta_ms
-                           << " ms, Link capacity: " << link_capacity_.estimate().bps() << " bps";
+                           << " ms, Link capacity: " << (link_capacity_.has_estimate() ? 
+                              std::to_string(link_capacity_.estimate().bps()) : "N/A") 
+                           << (force_additive ? " (Cellular-forced)" : "");
           
           last_strategy_name_ = "Additive-Increase";
-          last_strategy_params_ = "Rate=" + std::to_string(static_cast<int>(increase_rate_bps_per_sec)) + 
-                                  "bps/s,Delta=" + std::to_string(time_delta_ms) + 
-                                  "ms,LinkCap=" + std::to_string(link_capacity_.estimate().bps()) + "bps";
+          if (force_additive) {
+            last_strategy_params_ = "Rate=" + std::to_string(static_cast<int>(increase_rate_bps_per_sec)) + 
+                                    "bps/s,Delta=" + std::to_string(time_delta_ms) + 
+                                    "ms,Cellular-forced";
+          } else {
+            last_strategy_params_ = "Rate=" + std::to_string(static_cast<int>(increase_rate_bps_per_sec)) + 
+                                    "bps/s,Delta=" + std::to_string(time_delta_ms) + 
+                                    "ms,LinkCap=" + std::to_string(link_capacity_.estimate().bps()) + "bps";
+          }
         } else {
           // If we don't have an estimate of the link capacity, use faster ramp
           // up to discover the capacity.
@@ -342,11 +371,18 @@ void AimdRateControl::ChangeBitrate(const RateControlInput& input,
           
           RTC_LOG(LS_INFO) << "[AIMD-Multiplicative] Base increase: " << multiplicative_increase.bps()
                            << " bps, Alpha factor: " << alpha_factor
-                           << ", Time delta: " << time_delta_ms << " ms";
+                           << ", Time delta: " << time_delta_ms << " ms"
+                           << (force_multiplicative ? " (Cellular-L4-forced)" : "");
           
           last_strategy_name_ = "Multiplicative-Increase";
-          last_strategy_params_ = "Alpha=" + std::to_string(alpha_factor) + 
-                                  ",Delta=" + std::to_string(time_delta_ms) + "ms";
+          if (force_multiplicative) {
+            last_strategy_params_ = "Alpha=" + std::to_string(alpha_factor) + 
+                                    ",Delta=" + std::to_string(time_delta_ms) + 
+                                    "ms,Cellular-L4-forced";
+          } else {
+            last_strategy_params_ = "Alpha=" + std::to_string(alpha_factor) + 
+                                    ",Delta=" + std::to_string(time_delta_ms) + "ms";
+          }
         }
         new_bitrate = std::min(increased_bitrate, increase_limit);
         
@@ -480,6 +516,7 @@ void AimdRateControl::ChangeState(const RateControlInput& input,
                                   Timestamp at_time) {
   RateControlState old_state = rate_control_state_;
   
+  // First, apply normal state transitions based on bandwidth usage
   switch (input.bw_state) {
     case BandwidthUsage::kBwNormal:
       if (rate_control_state_ == RateControlState::kRcHold) {
@@ -497,6 +534,24 @@ void AimdRateControl::ChangeState(const RateControlInput& input,
       break;
     default:
       RTC_DCHECK_NOTREACHED();
+  }
+  
+  // Apply cellular ratio-based preventive control if we have fresh data
+  if (HasFreshCellularData(at_time)) {
+    // 预防性控制策略：不主动降速，只是阻止增长或保持当前速率
+    
+    if (ShouldForceHold()) {
+      // 当ratio < 0.7时，如果当前想增长，改为保持
+      // 这样可以避免继续增加负载导致overuse
+      if (rate_control_state_ == RateControlState::kRcIncrease) {
+        rate_control_state_ = RateControlState::kRcHold;
+        RTC_LOG(LS_INFO) << "[AIMD-Cellular] Preventive HOLD due to low ratio: " 
+                         << smoothed_cellular_ratio_ 
+                         << " (preventing increase to avoid overuse)";
+      }
+    }
+    // 注意：我们不强制DECREASE，让WebRTC自己的overuse检测来处理
+    // 我们的目标是预防，不是治疗
   }
   
   if (old_state != rate_control_state_) {
@@ -526,6 +581,81 @@ void AimdRateControl::ChangeState(const RateControlInput& input,
     RTC_LOG(LS_INFO) << "[AIMD-StateChange] " << old_state_str << " -> " << new_state_str 
                      << " (BW state: " << bw_state_str << ")";
   }
+}
+
+// Cellular resource ratio support methods
+void AimdRateControl::SetCellularResourceRatio(double ratio, Timestamp at_time) {
+  // Clamp ratio to valid range [0, 2]
+  ratio = std::max(0.0, std::min(2.0, ratio));
+  
+  // Store previous ratio for trend detection
+  previous_ratio_ = smoothed_cellular_ratio_;
+  
+  // Apply exponential smoothing with alpha = 0.3 for faster response
+  // Higher alpha means new values have more weight, allowing faster recovery
+  const double kSmoothingAlpha = 0.3;
+  smoothed_cellular_ratio_ = kSmoothingAlpha * ratio + 
+                             (1.0 - kSmoothingAlpha) * smoothed_cellular_ratio_;
+  
+  cellular_resource_ratio_ = ratio;
+  last_ratio_update_time_ = at_time;
+  
+  // Update consecutive high ratio count for fourth layer defense
+  if (smoothed_cellular_ratio_ >= kMultiplicativeGrowthThreshold) {
+    consecutive_high_ratio_count_++;
+    RTC_LOG(LS_INFO) << "[AIMD-Cellular] High ratio detected: " 
+                     << smoothed_cellular_ratio_ << " (count: " 
+                     << consecutive_high_ratio_count_ << "/" 
+                     << kConsecutiveHighRatioThreshold << ")";
+  } else {
+    consecutive_high_ratio_count_ = 0;  // Reset counter
+  }
+  
+  // Log significant ratio changes
+  if (std::abs(ratio - previous_ratio_) > 0.1) {
+    RTC_LOG(LS_INFO) << "[AIMD-Cellular] Resource ratio updated: " 
+                     << ratio << " (smoothed: " << smoothed_cellular_ratio_ 
+                     << "), trend: " << (ratio - previous_ratio_);
+  }
+}
+
+bool AimdRateControl::HasFreshCellularData(Timestamp at_time) const {
+  // Consider data fresh if updated within last 1 second
+  const TimeDelta kFreshnessWindow = TimeDelta::Seconds(1);
+  return last_ratio_update_time_.IsFinite() && 
+         (at_time - last_ratio_update_time_) < kFreshnessWindow;
+}
+
+bool AimdRateControl::ShouldForceDecrease() const {
+  // 不再强制DECREASE - WebRTC自己会检测overuse
+  // 我们只是提前预防，不主动降速
+  return false;
+}
+
+bool AimdRateControl::ShouldForceHold() const {
+  // 当ratio较低时(< 0.7)，保持当前速率，避免继续增长
+  // 这是预防性措施，防止触发overuse
+  const double kHoldThreshold = 0.7;
+  return smoothed_cellular_ratio_ < kHoldThreshold;
+}
+
+bool AimdRateControl::ShouldLimitIncrease() const {
+  // 当ratio在0.7-0.9之间时，限制为保守的加性增长
+  // 避免激进增长导致overuse
+  const double kLimitThreshold = 0.9;
+  
+  // 检测负趋势 - 如果ratio在下降，即使当前值还可以，也要保守
+  double trend = smoothed_cellular_ratio_ - previous_ratio_;
+  bool negative_trend = trend < -0.02;  // 检测轻微负趋势
+  
+  return (smoothed_cellular_ratio_ < kLimitThreshold) || 
+         (smoothed_cellular_ratio_ < 1.0 && negative_trend);
+}
+
+bool AimdRateControl::ShouldForceMultiplicativeGrowth() const {
+  // 第四层防御：当ratio连续高于阈值时，强制进入乘法增长
+  // 目标：在网络状况持续良好时更积极利用带宽
+  return consecutive_high_ratio_count_ >= kConsecutiveHighRatioThreshold;
 }
 
 }  // namespace webrtc

@@ -73,6 +73,10 @@ class AimdRateControl {
   };
   StrategyInfo GetLastStrategyInfo() const;
 
+  // Cellular resource ratio support
+  void SetCellularResourceRatio(double ratio, Timestamp at_time);
+  double GetCellularResourceRatio() const { return cellular_resource_ratio_; }
+
  private:
   enum class RateControlState { kRcHold, kRcIncrease, kRcDecrease };
 
@@ -121,6 +125,24 @@ class AimdRateControl {
   // Strategy information for logging
   mutable std::string last_strategy_name_;
   mutable std::string last_strategy_params_;
+  
+  // Cellular resource ratio tracking
+  double cellular_resource_ratio_ = 1.0;  // Default: no constraint
+  double smoothed_cellular_ratio_ = 1.0;  // Smoothed ratio for stability
+  Timestamp last_ratio_update_time_ = Timestamp::MinusInfinity();
+  double previous_ratio_ = 1.0;  // For trend detection
+  
+  // Fourth layer: multiplicative growth when ratio consistently high
+  int consecutive_high_ratio_count_ = 0;  // Count of consecutive high ratios
+  static constexpr double kMultiplicativeGrowthThreshold = 0.95;
+  static constexpr int kConsecutiveHighRatioThreshold = 3;
+  
+  // Helper functions for cellular ratio
+  bool HasFreshCellularData(Timestamp at_time) const;
+  bool ShouldForceDecrease() const;
+  bool ShouldForceHold() const;
+  bool ShouldLimitIncrease() const;
+  bool ShouldForceMultiplicativeGrowth() const;  // Fourth layer: force multiplicative growth
 };
 }  // namespace webrtc
 

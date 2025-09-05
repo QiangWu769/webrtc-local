@@ -28,6 +28,7 @@
 #include "api/units/timestamp.h"
 #include "modules/congestion_controller/goog_cc/acknowledged_bitrate_estimator_interface.h"
 #include "modules/congestion_controller/goog_cc/alr_detector.h"
+#include "modules/congestion_controller/goog_cc/cellular_ratio_receiver.h"
 #include "modules/congestion_controller/goog_cc/congestion_window_pushback_controller.h"
 #include "modules/congestion_controller/goog_cc/delay_based_bwe.h"
 #include "modules/congestion_controller/goog_cc/loss_based_bwe_v2.h"
@@ -133,6 +134,10 @@ class GoogCcNetworkController : public NetworkControllerInterface {
   bool previously_in_alr_ = false;
 
   std::optional<DataSize> current_data_window_;
+  
+  // Cellular ratio receiver for BSR data
+  std::unique_ptr<CellularRatioReceiver> cellular_ratio_receiver_;
+  std::unique_ptr<TaskQueueBase, TaskQueueDeleter> cellular_task_queue_;
 };
 
 }  // namespace webrtc

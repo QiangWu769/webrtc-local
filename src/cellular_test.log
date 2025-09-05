@@ -1,0 +1,92 @@
+(send_side_bandwidth_estimation.cc:147): [RttBWE-Config] RTT-based backoff initialized, Disabled: false, RttLimit: 3000 ms, DropFraction: 0.8, DropInterval: 1000 ms, BandwidthFloor: 5000 bps
+(alr_experiment.cc:69): Using ALR experiment settings: pacing factor: 1, max pacer queue length: 2875, ALR bandwidth usage percent: 80, ALR start budget level percent: 40, ALR end budget level percent: -60, ALR experiment group ID: 3
+(trendline_estimator.cc:198): Using Trendline filter for delay change estimation with settings sort:false,cap:false,beginning_packets:7,end_packets:7,cap_uncertainty:0,window_size:20 and no network state predictor
+(trendline_estimator.cc:198): Using Trendline filter for delay change estimation with settings sort:false,cap:false,beginning_packets:7,end_packets:7,cap_uncertainty:0,window_size:20 and no network state predictor
+(aimd_rate_control.cc:99): Using aimd rate control with back off factor 0.85
+(delay_based_bwe.cc:104): Initialized DelayBasedBwe with separate audio overuse detectionenabled:false,packet_threshold:10,time_threshold:1 s
+(delay_based_bwe.cc:441): [DelayBWE-Config] Setting minimum bitrate to: 5000 bps
+(goog_cc_network_control.cc:160): [GoogCC] Initializing CellularRatioReceiver
+(cellular_ratio_receiver.cc:26): [CellularReceiver] Created
+(cellular_ratio_receiver.cc:44): [CellularReceiver] Started successfully
+(goog_cc_network_control.cc:171): [GoogCC] CellularRatioReceiver started successfully
+(send_side_bandwidth_estimation.cc:305): [BWE-ConfigLimit] MinBitrate: 5000 -> 100000 bps, MaxBitrate: 1000000000 -> 10000000 bps, CurrentTarget: 0 bps
+(cellular_ratio_receiver.cc:72): [CellularReceiver] Thread started
+(send_side_bandwidth_estimation.cc:739): [1756768380.616000] [BWE-ConstraintApply] MonoTime: 0 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(delay_based_bwe.cc:433): BWE Setting start bitrate to: 1000 kbps
+(delay_based_bwe.cc:441): [DelayBWE-Config] Setting minimum bitrate to: 100000 bps
+(cellular_ratio_receiver.cc:141): [CellularReceiver] Socket bound to: /tmp/webrtc_cellular_ratio.sock
+(send_side_bandwidth_estimation.cc:739): [1756768380.616000] [BWE-ConstraintApply] MonoTime: 0 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(goog_cc_network_control.cc:732): [1756768380.616000] [GCC-OUTPUT] TargetRateUpdate MonoTime: 0 ms, DelayBasedBps: 0, LossBasedBps: 1000000, FinalTargetBps: 1000000
+=================================
+ Cellular Ratio Pipeline Test
+=================================
+
+创建 GoogCcNetworkController...
+✅ Controller 创建成功
+
+检查日志输出:
+  - 应该看到: [GoogCC] Initializing CellularRatioReceiver
+  - 应该看到: [CellularReceiver] Socket bound to: /tmp/webrtc_cellular_ratio.sock
+
+等待 5 秒...
+请在另一个终端运行: ./test_ratio_sender sine 10
+
+.(send_side_bandwidth_estimation.cc:739): [1756768380.717000] [BWE-ConstraintApply] MonoTime: 100 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768380.817000] [BWE-ConstraintApply] MonoTime: 200 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768380.917000] [BWE-ConstraintApply] MonoTime: 300 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768381.017000] [BWE-ConstraintApply] MonoTime: 400 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768381.117000] [BWE-ConstraintApply] MonoTime: 500 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768381.217000] [BWE-ConstraintApply] MonoTime: 600 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768381.317000] [BWE-ConstraintApply] MonoTime: 700 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768381.418000] [BWE-ConstraintApply] MonoTime: 800 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768381.518000] [BWE-ConstraintApply] MonoTime: 900 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768381.618000] [BWE-ConstraintApply] MonoTime: 1000 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+.(send_side_bandwidth_estimation.cc:739): [1756768381.718000] [BWE-ConstraintApply] MonoTime: 1100 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768381.818000] [BWE-ConstraintApply] MonoTime: 1200 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768381.919000] [BWE-ConstraintApply] MonoTime: 1300 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768382.019000] [BWE-ConstraintApply] MonoTime: 1400 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768382.119000] [BWE-ConstraintApply] MonoTime: 1500 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768382.219000] [BWE-ConstraintApply] MonoTime: 1600 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768382.320000] [BWE-ConstraintApply] MonoTime: 1700 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768382.420000] [BWE-ConstraintApply] MonoTime: 1800 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768382.520000] [BWE-ConstraintApply] MonoTime: 1900 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768382.620000] [BWE-ConstraintApply] MonoTime: 2000 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+.(send_side_bandwidth_estimation.cc:739): [1756768382.721000] [BWE-ConstraintApply] MonoTime: 2100 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768382.821000] [BWE-ConstraintApply] MonoTime: 2200 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768382.921000] [BWE-ConstraintApply] MonoTime: 2300 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768383.021000] [BWE-ConstraintApply] MonoTime: 2400 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768383.121000] [BWE-ConstraintApply] MonoTime: 2500 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768383.222000] [BWE-ConstraintApply] MonoTime: 2600 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768383.322000] [BWE-ConstraintApply] MonoTime: 2700 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768383.422000] [BWE-ConstraintApply] MonoTime: 2800 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768383.522000] [BWE-ConstraintApply] MonoTime: 2900 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768383.623000] [BWE-ConstraintApply] MonoTime: 3000 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+.(send_side_bandwidth_estimation.cc:739): [1756768383.723000] [BWE-ConstraintApply] MonoTime: 3100 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768383.823000] [BWE-ConstraintApply] MonoTime: 3200 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768383.923000] [BWE-ConstraintApply] MonoTime: 3300 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768384.023000] [BWE-ConstraintApply] MonoTime: 3400 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768384.124000] [BWE-ConstraintApply] MonoTime: 3500 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768384.224000] [BWE-ConstraintApply] MonoTime: 3600 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768384.324000] [BWE-ConstraintApply] MonoTime: 3700 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768384.424000] [BWE-ConstraintApply] MonoTime: 3800 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768384.524000] [BWE-ConstraintApply] MonoTime: 3900 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768384.625000] [BWE-ConstraintApply] MonoTime: 4000 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+.(send_side_bandwidth_estimation.cc:739): [1756768384.725000] [BWE-ConstraintApply] MonoTime: 4100 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768384.825000] [BWE-ConstraintApply] MonoTime: 4200 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768384.925000] [BWE-ConstraintApply] MonoTime: 4300 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768385.026000] [BWE-ConstraintApply] MonoTime: 4400 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768385.126000] [BWE-ConstraintApply] MonoTime: 4500 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768385.226000] [BWE-ConstraintApply] MonoTime: 4600 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768385.326000] [BWE-ConstraintApply] MonoTime: 4700 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768385.427000] [BWE-ConstraintApply] MonoTime: 4800 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(send_side_bandwidth_estimation.cc:739): [1756768385.527000] [BWE-ConstraintApply] MonoTime: 4900 ms, Original: 1000000 bps, UpperLimit: 10000000 bps, AfterUpper: 1000000 bps, MinConfig: 100000 bps, Final: 1000000 bps, DelayLimit: INF, ReceiverLimit: INF, MaxConfig: 10000000 bps
+(goog_cc_network_control.cc:181): [GoogCC] Stopping CellularRatioReceiver
+(cellular_ratio_receiver.cc:53): [CellularReceiver] Stopping...
+(cellular_ratio_receiver.cc:103): [CellularReceiver] Invalid packet size: 0 (expected 20)
+(cellular_ratio_receiver.cc:110): [CellularReceiver] Thread stopped
+(cellular_ratio_receiver.cc:67): [CellularReceiver] Stopped. Total packets received: 0
+(cellular_ratio_receiver.cc:30): [CellularReceiver] Destroying...
+
+
+测试完成!
+如果看到 [DelayBWE-Cellular] DATA RECEIVED 日志，说明数据管道打通了!

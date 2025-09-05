@@ -34,19 +34,36 @@ fatal_error_occurred = False  # Flag to indicate a fatal error occurred
 # Drain buffer command for socket mode
 DRAIN_BUFFER_COMMAND = b'\x24\x00\x00\x00\x00\x00\x00\x00' 
 
-def get_tbs_index_string(tbs_index):
-    TBS_MAP = {
-        0: "TBS_Index_0", 1: "TBS_Index_1", 2: "TBS_Index_2", 3: "TBS_Index_3",
-        4: "TBS_Index_4", 5: "TBS_Index_5", 6: "TBS_Index_6", 7: "TBS_Index_7",
-        8: "TBS_Index_8", 9: "TBS_Index_9", 10: "TBS_Index_10", 11: "TBS_Index_11",
-        12: "TBS_Index_12", 13: "TBS_Index_13", 14: "TBS_Index_14", 15: "TBS_Index_15",
-        16: "TBS_Index_16", 17: "TBS_Index_17", 18: "TBS_Index_18", 19: "TBS_Index_19",
-        20: "TBS_Index_20", 21: "TBS_Index_21", 22: "TBS_Index_22", 23: "TBS_Index_23",
-        24: "TBS_Index_24", 25: "TBS_Index_25", 26: "TBS_Index_26", 27: "TBS_Index_26A",
-        28: "TBS_Index_27", 29: "TBS_Index_28", 30: "TBS_Index_29", 31: "TBS_Index_30",
-        32: "TBS_Index_31", 33: "TBS_Index_32", 34: "TBS_Index_32A", 35: "TBS_Index_33"
-    }
-    return TBS_MAP.get(tbs_index, "invalid")
+# Global variable for raw TCP data logging
+raw_tcp_file = None
+raw_tcp_counter = 0
+
+def log_all_tcp_data(data, timestamp):
+    """Log ALL raw TCP data to a separate file for debugging"""
+    global raw_tcp_file, raw_tcp_counter
+    
+    if raw_tcp_file is None:
+        raw_tcp_file = open('all_tcp_raw_data.txt', 'a+')
+        raw_tcp_file.write("\n\n========== NEW SESSION STARTED AT {} ==========\n".format(
+            datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+    
+    try:
+        raw_tcp_counter += 1
+        raw_tcp_file.write("\n--- TCP Packet #{} at {} ---\n".format(raw_tcp_counter, timestamp))
+        raw_tcp_file.write("Length: {} bytes\n".format(len(data)))
+        
+        # Write hex dump in rows of 16 bytes
+        hex_lines = []
+        for i in range(0, len(data), 16):
+            hex_part = ' '.join('{:02X}'.format(b) for b in data[i:i+16])
+            ascii_part = ''.join(chr(b) if 32 <= b < 127 else '.' for b in data[i:i+16])
+            hex_lines.append("{:04X}  {:48s}  |{}|".format(i, hex_part, ascii_part))
+        
+        raw_tcp_file.write('\n'.join(hex_lines) + '\n')
+        raw_tcp_file.flush()  # Ensure data is written immediately
+        
+    except Exception as e:
+        print("Error writing to all_tcp_raw_data.txt: {}".format(e))
 
 def convert_endianess(data, index, length):
     """Swaps bytes in-place for a given length at a specific index."""
@@ -79,22 +96,6 @@ def convert_B16C_v49_S_H_no_asn(data, index_obj):
     convert_endianess(data, index_obj['i'], 2)
     index_obj['i'] = 4 
 
-def convert_B16C_v49_R_H_no_asn(data, index_obj):
-    convert_endianess(data, index_obj['i'], 4)
-    index_obj['i'] += 4
-
-def convert_B16C_v49_ULgrant_no_asn(data, index_obj):
-    start_pos = index_obj['i']
-    convert_endianess(data, start_pos + 2, 2)
-    convert_endianess(data, start_pos + 4, 2)
-    convert_endianess(data, start_pos + 6, 2)
-    index_obj['i'] += 16
-
-def convert_B16C_v49_DLgrant_no_asn(data, index_obj):
-    index_obj['i'] += 8
-
-def format_hex(data):
-    return data.hex(' ')
 
 def log_raw_tcp_data(raw_data, ts_bridge_read, ts_python_recv):
     """Log raw data after timestamp removal (but before DIAG header skip) to a file for analysis"""
@@ -132,17 +133,6 @@ class DiagDataParser:
         
         self.PER_SECOND = 52428800.0 
         self.EPOCH = datetime(1980, 1, 6, 0, 0, 0, tzinfo=timezone.utc)
-        self.RNTI_TYPE_MAP = {1: "C-RNTI", 2: "SPS-RNTI"}
-        self.BSR_EVENT_MAP = {0: "none", 1: "periodic", 2: "high-data-arrival", 3: "robustness-bsr"}
-        self.BSR_TRIG_MAP = {0: "no-bsr", 1: "cacelled", 2: "l-bsr", 3: "s-bsr", 4: "pad-l-bsr", 5: "pad-s-bsr", 6: "pad-t-bsr"}
-        self.LCID_MAP = {26: "PHR", 29: "S-BSR", 30: "L-BSR", 31: "Padding"}
-        
-        self.CE_LENGTH_MAP = {
-            26: 1,
-            29: 1,
-            30: 3,
-            31: 0
-        }
         
         # Maps for B139 decoding
         self.CARRIER_INDEX_MAP = {0: "pcc", 1: "scc1", 2: "scc2"}
@@ -229,7 +219,7 @@ class DiagDataParser:
                     "sysfn": sysfn, 
                     "mcs_index": mcs_index,
                     "redundancy_version": redundancy_version, 
-                    "tbs_string": get_tbs_index_string(tbs_index),
+                    "tbs_index": tbs_index,
                     "num_of_resource_blocks": num_of_resource_blocks, 
                     "is_ul_grant": 1
                 }
@@ -307,9 +297,9 @@ class DiagDataParser:
                     "subfn": subfn, 
                     "sysfn": sysfn, 
                     "mcs_index": mcs_index,
-                    "tbs_string": get_tbs_index_string(tbs_index),
+                    "tbs_index": tbs_index,
                     "num_of_resource_blocks": num_of_resource_blocks,
-                    # Add dummy fields for compatibility with buffer_data function
+                    # Add fields for data structure compatibility
                     "start_of_resource_block": -1, 
                     "riv_width": -1, 
                     "riv_value": -1,
@@ -430,53 +420,6 @@ class DiagDataParser:
             print("[WARNING] Unsupported B139 version detected: {}".format(version))
             return []
 
-    def buffer_data(self, results, logcode):
-        """Buffer data by timestamp for later writing to file"""
-        if not results: 
-            return
-            
-        for record in results:
-            timestamp = self.convert_timestamp(record['timestamp'])
-            ts_ran_event = self.convert_timestamp_to_unix(record['timestamp'])  # Convert to Unix timestamp
-            
-            # Create unique key for the timestamp with subfn/sysfn to preserve multiple records
-            unique_key = "{}_{}_{}".format(timestamp, record['subfn'], record['sysfn'])
-            
-            if unique_key not in self._data_buffer:
-                self._data_buffer[unique_key] = {
-                    'timestamp': timestamp,
-                    'unix_timestamp': ts_ran_event,
-                    'subfn': record['subfn'],
-                    'sysfn': record['sysfn'],
-                    'lcg_0': '-', 
-                    'lcg_1': '-', 
-                    'lcg_2': '-', 
-                    'lcg_3': '-', 
-                    'num_rbs': '-',
-                    'tbs_index': '-',
-                    'mcs_index': '-',
-                    'riv_width': '-',
-                    'riv_value': '-',
-                    'bridge_timestamp': 0.0,
-                    'pipeline_latency_ms': 0.0
-                }
-            
-            if logcode == 0xB064:
-                # Store the buffer size values (LCG values)
-                self._data_buffer[unique_key]['lcg_0'] = record['buffer_size'][0]
-                self._data_buffer[unique_key]['lcg_1'] = record['buffer_size'][1]
-                self._data_buffer[unique_key]['lcg_2'] = record['buffer_size'][2]
-                self._data_buffer[unique_key]['lcg_3'] = record['buffer_size'][3]
-            
-            elif logcode == 0xB16C:
-                # Store the number of resource blocks and TBS index
-                self._data_buffer[unique_key]['num_rbs'] = record['num_of_resource_blocks']
-                self._data_buffer[unique_key]['tbs_index'] = record['tbs_string']
-                self._data_buffer[unique_key]['mcs_index'] = record.get('mcs_index', '-')
-        
-        # Write buffered data to file when it exceeds a certain size
-        if len(self._data_buffer) > 100:
-            self.write_buffered_data()
 
     def buffer_data_with_bridge_ts(self, results, logcode, ts_bridge_read, ts_python_recv):
         """Buffer data with bridge timestamp and local unix time for latency analysis"""
@@ -514,7 +457,7 @@ class DiagDataParser:
                     'lcg_2': '-', 
                     'lcg_3': '-', 
                     'num_rbs': '-',
-                    'tbs_index': '-',
+                    'tbs_index': -1,
                     'mcs_index': '-',
                     'pusch_tb_size': '-',
                     'redund_ver': '-',
@@ -537,7 +480,7 @@ class DiagDataParser:
             elif logcode == 0xB16C:
                 # Store the number of resource blocks and TBS index
                 self._data_buffer[unique_key]['num_rbs'] = record['num_of_resource_blocks']
-                self._data_buffer[unique_key]['tbs_index'] = record['tbs_string']
+                self._data_buffer[unique_key]['tbs_index'] = record['tbs_index']
                 self._data_buffer[unique_key]['mcs_index'] = record.get('mcs_index', '-')
             
             elif logcode == 0xB139:
@@ -564,7 +507,7 @@ class DiagDataParser:
             with open(self._report_filename, 'a', encoding='utf-8') as f:
                 # Write header if needed
                 if not self._header_written and write_header:
-                    header = ["RAN_Event_Unix_Timestamp", "Bridge_Read_Timestamp", "Python_Recv_Timestamp", "Cellular_Precise_Timestamp", "Current_SFN_SF", "Pipeline_Latency_ms",
+                    header = ["RAN_Event_Unix_Timestamp", "Bridge_Read_Timestamp", "Python_Recv_Timestamp", "Cellular_Precise_Timestamp", "Current_SFN_SF", "Pipeline_Latency_ms", "Bridge_Python_Latency_ms",
                             "LCG_0", "LCG_1", "LCG_2", "LCG_3", "Num_RBs", "TBS_Index", 
                             "MCS_Index",
                             "Redund_Ver", "PUSCH_TB_Size"]
@@ -602,13 +545,19 @@ class DiagDataParser:
                         if ran_unix_ts > 0 and bridge_ts > 0:
                             pipeline_latency_ms = (bridge_ts - ran_unix_ts) * 1000
                         
-                        line = "{:.6f}\t{:.6f}\t{:.6f}\t{:.6f}\t{}\t{:.3f}\t".format(
+                        # Calculate Bridge to Python latency (Python_Recv - Bridge_Read)
+                        bridge_python_latency_ms = 0.0
+                        if bridge_ts > 0 and python_recv_ts > 0:
+                            bridge_python_latency_ms = (python_recv_ts - bridge_ts) * 1000
+                        
+                        line = "{:.6f}\t{:.6f}\t{:.6f}\t{:.6f}\t{}\t{:.3f}\t{:.3f}\t".format(
                             ran_unix_ts,
                             bridge_ts,
                             python_recv_ts,
                             cellular_precise_ts,
                             data.get('current_sfn_sf', '-'),
-                            pipeline_latency_ms
+                            pipeline_latency_ms,
+                            bridge_python_latency_ms
                         )
                         line += "{}\t{}\t{}\t{}\t".format(data['lcg_0'], data['lcg_1'], data['lcg_2'], data['lcg_3'])
                         line += "{}\t{}\t".format(data.get('num_rbs', '-'), data['tbs_index'])
@@ -691,9 +640,10 @@ class DiagDataParser:
                 index_obj['i'] += 14
                 
                 # --- Element Parsing ---
-                buffer_size = [0, 0, 0, 0]
+                buffer_size = [-1, -1, -1, -1]  # Initialize as invalid
                 lcg = -1
                 bsr_type = 0
+                has_bsr_data = False  # Track if we found actual BSR data
                 
                 if hdrlen > 0 and index_obj['i'] + hdrlen <= len(data):
                     start_element = index_obj['i']
@@ -709,8 +659,12 @@ class DiagDataParser:
                         # Determine BSR type
                         if LCID_data == 29: 
                             bsr_type = 1  # Short BSR
+                            has_bsr_data = True
+                            buffer_size = [0, 0, 0, 0]  # Reset to valid zeros when BSR found
                         elif LCID_data == 30: 
                             bsr_type = 2  # Long BSR
+                            has_bsr_data = True
+                            buffer_size = [0, 0, 0, 0]  # Reset to valid zeros when BSR found
                         elif LCID_data == 31 and bsr_type == 0: 
                             bsr_type = 3  # Padding
                         
@@ -748,106 +702,131 @@ class DiagDataParser:
                     
                     index_obj['i'] += hdrlen
                 
-                # Create a record with the parsed data
-                record = {
-                    "logcode": logcode,
-                    "timestamp": timestamp,
-                    "subfn": subfn,
-                    "sysfn": sysfn,
-                    "grant_bytes": grant_bytes,
-                    "padding": padding,
-                    "bsr_event": bsr_event,
-                    "bsr_type": bsr_type,
-                    "lcg": lcg,
-                    "bsr_trig": bsr_trig,
-                    "buffer_size": buffer_size
-                }
-                results.append(record)
+                # Only create a record if we found actual BSR data
+                if has_bsr_data:
+                    record = {
+                        "logcode": logcode,
+                        "timestamp": timestamp,
+                        "subfn": subfn,
+                        "sysfn": sysfn,
+                        "grant_bytes": grant_bytes,
+                        "padding": padding,
+                        "bsr_event": bsr_event,
+                        "bsr_type": bsr_type,
+                        "lcg": lcg,
+                        "bsr_trig": bsr_trig,
+                        "buffer_size": buffer_size
+                    }
+                    results.append(record)
                 
         return results
 
     def parse_and_log(self, hdlc_stream, ts_bridge_read=None, ts_python_recv=None):
         """Parse HDLC data stream with timestamps, calculate latency, and record local Unix timestamp"""
+        # Log data entering parse_and_log function to tcp_and_parse_data.txt
+        with open("tcp_and_parse_data.txt", "a") as logfile:
+            logfile.write("\n=== Data Entering parse_and_log() at Python_TS: {:.6f} ===\n".format(ts_python_recv if ts_python_recv else 0))
+            logfile.write("Bridge_TS: {:.6f}\n".format(ts_bridge_read if ts_bridge_read else 0))
+            logfile.write("Data length: {} bytes\n".format(len(hdlc_stream)))
+            logfile.write("Hex dump:\n")
+            # Write hex dump
+            for i in range(0, len(hdlc_stream), 16):
+                hex_part = ' '.join('{:02X}'.format(b) for b in hdlc_stream[i:i+16])
+                logfile.write("{:04X}  {}\n".format(i, hex_part))
+        
+        # New logging file for parse_and_log data with 98 header checking
+        with open("parseandlog_data.txt", "a") as parse_log:
+            parse_log.write("\n========== NEW parse_and_log() CALL AT {} ==========\n".format(
+                datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+            parse_log.write("Bridge_TS: {:.6f}, Python_TS: {:.6f}\n".format(
+                ts_bridge_read if ts_bridge_read else 0, 
+                ts_python_recv if ts_python_recv else 0))
+            parse_log.write("Total HDLC stream length: {} bytes\n\n".format(len(hdlc_stream)))
+        
         potential_frames = hdlc_stream.split(b'\x7e')
-        for frame_data in potential_frames:
-            if not frame_data: continue
-            
-            # Check if raw frame starts with 98 (before HDLC decode)
-            raw_starts_with_98 = frame_data.startswith(b'\x98')
-            
-            decoded_payload = HDLC.decode(frame_data + b'\x7e')
-            if decoded_payload is None: continue
-
-            # Log non-98-01 packets for analysis
-            if not decoded_payload.startswith(b'\x98\01\x00\x00\x01\x00\x00\x00'):
-                self._log_non_9801_packet(decoded_payload, ts_bridge_read, ts_python_recv, 
-                                          frame_data, raw_starts_with_98)
-                continue
-            
-            data = decoded_payload[12:]
-            if len(data) < 12: continue
-            
-            msg_len, logcode, timestamp = struct.unpack('<HHQ', data[:12])
-            payload = data[12 : 12 + msg_len]
-            
-            # Convert RAN event timestamp to Unix timestamp to maintain consistency with bridge timestamp
-            ts_ran_event = self.convert_timestamp_to_unix(timestamp)
-            
-            # Calculate latency (RAN timestamp converted to Unix timestamp, consistent with bridge timestamp baseline)
-            if ts_ran_event > 0 and ts_bridge_read is not None:  # Ensure timestamp is valid
-                diag_pipeline_latency_ms = (ts_bridge_read - ts_ran_event) * 1000
-                print("--- Latency Analysis ---")
-                print("T_ran_event: {}".format(ts_ran_event))
-                print("T_bridge_read: {}".format(ts_bridge_read))
-                print("Diag Pipeline Latency: {:.3f}ms".format(diag_pipeline_latency_ms))
-            
-            if logcode == 0xB16C:
-                results = self.decode_b16c_payload(payload, timestamp, logcode)  # Using central dispatcher
-                if results:
-                    self.buffer_data_with_bridge_ts(results, logcode, ts_bridge_read, ts_python_recv)
-            elif logcode == 0xB139:
-                results = self.decode_b139_payload(payload, timestamp, logcode)  # Using central dispatcher
-                if results:
-                    self.buffer_data_with_bridge_ts(results, logcode, ts_bridge_read, ts_python_recv)
-            elif logcode == 0xB064:
-                # Use the new C-style parsing for B064
-                b064_records = self.decode_b064_payload(payload, timestamp, logcode)
-                if b064_records:
-                    self.buffer_data_with_bridge_ts(b064_records, logcode, ts_bridge_read, ts_python_recv)
+        frame_counter = 0
+        # Open parseandlog_data.txt for detailed logging
+        with open("parseandlog_data.txt", "a") as parse_log:
+            for frame_data in potential_frames:
+                if not frame_data: continue
+                
+                frame_counter += 1
+                
+                # Check if raw frame starts with 98 (before HDLC decode)
+                raw_starts_with_98 = frame_data.startswith(b'\x98')
+                
+                # Log frame info to parseandlog_data.txt
+                parse_log.write("--- Frame #{} ---\n".format(frame_counter))
+                parse_log.write("Raw frame length: {} bytes\n".format(len(frame_data)))
+                parse_log.write("Raw frame starts with 0x98: {}\n".format(raw_starts_with_98))
+                if len(frame_data) >= 16:
+                    parse_log.write("Raw frame first 16 bytes: {}\n".format(
+                        ' '.join('{:02X}'.format(b) for b in frame_data[:16])))
+                
+                decoded_payload = HDLC.decode(frame_data + b'\x7e')
+                if decoded_payload is None: 
+                    parse_log.write("HDLC decode failed\n\n")
+                    continue
+                
+                # Check if decoded payload starts with 98 01
+                decoded_starts_with_9801 = decoded_payload.startswith(b'\x98\01\x00\x00\x01\x00\x00\x00')
+                parse_log.write("Decoded payload length: {} bytes\n".format(len(decoded_payload)))
+                parse_log.write("Decoded payload starts with 0x98 0x01: {}\n".format(decoded_starts_with_9801))
+                
+                if len(decoded_payload) >= 16:
+                    parse_log.write("Decoded payload first 16 bytes: {}\n".format(
+                        ' '.join('{:02X}'.format(b) for b in decoded_payload[:16])))
+                
+                # Log non-98-01 packets for analysis
+                if not decoded_starts_with_9801:
+                    parse_log.write("*** NON-98-01 PACKET - Logging to non_9801_packets.txt ***\n\n")
+                    self._log_non_9801_packet(decoded_payload, ts_bridge_read, ts_python_recv, 
+                                              frame_data, raw_starts_with_98)
+                    continue
+                
+                parse_log.write("Processing as valid DIAG packet\n")
+                
+                data = decoded_payload[12:]
+                if len(data) < 12: 
+                    parse_log.write("Data after DIAG header too short, skipping\n\n")
+                    continue
+                
+                msg_len, logcode, timestamp = struct.unpack('<HHQ', data[:12])
+                payload = data[12 : 12 + msg_len]
+                
+                # Log packet details
+                parse_log.write("Valid DIAG packet - Logcode: 0x{:04X}, Msg_len: {}, Timestamp: {}\n\n".format(
+                    logcode, msg_len, timestamp))
+                
+                # Convert RAN event timestamp to Unix timestamp to maintain consistency with bridge timestamp
+                ts_ran_event = self.convert_timestamp_to_unix(timestamp)
+                
+                # Calculate latency (RAN timestamp converted to Unix timestamp, consistent with bridge timestamp baseline)
+                if ts_ran_event > 0 and ts_bridge_read is not None:  # Ensure timestamp is valid
+                    diag_pipeline_latency_ms = (ts_bridge_read - ts_ran_event) * 1000
+                    print("--- Latency Analysis ---")
+                    print("T_ran_event: {}".format(ts_ran_event))
+                    print("T_bridge_read: {}".format(ts_bridge_read))
+                    print("Diag Pipeline Latency: {:.3f}ms".format(diag_pipeline_latency_ms))
+                
+                if logcode == 0xB16C:
+                    results = self.decode_b16c_payload(payload, timestamp, logcode)  # Using central dispatcher
+                    if results:
+                        self.buffer_data_with_bridge_ts(results, logcode, ts_bridge_read, ts_python_recv)
+                elif logcode == 0xB139:
+                    results = self.decode_b139_payload(payload, timestamp, logcode)  # Using central dispatcher
+                    if results:
+                        self.buffer_data_with_bridge_ts(results, logcode, ts_bridge_read, ts_python_recv)
+                elif logcode == 0xB064:
+                    # Use the new C-style parsing for B064
+                    b064_records = self.decode_b064_payload(payload, timestamp, logcode)
+                    if b064_records:
+                        self.buffer_data_with_bridge_ts(b064_records, logcode, ts_bridge_read, ts_python_recv)
         
         # Periodically write buffered data to file
         if len(self._data_buffer) > 50:
             self.write_buffered_data()
 
-    def calculate_cellular_time_order(self, df):
-        """
-        Calculate precise time order based on cellular network time structure
-        SysFN: 0-1023 (System Frame Number, increments every 10ms)
-        SubFN: 0-9 (Sub-Frame Number, increments every 1ms)
-        """
-        # Calculate relative time offset (ms) = SysFN * 10 + SubFN * 1
-        df['cellular_time_ms'] = df['SysFN'] * 10 + df['SubFN'] * 1
-        
-        # Handle SysFN wrap-around (0-1023)
-        df = df.sort_values('RAN_Event_Unix_Timestamp').reset_index(drop=True)
-        
-        # Group by Unix timestamp to handle SysFN wrap-around
-        grouped = df.groupby('RAN_Event_Unix_Timestamp')
-        
-        refined_data = []
-        for timestamp, group in grouped:
-            # Sort by cellular_time_ms within same Unix timestamp
-            group_sorted = group.sort_values('cellular_time_ms').copy()
-            
-            # Add fine-grained timestamp (based on cellular network time)
-            for i, (_, row) in enumerate(group_sorted.iterrows()):
-                row_dict = row.to_dict()
-                # Add millisecond-level offset to Unix timestamp
-                row_dict['precise_timestamp'] = timestamp + (row['cellular_time_ms'] % 10240) / 1000.0
-                row_dict['event_order_in_timestamp'] = i
-                refined_data.append(row_dict)
-        
-        return pd.DataFrame(refined_data)
 
 
     def _log_non_9801_packet(self, decoded_payload, ts_bridge_read, ts_python_recv, 
@@ -903,7 +882,7 @@ class DiagDataParser:
             if needs_header:
                 # Write header to new file or prepend to existing
                 header = ["RAN_Event_Unix_Timestamp", "Bridge_Read_Timestamp", "Python_Recv_Timestamp", 
-                        "Cellular_Precise_Timestamp", "Current_SFN_SF", "Pipeline_Latency_ms",
+                        "Cellular_Precise_Timestamp", "Current_SFN_SF", "Pipeline_Latency_ms", "Bridge_Python_Latency_ms",
                         "LCG_0", "LCG_1", "LCG_2", "LCG_3", "Num_RBs", "TBS_Index", 
                         "MCS_Index",
                         "Redund_Ver", "PUSCH_TB_Size"]
@@ -1019,9 +998,7 @@ INIT_MESSAGES = [
     b'\x73\x00\x00\x00\x00\x00\x00\x00\xda\x81\x7e',
 ]
 FINAL_MESSAGE = b'\x60\x00\x12\x6a\x7e'
-DEFAULT_LOGCODES = [0xB064, 0xB16C, 0xB139]  # Added B139 for PUSCH transmission info
-def hex_dump(data):
-    return ' '.join("{:02x}".format(b) for b in data)
+DEFAULT_LOGCODES = [0xB16C,0xB064]  # Added B139 for PUSCH transmission info
 def generate_logcode_command(logcodes):
     item_ids = [code & 0xFFF for code in logcodes]
     if not item_ids: return None
@@ -1112,7 +1089,7 @@ def parse_0x1d_response(response_data, parser):
                 print("[0x1D INIT RESPONSE] Warning: Payload too short ({} bytes)".format(len(payload)))
             return  # Found and processed 0x1D response
 def main():
-    global drain_thread_running, client_socket_global, client_socket_lock, current_mode, fatal_error_occurred
+    global drain_thread_running, client_socket_global, client_socket_lock, current_mode, fatal_error_occurred, raw_tcp_file
     
     # Initialize lock for thread-safe socket access
     client_socket_lock = threading.Lock()
@@ -1128,6 +1105,10 @@ def main():
         print("Connecting to {}:{}...".format(HOST, PORT))
         client_socket.connect((HOST, PORT))
         print("Connection successful!")
+        
+        # 添加TCP_NODELAY禁用Nagle算法，减少网络延迟
+        client_socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+        print("TCP_NODELAY enabled for real-time data transmission")
         
         # Receive and analyze welcome message to determine mode
         welcome_bytes = client_socket.recv(1024)
@@ -1188,7 +1169,12 @@ def main():
             print("\nDrain thread is not required for LEGACY mode (handled by C bridge).")
         
         print("\nStarting continuous monitoring and parsing mode...")
-        print("Press Ctrl-C to exit. Parsed data will be saved to diag_report.txt")
+        print("Press Ctrl-C to exit.")
+        print("Output files:")
+        print("  1. diag_report.txt - Parsed DIAG data report")
+        print("  2. tcp_and_parse_data.txt - Raw TCP data and pre-parseandlog data")
+        print("  3. parseandlog_data.txt - Data during parse_and_log with 98 header checking")
+        print("  4. all_tcp_raw_data.txt - ALL raw TCP data")
         print("Operating in {} mode".format(current_mode))
         
         # Buffer for processing TCP stream
@@ -1211,6 +1197,22 @@ def main():
 
                 # Get Python data receive timestamp, use CLOCK_REALTIME to ensure consistency with other components
                 ts_python_recv = time.clock_gettime(time.CLOCK_REALTIME)
+                
+                # Log ALL raw TCP data
+                log_all_tcp_data(new_data, ts_python_recv)
+                
+                # Log raw TCP data received to tcp_and_parse_data.txt
+                with open("tcp_and_parse_data.txt", "a") as tcp_log:
+                    tcp_log.write("\n=== Raw TCP Data Received at {:.6f} ===\n".format(ts_python_recv))
+                    tcp_log.write("Data length: {} bytes\n".format(len(new_data)))
+                    # Check if starts with 98
+                    tcp_starts_with_98 = new_data.startswith(b'\x98') if len(new_data) > 0 else False
+                    tcp_log.write("Starts with 0x98: {}\n".format(tcp_starts_with_98))
+                    tcp_log.write("Hex dump:\n")
+                    # Write hex dump
+                    for i in range(0, len(new_data), 16):
+                        hex_part = ' '.join('{:02X}'.format(b) for b in new_data[i:i+16])
+                        tcp_log.write("{:04X}  {}\n".format(i, hex_part))
                 
                 # Add new data to receive buffer
                 receive_buffer += new_data
@@ -1239,10 +1241,41 @@ def main():
                         if len(remaining_data) > 0:
                             log_raw_tcp_data(remaining_data, ts_bridge_read, ts_python_recv)
                         
-                        # Process raw diag data, skip first 12 bytes of DIAG protocol header
+                        # NEW LOGIC: Process frames with individual 12-byte DIAG header removal
+                        # Note: 8-byte timestamp already removed, only need to remove 12-byte DIAG header
                         if len(remaining_data) > 12:
-                            hdlc_data_stream = remaining_data[12:]
-                            parser.parse_and_log(hdlc_data_stream, ts_bridge_read, ts_python_recv)
+                            # 1. Remove first 12 bytes (DIAG header only, timestamp already removed)
+                            first_frame_data = remaining_data[12:]
+                            hdlc_data_stream = b''
+                            
+                            # 2. Check if there are more frames (split by 7e)
+                            if b'\x7e' in first_frame_data:
+                                # Split by 7e to find additional frames
+                                parts = first_frame_data.split(b'\x7e')
+                                
+                                # Process first frame (already had 20 bytes removed)
+                                if len(parts[0]) > 0:
+                                    hdlc_data_stream += parts[0] + b'\x7e'
+                                
+                                # 3. Process additional frames - each needs 20-byte header removal 
+                                # (8-byte timestamp + 12-byte DIAG header)
+                                for i in range(1, len(parts)):
+                                    frame_part = parts[i]
+                                    if len(frame_part) > 20:  # Has enough data for full header removal
+                                        # Remove full 20-byte header from additional frames
+                                        frame_payload = frame_part[20:]
+                                        if len(frame_payload) > 0:
+                                            hdlc_data_stream += frame_payload + b'\x7e'
+                                    elif len(frame_part) > 0:
+                                        # Frame too short for header, use as-is
+                                        hdlc_data_stream += frame_part + b'\x7e'
+                            else:
+                                # Only one frame, use it directly
+                                hdlc_data_stream = first_frame_data + b'\x7e'
+                            
+                            # Process the reconstructed HDLC data stream
+                            if hdlc_data_stream:
+                                parser.parse_and_log(hdlc_data_stream, ts_bridge_read, ts_python_recv)
                     
                     # Prepare buffer for next data block
                     # Note: This assumes each TCP packet contains only one complete data block
@@ -1266,6 +1299,11 @@ def main():
             drain_thread_running = False
             if drain_thread:
                 drain_thread.join(timeout=2.0)  # Wait up to 2 seconds for thread to stop
+        
+        # Close raw TCP log file
+        if raw_tcp_file:
+            raw_tcp_file.close()
+            print("Raw TCP data file closed.")
         
         # Close socket with thread safety
         with client_socket_lock:

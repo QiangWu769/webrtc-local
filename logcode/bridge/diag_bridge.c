@@ -254,6 +254,7 @@ void print_hex_data(const char* prefix, const unsigned char* data, int len) {
     printf("\n");
 }
 
+
 // Detect 0x1D response in HDLC data
 int detect_1d_response(const char* data, int len) {
     // Look for 0x1D response patterns in the data
@@ -747,7 +748,6 @@ int main(int argc, char* argv[]) {
             }
             else {
                 // Process client data
-                printf("[%d] Reading data from client...\n", some_fd.fd);
                 int bytes_read = read(some_fd.fd, diag_buffer, BUFFER_LEN);
                 
                 if(bytes_read < 1) {
@@ -755,11 +755,6 @@ int main(int argc, char* argv[]) {
                     goto remove_fd;
                 }
 
-                printf("[%d] RX: ", some_fd.fd);
-                for(int i = 0; i < bytes_read; i++) {
-                    printf("%02X ", (unsigned char)diag_buffer[i]);
-                }
-                printf("\n");
 
                 // Check if this is the final configuration message
                 if (!config_completed && is_final_config_message(diag_buffer, bytes_read)) {
@@ -800,11 +795,6 @@ int main(int argc, char* argv[]) {
                 }
                 // Removed second conditional branch for adding 0xFFFFFFFF
                 
-                printf("[%d] TX to diag: ", some_fd.fd);
-                for(int i = 0; i < write_len; i++) {
-                    printf("%02X ", (unsigned char)write_buf[i]);
-                }
-                printf("\n");
                 
                 // Record timestamp before sending command to diag
                 struct timeval send_tv;

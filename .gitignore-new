@@ -1,0 +1,84 @@
+# Video files
+*.yuv
+*.y4m
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+
+# Large binary files
+*.so
+*.a
+*.o
+*.dylib
+*.dll
+*.exe
+*.bin
+*.pak
+*.tgz
+*.tar.gz
+*.tar.xz
+*.zip
+
+# Build outputs
+out/
+build/
+Release/
+Debug/
+obj/
+
+# Test data and resources
+*/test_data/
+*/testdata/
+*/resources/*.yuv
+*/resources/*.y4m
+
+# Large third-party files
+*/third_party/**/*.pack
+*/third_party/**/*.idx
+*/.git/objects/pack/*.pack
+*/.git/objects/pack/*.idx
+
+# Instrumented libraries binaries
+*/instrumented_libs/binaries/
+*/instrumented_libraries/binaries/
+
+# Specific large files
+src/third_party/jdk/current/lib/modules
+src/third_party/llvm-build/
+src/third_party/rust-toolchain/lib/
+AlphaRTC/third_party/instrumented_libraries/binaries/
+
+# Test results
+*_test_results/
+received_video.*
+output_video.*
+sent_video.*
+
+# Temporary and cache files
+*.tmp
+*.cache
+*.pyc
+__pycache__/
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node modules (if any)
+node_modules/
+
+# Python virtual environments
+venv/
+env/
+.env
+
+# Log files
+*.log
+*.out

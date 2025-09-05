@@ -238,3 +238,305 @@ Decoded packet length: 152 bytes
 Decoded 8-byte header: DE AB F8 E4 C9 2C DA 41
 Full decoded packet content:
 DE AB F8 E4 C9 2C DA 41 20 00 00 00 01 00 00 00 88 00 00 00 98 01 00 00 01 00 00 00 10 00 78 00 78 00 39 B1 07 81 32 B7 7B 55 0C 01 A1 38 02 00 86 1C 00 00 7D 1C 1D 00 1C 8E 42 00 C9 00 F7 02 90 80 00 30 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 04 00 0E 00 68 18 00 00 56 00 0F 00 82 00 54 00 F6 B3 14 90 11 C1 CC 16 5D C0 30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 44 8E 99 99 91 30 50 00
+
+--- Packet at Bridge_TS: 1756752860.227949, Python_TS: 1756752860.0160203 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 1D 9E 8A 5A E0 20 5E 0C
+Decoded packet length: 9 bytes
+Decoded 8-byte header: 1D 9E 8A 5A E0 20 5E 0C
+Full decoded packet content:
+1D 9E 8A 5A E0 20 5E 0C 01
+Full raw HDLC frame (before decode):
+1D 9E 8A 5A E0 20 5E 0C 01 77 6A
+
+--- Packet at Bridge_TS: 1756752860.228974, Python_TS: 1756752860.0180674 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 00 41 70 72 20 20 32 20
+Decoded packet length: 55 bytes
+Decoded 8-byte header: 00 41 70 72 20 20 32 20
+Full decoded packet content:
+00 41 70 72 20 20 32 20 32 30 32 34 31 36 3A 33 37 3A 31 37 41 70 72 20 30 31 20 32 30 32 34 30 34 3A 30 30 3A 30 30 6C 61 68 61 69 6E 61 2E 3A 09 FF 64 00 30 01 35
+Full raw HDLC frame (before decode):
+00 41 70 72 20 20 32 20 32 30 32 34 31 36 3A 33 37 3A 31 37 41 70 72 20 30 31 20 32 30 32 34 30 34 3A 30 30 3A 30 30 6C 61 68 61 69 6E 61 2E 3A 09 FF 64 00 30 01 35 84 3D
+
+--- Packet at Bridge_TS: 1756752860.229905, Python_TS: 1756752860.020413 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 7C 01 00 00 53 13 00 00
+Decoded packet length: 66 bytes
+Decoded 8-byte header: 7C 01 00 00 53 13 00 00
+Full decoded packet content:
+7C 01 00 00 53 13 00 00 4E 01 00 00 4D 50 53 53 2E 48 49 2E 34 2E 33 2E 63 34 2D 30 30 32 33 34 2D 4C 43 5F 41 4C 4C 5F 50 41 43 4B 2D 31 2E 32 37 31 33 36 2E 31 34 30 2E 36 35 32 33 37 2E 33 00 00
+
+--- Packet at Bridge_TS: 1756752860.231979, Python_TS: 1756752860.0217752 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 0C 00 00 00 59 B8 AC 80
+Decoded packet length: 48 bytes
+Decoded 8-byte header: 0C 00 00 00 59 B8 AC 80
+Full decoded packet content:
+0C 00 00 00 59 B8 AC 80 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF 00 00 00 00 00 00 00 00 00 00 00 00 00 13 00 62 00 00 00 00 00 00
+Full raw HDLC frame (before decode):
+0C 00 00 00 59 B8 AC 80 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF 00 00 00 00 00 00 00 00 00 00 00 00 00 13 00 62 00 00 00 00 00 00 61 BE
+
+--- Packet at Bridge_TS: 1756752860.233946, Python_TS: 1756752860.023032 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 4B 0F 00 00 05 00 00 00
+Decoded packet length: 156 bytes
+Decoded 8-byte header: 4B 0F 00 00 05 00 00 00
+Full decoded packet content:
+4B 0F 00 00 05 00 00 00 05 00 00 00 09 00 00 00 27 00 00 00 FF FF FF FF FF 00 00 00 02 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 02 00 00 00 00 00 00 00 FF FF FF FF 28 02 00 00 DF 18 0F AB E0 A1 00 00 42 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 57 00 08 09 00 81 00 00 42 30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+--- Packet at Bridge_TS: 1756752860.234921, Python_TS: 1756752860.0243227 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 4B 09 00 00 06 07 06 00
+Decoded packet length: 26 bytes
+Decoded 8-byte header: 4B 09 00 00 06 07 06 00
+Full decoded packet content:
+4B 09 00 00 06 07 06 00 05 00 00 00 09 00 00 00 27 00 00 00 00 00 00 00 0F F0
+Full raw HDLC frame (before decode):
+4B 09 00 00 06 07 06 00 05 00 00 00 09 00 00 00 27 00 00 00 00 00 00 00 0F F0 AC 5E
+
+--- Packet at Bridge_TS: 1756752860.236987, Python_TS: 1756752860.0266616 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 4B 08 01 00 08 8A 46 76
+Decoded packet length: 32 bytes
+Decoded 8-byte header: 4B 08 01 00 08 8A 46 76
+Full decoded packet content:
+4B 08 01 00 08 8A 46 76 08 05 83 57 92 00 00 00 00 00 00 00 00 00 00 00 0F F0 DE AD 00 05 05 09
+Full raw HDLC frame (before decode):
+4B 08 01 00 08 8A 46 76 08 05 83 57 92 00 00 00 00 00 00 00 00 00 00 00 0F F0 DE AD 00 05 05 09 77 75
+
+--- Packet at Bridge_TS: 1756752860.238965, Python_TS: 1756752860.02945 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 4B 04 0F 00 08 8A 46 76
+Decoded packet length: 23 bytes
+Decoded 8-byte header: 4B 04 0F 00 08 8A 46 76
+Full decoded packet content:
+4B 04 0F 00 08 8A 46 76 08 05 83 57 92 08 39 01 42 30 14 66 19 04 0A
+Full raw HDLC frame (before decode):
+4B 04 0F 00 08 8A 46 76 08 05 83 57 92 08 39 01 42 30 14 66 19 04 0A 91 53
+
+--- Packet at Bridge_TS: 1756834595.513918, Python_TS: 1756834595.1654115 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 4B 44 01 90 00 00 00 00
+Decoded packet length: 8 bytes
+Decoded 8-byte header: 4B 44 01 90 00 00 00 00
+Full decoded packet content:
+4B 44 01 90 00 00 00 00
+Full raw HDLC frame (before decode):
+4B 44 01 90 00 00 00 00 A0 D3
+
+--- Packet at Bridge_TS: 1756834595.515051, Python_TS: 1756834595.167186 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 1D 34 A5 1F 9F 06 62 0C
+Decoded packet length: 9 bytes
+Decoded 8-byte header: 1D 34 A5 1F 9F 06 62 0C
+Full decoded packet content:
+1D 34 A5 1F 9F 06 62 0C 01
+Full raw HDLC frame (before decode):
+1D 34 A5 1F 9F 06 62 0C 01 5C C5
+
+--- Packet at Bridge_TS: 1756834595.515615, Python_TS: 1756834595.1682267 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 00 41 70 72 20 20 32 20
+Decoded packet length: 55 bytes
+Decoded 8-byte header: 00 41 70 72 20 20 32 20
+Full decoded packet content:
+00 41 70 72 20 20 32 20 32 30 32 34 31 36 3A 33 37 3A 31 37 41 70 72 20 30 31 20 32 30 32 34 30 34 3A 30 30 3A 30 30 6C 61 68 61 69 6E 61 2E 3A 09 FF 64 00 30 01 35
+Full raw HDLC frame (before decode):
+00 41 70 72 20 20 32 20 32 30 32 34 31 36 3A 33 37 3A 31 37 41 70 72 20 30 31 20 32 30 32 34 30 34 3A 30 30 3A 30 30 6C 61 68 61 69 6E 61 2E 3A 09 FF 64 00 30 01 35 84 3D
+
+--- Packet at Bridge_TS: 1756834595.51659, Python_TS: 1756834595.1701703 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 7C 01 00 00 53 13 00 00
+Decoded packet length: 66 bytes
+Decoded 8-byte header: 7C 01 00 00 53 13 00 00
+Full decoded packet content:
+7C 01 00 00 53 13 00 00 4E 01 00 00 4D 50 53 53 2E 48 49 2E 34 2E 33 2E 63 34 2D 30 30 32 33 34 2D 4C 43 5F 41 4C 4C 5F 50 41 43 4B 2D 31 2E 32 37 31 33 36 2E 31 34 30 2E 36 35 32 33 37 2E 33 00 00
+
+--- Packet at Bridge_TS: 1756834595.51659, Python_TS: 1756834595.1701703 ---
+Raw HDLC frame starts with 98: False
+Decoded packet length: 3 bytes
+Full decoded packet content:
+1C 08 00
+Full raw HDLC frame (before decode):
+1C 08 00 3A 28
+
+--- Packet at Bridge_TS: 1756834595.518744, Python_TS: 1756834595.1712883 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 0C 00 00 00 59 B8 AC 80
+Decoded packet length: 48 bytes
+Decoded 8-byte header: 0C 00 00 00 59 B8 AC 80
+Full decoded packet content:
+0C 00 00 00 59 B8 AC 80 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF 00 00 00 00 00 00 00 00 00 00 00 00 00 13 00 62 00 00 00 00 00 00
+Full raw HDLC frame (before decode):
+0C 00 00 00 59 B8 AC 80 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF 00 00 00 00 00 00 00 00 00 00 00 00 00 13 00 62 00 00 00 00 00 00 61 BE
+
+--- Packet at Bridge_TS: 1756834595.518744, Python_TS: 1756834595.1712883 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 4B 44 01 90 00 00 00 00
+Decoded packet length: 8 bytes
+Decoded 8-byte header: 4B 44 01 90 00 00 00 00
+Full decoded packet content:
+4B 44 01 90 00 00 00 00
+Full raw HDLC frame (before decode):
+4B 44 01 90 00 00 00 00 A0 D3
+
+--- Packet at Bridge_TS: 1756834595.520476, Python_TS: 1756834595.1779685 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 1D C5 92 24 9F 06 62 0C
+Decoded packet length: 9 bytes
+Decoded 8-byte header: 1D C5 92 24 9F 06 62 0C
+Full decoded packet content:
+1D C5 92 24 9F 06 62 0C 01
+Full raw HDLC frame (before decode):
+1D C5 92 24 9F 06 62 0C 01 DF FC
+
+--- Packet at Bridge_TS: 1756834595.520476, Python_TS: 1756834595.1779685 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 00 41 70 72 20 20 32 20
+Decoded packet length: 55 bytes
+Decoded 8-byte header: 00 41 70 72 20 20 32 20
+Full decoded packet content:
+00 41 70 72 20 20 32 20 32 30 32 34 31 36 3A 33 37 3A 31 37 41 70 72 20 30 31 20 32 30 32 34 30 34 3A 30 30 3A 30 30 6C 61 68 61 69 6E 61 2E 3A 09 FF 64 00 30 01 35
+Full raw HDLC frame (before decode):
+00 41 70 72 20 20 32 20 32 30 32 34 31 36 3A 33 37 3A 31 37 41 70 72 20 30 31 20 32 30 32 34 30 34 3A 30 30 3A 30 30 6C 61 68 61 69 6E 61 2E 3A 09 FF 64 00 30 01 35 84 3D
+
+--- Packet at Bridge_TS: 1756834595.522571, Python_TS: 1756834595.1797435 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 7C 01 00 00 53 13 00 00
+Decoded packet length: 66 bytes
+Decoded 8-byte header: 7C 01 00 00 53 13 00 00
+Full decoded packet content:
+7C 01 00 00 53 13 00 00 4E 01 00 00 4D 50 53 53 2E 48 49 2E 34 2E 33 2E 63 34 2D 30 30 32 33 34 2D 4C 43 5F 41 4C 4C 5F 50 41 43 4B 2D 31 2E 32 37 31 33 36 2E 31 34 30 2E 36 35 32 33 37 2E 33 00 00
+
+--- Packet at Bridge_TS: 1756834595.522571, Python_TS: 1756834595.1797435 ---
+Raw HDLC frame starts with 98: False
+Decoded packet length: 3 bytes
+Full decoded packet content:
+1C 08 00
+Full raw HDLC frame (before decode):
+1C 08 00 3A 28
+
+--- Packet at Bridge_TS: 1756834595.522571, Python_TS: 1756834595.1797435 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 4B 44 01 90 00 00 00 00
+Decoded packet length: 8 bytes
+Decoded 8-byte header: 4B 44 01 90 00 00 00 00
+Full decoded packet content:
+4B 44 01 90 00 00 00 00
+Full raw HDLC frame (before decode):
+4B 44 01 90 00 00 00 00 A0 D3
+
+--- Packet at Bridge_TS: 1756834595.522571, Python_TS: 1756834595.1797435 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 1D 05 94 28 9F 06 62 0C
+Decoded packet length: 9 bytes
+Decoded 8-byte header: 1D 05 94 28 9F 06 62 0C
+Full decoded packet content:
+1D 05 94 28 9F 06 62 0C 01
+Full raw HDLC frame (before decode):
+1D 05 94 28 9F 06 62 0C 01 F5 3B
+
+--- Packet at Bridge_TS: 1756834595.522571, Python_TS: 1756834595.1797435 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 00 41 70 72 20 20 32 20
+Decoded packet length: 55 bytes
+Decoded 8-byte header: 00 41 70 72 20 20 32 20
+Full decoded packet content:
+00 41 70 72 20 20 32 20 32 30 32 34 31 36 3A 33 37 3A 31 37 41 70 72 20 30 31 20 32 30 32 34 30 34 3A 30 30 3A 30 30 6C 61 68 61 69 6E 61 2E 3A 09 FF 64 00 30 01 35
+Full raw HDLC frame (before decode):
+00 41 70 72 20 20 32 20 32 30 32 34 31 36 3A 33 37 3A 31 37 41 70 72 20 30 31 20 32 30 32 34 30 34 3A 30 30 3A 30 30 6C 61 68 61 69 6E 61 2E 3A 09 FF 64 00 30 01 35 84 3D
+
+--- Packet at Bridge_TS: 1756834595.527668, Python_TS: 1756834595.182636 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 7C 01 00 00 53 13 00 00
+Decoded packet length: 66 bytes
+Decoded 8-byte header: 7C 01 00 00 53 13 00 00
+Full decoded packet content:
+7C 01 00 00 53 13 00 00 4E 01 00 00 4D 50 53 53 2E 48 49 2E 34 2E 33 2E 63 34 2D 30 30 32 33 34 2D 4C 43 5F 41 4C 4C 5F 50 41 43 4B 2D 31 2E 32 37 31 33 36 2E 31 34 30 2E 36 35 32 33 37 2E 33 00 00
+
+--- Packet at Bridge_TS: 1756834595.528633, Python_TS: 1756834595.183677 ---
+Raw HDLC frame starts with 98: False
+Decoded packet length: 3 bytes
+Full decoded packet content:
+1C 08 00
+Full raw HDLC frame (before decode):
+1C 08 00 3A 28
+
+--- Packet at Bridge_TS: 1756834595.528633, Python_TS: 1756834595.183677 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 0C 00 00 00 59 B8 AC 80
+Decoded packet length: 48 bytes
+Decoded 8-byte header: 0C 00 00 00 59 B8 AC 80
+Full decoded packet content:
+0C 00 00 00 59 B8 AC 80 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF 00 00 00 00 00 00 00 00 00 00 00 00 00 13 00 62 00 00 00 00 00 00
+Full raw HDLC frame (before decode):
+0C 00 00 00 59 B8 AC 80 03 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF 00 00 00 00 00 00 00 00 00 00 00 00 00 13 00 62 00 00 00 00 00 00 61 BE
+
+--- Packet at Bridge_TS: 1756834595.528633, Python_TS: 1756834595.183677 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 63 59 B8 AC 80 9A CF F9
+Decoded packet length: 36 bytes
+Decoded 8-byte header: 63 59 B8 AC 80 9A CF F9
+Full decoded packet content:
+63 59 B8 AC 80 9A CF F9 00 E7 03 9A CF F9 E7 03 00 00 00 63 E7 03 FF 13 00 62 00 09 09 09 00 00 00 04 00 00
+Full raw HDLC frame (before decode):
+63 59 B8 AC 80 9A CF F9 00 E7 03 9A CF F9 E7 03 00 00 00 63 E7 03 FF 13 00 62 00 09 09 09 00 00 00 04 00 00 FA 96
+
+--- Packet at Bridge_TS: 1756834595.528633, Python_TS: 1756834595.183677 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 4B 0F 00 00 05 00 00 00
+Decoded packet length: 156 bytes
+Decoded 8-byte header: 4B 0F 00 00 05 00 00 00
+Full decoded packet content:
+4B 0F 00 00 05 00 00 00 05 00 00 00 09 00 00 00 27 00 00 00 87 03 E8 06 FF 00 00 00 02 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 02 00 00 00 00 00 00 00 FF FF FF FF 28 02 00 00 DF 18 0F AB E0 A1 00 00 42 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 57 00 08 09 00 81 00 00 42 30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+--- Packet at Bridge_TS: 1756834595.532784, Python_TS: 1756834595.1846867 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 4B 09 00 00 06 07 06 00
+Decoded packet length: 26 bytes
+Decoded 8-byte header: 4B 09 00 00 06 07 06 00
+Full decoded packet content:
+4B 09 00 00 06 07 06 00 05 00 00 00 09 00 00 00 27 00 00 00 00 00 00 00 0F F0
+Full raw HDLC frame (before decode):
+4B 09 00 00 06 07 06 00 05 00 00 00 09 00 00 00 27 00 00 00 00 00 00 00 0F F0 AC 5E
+
+--- Packet at Bridge_TS: 1756834595.533828, Python_TS: 1756834595.1853244 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 4B 08 00 00 AD DE AD DE
+Decoded packet length: 10 bytes
+Decoded 8-byte header: 4B 08 00 00 AD DE AD DE
+Full decoded packet content:
+4B 08 00 00 AD DE AD DE AD DE
+Full raw HDLC frame (before decode):
+4B 08 00 00 AD DE AD DE AD DE C9 ED
+
+--- Packet at Bridge_TS: 1756834595.535063, Python_TS: 1756834595.186621 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 4B 08 01 00 08 8A 46 76
+Decoded packet length: 32 bytes
+Decoded 8-byte header: 4B 08 01 00 08 8A 46 76
+Full decoded packet content:
+4B 08 01 00 08 8A 46 76 08 05 83 57 92 00 00 00 00 00 00 00 00 00 00 00 0F F0 DE AD 00 05 05 09
+Full raw HDLC frame (before decode):
+4B 08 01 00 08 8A 46 76 08 05 83 57 92 00 00 00 00 00 00 00 00 00 00 00 0F F0 DE AD 00 05 05 09 77 75
+
+--- Packet at Bridge_TS: 1756834595.535977, Python_TS: 1756834595.1876242 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 4B 04 00 00 08 06 00 00
+Decoded packet length: 10 bytes
+Decoded 8-byte header: 4B 04 00 00 08 06 00 00
+Full decoded packet content:
+4B 04 00 00 08 06 00 00 00 00
+Full raw HDLC frame (before decode):
+4B 04 00 00 08 06 00 00 00 00 66 0A
+
+--- Packet at Bridge_TS: 1756834595.537037, Python_TS: 1756834595.188614 ---
+Raw HDLC frame starts with 98: False
+Raw frame header (first 8 bytes): 4B 04 0F 00 08 8A 46 76
+Decoded packet length: 23 bytes
+Decoded 8-byte header: 4B 04 0F 00 08 8A 46 76
+Full decoded packet content:
+4B 04 0F 00 08 8A 46 76 08 05 83 57 92 08 39 01 62 40 91 28 25 29 09
+Full raw HDLC frame (before decode):
+4B 04 0F 00 08 8A 46 76 08 05 83 57 92 08 39 01 62 40 91 28 25 29 09 3A 63

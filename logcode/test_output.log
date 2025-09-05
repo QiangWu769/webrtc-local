@@ -1,0 +1,4 @@
+[INFO] Report file initialized with header: diag_report.txt
+Connecting to 127.0.0.1:43555...
+An error occurred: [Errno 111] Connection refused
+Connection closed.

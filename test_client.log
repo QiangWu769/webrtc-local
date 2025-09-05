@@ -1,0 +1,3 @@
+Unable to init server: Could not connect: Connection refused
+
+(peerconnection_client:160756): Gtk-WARNING **: 07:12:27.333: cannot open display: 

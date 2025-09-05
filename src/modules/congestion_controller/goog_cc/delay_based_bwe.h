@@ -87,6 +87,9 @@ class DelayBasedBwe {
                           std::optional<DataRate> link_capacity);
   DataRate last_estimate() const { return prev_bitrate_; }
   BandwidthUsage last_state() const { return prev_state_; }
+  
+  // Cellular resource ratio support (for testing data pipeline)
+  void UpdateCellularResourceRatio(double ratio, Timestamp at_time);
 
  private:
   friend class GoogCcStatePrinter;

@@ -1,0 +1,1 @@
+RAN_Event_Unix_Timestamp	Bridge_Read_Timestamp	Python_Recv_Timestamp	Cellular_Precise_Timestamp	Current_SFN_SF	Pipeline_Latency_ms	Bridge_Python_Latency_ms	LCG_0	LCG_1	LCG_2	LCG_3	Num_RBs	TBS_Index	MCS_Index	Redund_Ver	PUSCH_TB_Size
