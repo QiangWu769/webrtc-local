@@ -289,6 +289,9 @@ class DiagDataParser:
                 tbs_index = (ul_grant_data[2] & 0xFC) >> 2
                 mcs_index = ((ul_grant_data[2] & 0x03) << 3) | ((ul_grant_data[3] & 0xE0) >> 5)
                 
+                
+                redundancy_version = (ul_grant_data[3] & 0x18) >> 3
+                
                 record_data = {
                     "logcode": logcode, 
                     "timestamp": timestamp, 
@@ -299,6 +302,10 @@ class DiagDataParser:
                     "mcs_index": mcs_index,
                     "tbs_index": tbs_index,
                     "num_of_resource_blocks": num_of_resource_blocks,
+                    
+                    
+                    "redundancy_version": redundancy_version,
+
                     # Add fields for data structure compatibility
                     "start_of_resource_block": -1, 
                     "riv_width": -1, 
@@ -338,65 +345,52 @@ class DiagDataParser:
     
     def _decode_b139_v161(self, payload, timestamp, logcode):
         """
-        Decode B139 payload for version 161 (PUSCH transmission info)
-        (CORRECTED based on reverse-engineering against ground truth log)
+        一个高效的B139 v161解析器，仅提取报告所需的
+        'current_sfn_sf', 'redund_ver', 和 'pusch_tb_size' 字段。
+        这是经过多份日志验证的最终正确版本。
         """
         parsed_records = []
         if len(payload) < 8:
             return []
         
-        # Parse S_H header (8 bytes) - This part is correct
-        version = payload[0]
+        # 从头部获取记录数量
         num_of_records = (payload[2] & 0xFE) >> 1
-        payload_view = memoryview(payload)
-        dispatch_sfn_sf = struct.unpack('<H', payload_view[4:6])[0]
-        
-        readable_timestamp = self.convert_timestamp(timestamp)
-        cursor = 8  # Skip S_H header
-        
+        cursor = 8  # 跳过8字节的头部
+
+        # 遍历payload中的每一个100字节的记录
         for _ in range(num_of_records):
-            if cursor + 100 > len(payload_view):  # Each record is 100 bytes
+            # 确保有足够的数据
+            if cursor + 100 > len(payload):
                 break
-                
-            # Parse record
-            record_view = payload_view[cursor : cursor + 100]
-            
-            # Extract fields using direct, correct logic
+
+            record_view = memoryview(payload)[cursor : cursor + 100]
+
+            # --- 只解析三个必需的字段 ---
+
+            # 1. 'current_sfn_sf' (用于时间戳和分组)
             current_sfn_sf = struct.unpack('<H', record_view[0:2])[0]
-            redund_ver = (record_view[2] & 0x30) >> 4
-            re_tx_index = ((record_view[2] & 0x0F) << 1) | ((record_view[3] & 0x80) >> 7)
-            ul_carrier_index = record_view[3] & 0x03
             
-            # !!!!!!!!!!! THIS IS THE CRITICAL FIX !!!!!!!!!!!
-            # The C code's cross-byte logic was wrong. The correct value is simply the byte at index 11.
-            num_of_rb = record_view[11]
-            
+            # 2. 'pusch_tb_size' (用于报告)
             pusch_tb_size = struct.unpack('<H', record_view[8:10])[0]
-            dl_carrier_index = (record_view[7] & 0x06) >> 1
-            
-            # Convert indices to strings
-            re_tx_index_str = self.RETX_INDEX_MAP.get(re_tx_index, "invalid")
-            ul_carrier_str = self.CARRIER_INDEX_MAP.get(ul_carrier_index, "invalid")
-            dl_carrier_str = self.CARRIER_INDEX_MAP.get(dl_carrier_index, "invalid")
-            
+
+            # 3. 'redund_ver' (用于报告)
+            # 正确逻辑：需要对记录的第3个字节进行位掩码操作
+            byte_for_rv = record_view[3]
+            redund_ver = (byte_for_rv & 0x30) >> 4
+
+            # --- 组装包含最少字段的记录字典 ---
+            # 必须包含logcode和timestamp，以便后续函数能正常工作
             record_data = {
                 "logcode": logcode,
                 "timestamp": timestamp,
-                "readable_timestamp": readable_timestamp,
-                "version": version,
-                "dispatch_sfn_sf": dispatch_sfn_sf,
                 "current_sfn_sf": current_sfn_sf,
                 "redund_ver": redund_ver,
-                "re_tx_index": re_tx_index,
-                "re_tx_index_str": re_tx_index_str,
-                "ul_carrier_index": ul_carrier_index,
-                "ul_carrier_str": ul_carrier_str,
-                "num_of_rb": num_of_rb,
                 "pusch_tb_size": pusch_tb_size,
-                "dl_carrier_index": dl_carrier_index,
-                "dl_carrier_str": dl_carrier_str
+                # 'num_of_rb' 不再解析，后续函数会自动处理
             }
             parsed_records.append(record_data)
+            
+            # 移动到下一个记录
             cursor += 100
             
         return parsed_records
@@ -482,6 +476,9 @@ class DiagDataParser:
                 self._data_buffer[unique_key]['num_rbs'] = record['num_of_resource_blocks']
                 self._data_buffer[unique_key]['tbs_index'] = record['tbs_index']
                 self._data_buffer[unique_key]['mcs_index'] = record.get('mcs_index', '-')
+
+              
+                self._data_buffer[unique_key]['redund_ver'] = record.get('redundancy_version', '-')
             
             elif logcode == 0xB139:
                 # Store PUSCH transmission info
@@ -702,8 +699,8 @@ class DiagDataParser:
                     
                     index_obj['i'] += hdrlen
                 
-                # Only create a record if we found actual BSR data
-                if has_bsr_data:
+                # Only create a record if we found actual BSR data and at least one LCG has non-zero value
+                if has_bsr_data and any(val > 0 for val in buffer_size):
                     record = {
                         "logcode": logcode,
                         "timestamp": timestamp,
@@ -998,7 +995,7 @@ INIT_MESSAGES = [
     b'\x73\x00\x00\x00\x00\x00\x00\x00\xda\x81\x7e',
 ]
 FINAL_MESSAGE = b'\x60\x00\x12\x6a\x7e'
-DEFAULT_LOGCODES = [0xB16C,0xB064]  # Added B139 for PUSCH transmission info
+DEFAULT_LOGCODES = [0xB16C,0xB064,0xB139]  # Added B139 for PUSCH transmission info
 def generate_logcode_command(logcodes):
     item_ids = [code & 0xFFF for code in logcodes]
     if not item_ids: return None
@@ -1241,41 +1238,98 @@ def main():
                         if len(remaining_data) > 0:
                             log_raw_tcp_data(remaining_data, ts_bridge_read, ts_python_recv)
                         
-                        # NEW LOGIC: Process frames with individual 12-byte DIAG header removal
-                        # Note: 8-byte timestamp already removed, only need to remove 12-byte DIAG header
-                        if len(remaining_data) > 12:
-                            # 1. Remove first 12 bytes (DIAG header only, timestamp already removed)
-                            first_frame_data = remaining_data[12:]
-                            hdlc_data_stream = b''
-                            
-                            # 2. Check if there are more frames (split by 7e)
-                            if b'\x7e' in first_frame_data:
-                                # Split by 7e to find additional frames
-                                parts = first_frame_data.split(b'\x7e')
+                        # Process frames based on operating mode
+                        if current_mode == OperatingMode.LEGACY:
+                            # LEGACY MODE: Skip 20-byte header first, then split by 7e, then find DIAG sequence
+                            # Data format: [8-byte timestamp][12-byte DIAG header][HDLC frames with 7e delimiters]
+                            if len(remaining_data) > 20:
+                                # Remove 12-byte DIAG header (8-byte timestamp already removed)
+                                frame_data_after_header = remaining_data[12:]
                                 
-                                # Process first frame (already had 20 bytes removed)
-                                if len(parts[0]) > 0:
-                                    hdlc_data_stream += parts[0] + b'\x7e'
+                                # Split by 7e delimiter to get individual frames
+                                potential_frames = frame_data_after_header.split(b'\x7e')
+                                hdlc_data_stream = b''
                                 
-                                # 3. Process additional frames - each needs 20-byte header removal 
-                                # (8-byte timestamp + 12-byte DIAG header)
-                                for i in range(1, len(parts)):
-                                    frame_part = parts[i]
-                                    if len(frame_part) > 20:  # Has enough data for full header removal
-                                        # Remove full 20-byte header from additional frames
-                                        frame_payload = frame_part[20:]
-                                        if len(frame_payload) > 0:
-                                            hdlc_data_stream += frame_payload + b'\x7e'
-                                    elif len(frame_part) > 0:
-                                        # Frame too short for header, use as-is
-                                        hdlc_data_stream += frame_part + b'\x7e'
-                            else:
-                                # Only one frame, use it directly
-                                hdlc_data_stream = first_frame_data + b'\x7e'
-                            
-                            # Process the reconstructed HDLC data stream
-                            if hdlc_data_stream:
-                                parser.parse_and_log(hdlc_data_stream, ts_bridge_read, ts_python_recv)
+                                for frame_data in potential_frames:
+                                    if frame_data and len(frame_data) > 0:
+                                        # Find the DIAG protocol sequence: 98 01 00 00 01 00 00 00
+                                        diag_sequence = b'\x98\x01\x00\x00\x01\x00\x00\x00'
+                                        diag_pos = frame_data.find(diag_sequence)
+                                        
+                                        if diag_pos >= 0:
+                                            # Found DIAG sequence, use data starting from this position
+                                            clean_frame_data = frame_data[diag_pos:]
+                                            hdlc_data_stream += clean_frame_data + b'\x7e'
+                                            print("[LEGACY] Found DIAG sequence at position {} in frame, using {} bytes".format(
+                                                diag_pos, len(clean_frame_data)))
+                                        else:
+                                            print("[LEGACY] No DIAG sequence found in frame, discarding {} bytes".format(len(frame_data)))
+                                
+                                if hdlc_data_stream:
+                                    parser.parse_and_log(hdlc_data_stream, ts_bridge_read, ts_python_recv)
+                        
+                        elif current_mode == OperatingMode.SOCKET:
+                            # SOCKET MODE: Original complex logic for socket mode
+                            # Note: 8-byte timestamp already removed, only need to remove 12-byte DIAG header
+                            if len(remaining_data) > 12:
+                                # 1. Remove first 12 bytes (DIAG header only, timestamp already removed)
+                                first_frame_data = remaining_data[12:]
+                                hdlc_data_stream = b''
+                                
+                                # 2. Check if there are more frames (split by 7e)
+                                if b'\x7e' in first_frame_data:
+                                    # Split by 7e to find additional frames
+                                    parts = first_frame_data.split(b'\x7e')
+                                    
+                                    # Process first frame (already had 20 bytes removed)
+                                    if len(parts[0]) > 0:
+                                        hdlc_data_stream += parts[0] + b'\x7e'
+                                    
+                                    # 3. Process additional frames - each needs 20-byte header removal 
+                                    # (8-byte timestamp + 12-byte DIAG header)
+                                    for i in range(1, len(parts)):
+                                        frame_part = parts[i]
+                                        if len(frame_part) > 20:  # Has enough data for full header removal
+                                            # Remove full 20-byte header from additional frames
+                                            frame_payload = frame_part[20:]
+                                            if len(frame_payload) > 0:
+                                                hdlc_data_stream += frame_payload + b'\x7e'
+                                        elif len(frame_part) > 0:
+                                            # Frame too short for header, use as-is
+                                            hdlc_data_stream += frame_part + b'\x7e'
+                                else:
+                                    # Only one frame, use it directly
+                                    hdlc_data_stream = first_frame_data + b'\x7e'
+                                
+                                # Process the reconstructed HDLC data stream
+                                if hdlc_data_stream:
+                                    parser.parse_and_log(hdlc_data_stream, ts_bridge_read, ts_python_recv)
+                        
+                        else:
+                            # UNKNOWN MODE: Default to legacy mode behavior with DIAG sequence detection
+                            print("[WARNING] Unknown operating mode, defaulting to legacy mode behavior")
+                            if len(remaining_data) > 20:
+                                frame_data_after_header = remaining_data[12:]
+                                potential_frames = frame_data_after_header.split(b'\x7e')
+                                hdlc_data_stream = b''
+                                
+                                for frame_data in potential_frames:
+                                    if frame_data and len(frame_data) > 0:
+                                        # Find the DIAG protocol sequence: 98 01 00 00 01 00 00 00
+                                        diag_sequence = b'\x98\x01\x00\x00\x01\x00\x00\x00'
+                                        diag_pos = frame_data.find(diag_sequence)
+                                        
+                                        if diag_pos >= 0:
+                                            # Found DIAG sequence, use data starting from this position
+                                            clean_frame_data = frame_data[diag_pos:]
+                                            hdlc_data_stream += clean_frame_data + b'\x7e'
+                                            print("[UNKNOWN] Found DIAG sequence at position {} in frame, using {} bytes".format(
+                                                diag_pos, len(clean_frame_data)))
+                                        else:
+                                            print("[UNKNOWN] No DIAG sequence found in frame, discarding {} bytes".format(len(frame_data)))
+                                
+                                if hdlc_data_stream:
+                                    parser.parse_and_log(hdlc_data_stream, ts_bridge_read, ts_python_recv)
                     
                     # Prepare buffer for next data block
                     # Note: This assumes each TCP packet contains only one complete data block

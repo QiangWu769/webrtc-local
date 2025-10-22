@@ -122,6 +122,14 @@ std::string GetWallClockTimestampString() {
   ss << std::fixed << std::setprecision(6) << unix_seconds;
   return ss.str();
 }
+
+std::string ToMsString(Timestamp value) {
+  return value.IsFinite() ? std::to_string(value.ms()) : "INF";
+}
+
+std::string ToMsString(TimeDelta value) {
+  return value.IsFinite() ? std::to_string(value.ms()) : "INF";
+}
 }  // namespace
  
  RttBasedBackoff::RttBasedBackoff(const FieldTrialsView& key_value_config)
@@ -144,12 +152,12 @@ std::string GetWallClockTimestampString() {
    }
    
    // RTT专属日志 - 初始化配置
-   RTC_LOG(LS_INFO) << "[RttBWE-Config] RTT-based backoff initialized"
-                    << ", Disabled: " << (disabled_ ? "true" : "false")
-                    << ", RttLimit: " << rtt_limit_.ms() << " ms"
-                    << ", DropFraction: " << drop_fraction_.Get()
-                    << ", DropInterval: " << drop_interval_.Get().ms() << " ms" 
-                    << ", BandwidthFloor: " << bandwidth_floor_.Get().bps() << " bps";
+  RTC_LOG(LS_INFO) << "[RttBWE-Config] RTT-based backoff initialized"
+                   << ", Disabled: " << (disabled_ ? "true" : "false")
+                   << ", RttLimit: " << ToMsString(rtt_limit_) << " ms"
+                   << ", DropFraction: " << drop_fraction_.Get()
+                   << ", DropInterval: " << ToMsString(drop_interval_.Get()) << " ms"
+                   << ", BandwidthFloor: " << bandwidth_floor_.Get().bps() << " bps";
  }
  
  void RttBasedBackoff::UpdatePropagationRtt(Timestamp at_time,
@@ -160,11 +168,12 @@ std::string GetWallClockTimestampString() {
    // RTT专属日志 - RTT更新
    TimeDelta corrected_rtt = CorrectedRtt();
    bool above_limit = corrected_rtt > rtt_limit_;
-   RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]" << " [RttBWE-Update] MonoTime: " << at_time.ms() << " ms"
-                    << ", PropagationRtt: " << propagation_rtt.ms() << " ms"
-                    << ", CorrectedRtt: " << corrected_rtt.ms() << " ms"
-                    << ", RttLimit: " << rtt_limit_.ms() << " ms"
-                    << ", AboveLimit: " << (above_limit ? "true" : "false");
+  RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
+                   << " [RttBWE-Update] MonoTime: " << ToMsString(at_time) << " ms"
+                   << ", PropagationRtt: " << ToMsString(propagation_rtt) << " ms"
+                   << ", CorrectedRtt: " << ToMsString(corrected_rtt) << " ms"
+                   << ", RttLimit: " << ToMsString(rtt_limit_) << " ms"
+                   << ", AboveLimit: " << (above_limit ? "true" : "false");
  }
  
  bool RttBasedBackoff::IsRttAboveLimit() const {
@@ -339,10 +348,11 @@ std::string GetWallClockTimestampString() {
    receiver_limit_ = bandwidth.IsZero() ? DataRate::PlusInfinity() : bandwidth;
    
    // 添加接收端约束日志 (安全处理无穷大值)
-   RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]" << " [BWE-ReceiverLimit] MonoTime: " << at_time.ms() << " ms"
-                    << ", OldLimit: " << (old_limit.IsFinite() ? std::to_string(old_limit.bps()) + " bps" : "INF")
-                    << ", NewLimit: " << (receiver_limit_.IsFinite() ? std::to_string(receiver_limit_.bps()) + " bps" : "INF")
-                    << ", CurrentTarget: " << (current_target_.IsFinite() ? std::to_string(current_target_.bps()) + " bps" : "INF");
+  RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
+                   << " [BWE-ReceiverLimit] MonoTime: " << ToMsString(at_time) << " ms"
+                   << ", OldLimit: " << (old_limit.IsFinite() ? std::to_string(old_limit.bps()) + " bps" : "INF")
+                   << ", NewLimit: " << (receiver_limit_.IsFinite() ? std::to_string(receiver_limit_.bps()) + " bps" : "INF")
+                   << ", CurrentTarget: " << (current_target_.IsFinite() ? std::to_string(current_target_.bps()) + " bps" : "INF");
    
    ApplyTargetLimits(at_time);
  }
@@ -355,10 +365,11 @@ std::string GetWallClockTimestampString() {
    delay_based_limit_ = bitrate.IsZero() ? DataRate::PlusInfinity() : bitrate;
    
    // 添加DelayBased约束日志 (安全处理无穷大值)
-   RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]" << " [BWE-DelayLimit] MonoTime: " << at_time.ms() << " ms"
-                    << ", OldLimit: " << (old_limit.IsFinite() ? std::to_string(old_limit.bps()) + " bps" : "INF")
-                    << ", NewLimit: " << (delay_based_limit_.IsFinite() ? std::to_string(delay_based_limit_.bps()) + " bps" : "INF")
-                    << ", CurrentTarget: " << (current_target_.IsFinite() ? std::to_string(current_target_.bps()) + " bps" : "INF");
+  RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
+                   << " [BWE-DelayLimit] MonoTime: " << ToMsString(at_time) << " ms"
+                   << ", OldLimit: " << (old_limit.IsFinite() ? std::to_string(old_limit.bps()) + " bps" : "INF")
+                   << ", NewLimit: " << (delay_based_limit_.IsFinite() ? std::to_string(delay_based_limit_.bps()) + " bps" : "INF")
+                   << ", CurrentTarget: " << (current_target_.IsFinite() ? std::to_string(current_target_.bps()) + " bps" : "INF");
    
    ApplyTargetLimits(at_time);
  }
@@ -503,14 +514,15 @@ std::string GetWallClockTimestampString() {
          TimeDelta::Zero());
      TimeDelta corrected_rtt = timeout_correction + rtt_backoff_.last_propagation_rtt_;
      
-     RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]" << " [RttBWE-Backoff] MonoTime: " << at_time.ms() << " ms"
-                      << ", CurrentTarget: " << current_target_.bps() << " bps"
-                      << ", CorrectedRtt: " << corrected_rtt.ms() << " ms"
-                      << ", RttLimit: " << rtt_backoff_.rtt_limit_.ms() << " ms"
-                      << ", TimeSinceLastDecrease: " << time_since_last_decrease.ms() << " ms"
-                      << ", DropInterval: " << rtt_backoff_.drop_interval_.Get().ms() << " ms"
-                      << ", BandwidthFloor: " << rtt_backoff_.bandwidth_floor_.Get().bps() << " bps"
-                      << ", CanDecrease: " << (can_decrease ? "true" : "false");
+    RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
+                     << " [RttBWE-Backoff] MonoTime: " << ToMsString(at_time) << " ms"
+                     << ", CurrentTarget: " << current_target_.bps() << " bps"
+                     << ", CorrectedRtt: " << ToMsString(corrected_rtt) << " ms"
+                     << ", RttLimit: " << ToMsString(rtt_backoff_.rtt_limit_) << " ms"
+                     << ", TimeSinceLastDecrease: " << ToMsString(time_since_last_decrease) << " ms"
+                     << ", DropInterval: " << ToMsString(rtt_backoff_.drop_interval_.Get()) << " ms"
+                     << ", BandwidthFloor: " << rtt_backoff_.bandwidth_floor_.Get().bps() << " bps"
+                     << ", CanDecrease: " << (can_decrease ? "true" : "false");
      
      if (can_decrease) {
        time_last_decrease_ = at_time;
@@ -519,11 +531,12 @@ std::string GetWallClockTimestampString() {
                     rtt_backoff_.bandwidth_floor_.Get());
        
        // RTT专属日志 - RTT回退决策
-       RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]" << " [RttBWE-Decision] MonoTime: " << at_time.ms() << " ms"
-                        << ", OldTarget: " << current_target_.bps() << " bps"
-                        << ", NewTarget: " << new_bitrate.bps() << " bps"
-                        << ", DropFraction: " << rtt_backoff_.drop_fraction_.Get()
-                        << ", Reason: RttBackoff";
+      RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
+                       << " [RttBWE-Decision] MonoTime: " << ToMsString(at_time) << " ms"
+                       << ", OldTarget: " << current_target_.bps() << " bps"
+                       << ", NewTarget: " << new_bitrate.bps() << " bps"
+                       << ", DropFraction: " << rtt_backoff_.drop_fraction_.Get()
+                       << ", Reason: RttBackoff";
        
        UpdateTargetBitrate(new_bitrate, at_time);
        return;
@@ -566,10 +579,11 @@ std::string GetWallClockTimestampString() {
      loss_based_state_ = result.state;
      
      // 添加发送端丢包带宽估算日志
-     RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]" << " [SendBWE-Loss] MonoTime: " << at_time.ms() << " ms"
-                      << ", Current target: " << current_target_.bps() << " bps"
-                      << ", Loss-based estimate: " << result.bandwidth_estimate.bps() << " bps"
-                      << ", State: " << static_cast<int>(result.state);
+    RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
+                     << " [SendBWE-Loss] MonoTime: " << ToMsString(at_time) << " ms"
+                     << ", Current target: " << current_target_.bps() << " bps"
+                     << ", Loss-based estimate: " << result.bandwidth_estimate.bps() << " bps"
+                     << ", State: " << static_cast<int>(result.state);
      
      UpdateTargetBitrate(result.bandwidth_estimate, at_time);
      return;
@@ -581,10 +595,11 @@ std::string GetWallClockTimestampString() {
      float loss = last_fraction_loss_ / 256.0f;
      
      // 添加传统丢包处理日志
-     RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]" << " [SendBWE-ClassicLoss] MonoTime: " << at_time.ms() << " ms"
-                      << ", Loss ratio: " << (loss * 100.0) << "%"
-                      << ", Current target: " << current_target_.bps() << " bps"
-                      << ", Threshold: " << bitrate_threshold_.bps() << " bps";
+    RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
+                     << " [SendBWE-ClassicLoss] MonoTime: " << ToMsString(at_time) << " ms"
+                     << ", Loss ratio: " << (loss * 100.0) << "%"
+                     << ", Current target: " << current_target_.bps() << " bps"
+                     << ", Threshold: " << bitrate_threshold_.bps() << " bps";
      
      // We only make decisions based on loss when the bitrate is above a
      // threshold. This is a crude way of handling loss which is uncorrelated
@@ -609,10 +624,11 @@ std::string GetWallClockTimestampString() {
        new_bitrate += DataRate::BitsPerSec(1000);
        
        // 添加低丢包率时增加带宽的日志
-       RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]" << " [SendBWE-ClassicIncrease] MonoTime: " << at_time.ms() << " ms"
-                        << ", Low loss detected: " << (loss * 100.0) << "%"
-                        << ", Increasing from " << current_target_.bps() << " bps"
-                        << " to " << new_bitrate.bps() << " bps";
+      RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
+                       << " [SendBWE-ClassicIncrease] MonoTime: " << ToMsString(at_time) << " ms"
+                       << ", Low loss detected: " << (loss * 100.0) << "%"
+                       << ", Increasing from " << current_target_.bps() << " bps"
+                       << " to " << new_bitrate.bps() << " bps";
        
        UpdateTargetBitrate(new_bitrate, at_time);
        return;
@@ -637,11 +653,12 @@ std::string GetWallClockTimestampString() {
            has_decreased_since_last_fraction_loss_ = true;
            
            // 添加高丢包率时减少带宽的日志
-           RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]" << " [SendBWE-ClassicDecrease] MonoTime: " << at_time.ms() << " ms"
-                            << ", High loss detected: " << (loss * 100.0) << "%"
-                            << ", Decreasing from " << current_target_.bps() << " bps"
-                            << " to " << new_bitrate.bps() << " bps"
-                            << ", Loss fraction: " << last_fraction_loss_;
+          RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
+                           << " [SendBWE-ClassicDecrease] MonoTime: " << ToMsString(at_time) << " ms"
+                           << ", High loss detected: " << (loss * 100.0) << "%"
+                           << ", Decreasing from " << current_target_.bps() << " bps"
+                           << " to " << new_bitrate.bps() << " bps"
+                           << ", Loss fraction: " << last_fraction_loss_;
            
            UpdateTargetBitrate(new_bitrate, at_time);
            return;
@@ -736,7 +753,8 @@ std::string GetWallClockTimestampString() {
    DataRate after_lower_limit = new_bitrate;
    
    // 添加约束应用详细日志 (安全处理无穷大值)
-   RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]" << " [BWE-ConstraintApply] MonoTime: " << at_time.ms() << " ms"
+  RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
+                   << " [BWE-ConstraintApply] MonoTime: " << ToMsString(at_time) << " ms"
                     << ", Original: " << (original_bitrate.IsFinite() ? std::to_string(original_bitrate.bps()) + " bps" : "INF")
                     << ", UpperLimit: " << (upper_limit.IsFinite() ? std::to_string(upper_limit.bps()) + " bps" : "INF")
                     << ", AfterUpper: " << (after_upper_limit.IsFinite() ? std::to_string(after_upper_limit.bps()) + " bps" : "INF")

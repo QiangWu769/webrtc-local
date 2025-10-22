@@ -13,6 +13,7 @@
 #include "modules/congestion_controller/goog_cc/delay_based_bwe.h"
 #include "rtc_base/logging.h"
 #include "rtc_base/checks.h"
+#include "rtc_base/time_utils.h"
 
 namespace webrtc {
 
@@ -152,34 +153,14 @@ void CellularRatioReceiver::CleanupSocket() {
 
 void CellularRatioReceiver::ProcessPacket(const CellularRatioPacket& packet) {
   packets_received_++;
-  
-  // Check for sequence number gaps (for debugging)
-  if (packets_received_ > 1 && packet.sequence_number != last_sequence_ + 1) {
-    RTC_LOG(LS_WARNING) << "[CellularReceiver] Sequence gap detected. "
-                       << "Expected: " << (last_sequence_ + 1) 
-                       << ", Got: " << packet.sequence_number;
-  }
-  last_sequence_ = packet.sequence_number;
-  
-  // Log every 10th packet to avoid spam
-  if (packet.sequence_number % 10 == 0) {
-    RTC_LOG(LS_INFO) << "[CellularReceiver] Packet received: "
-                    << "seq=" << packet.sequence_number
-                    << ", ratio=" << packet.ratio
-                    << ", time=" << packet.timestamp_ms << "ms";
-  }
-  
-  // Post task to WebRTC task queue for thread-safe processing
+
   if (task_queue_ && delay_based_bwe_) {
-    // Capture values for lambda
     double ratio = packet.ratio;
-    uint64_t timestamp_ms = packet.timestamp_ms;
-    
-    task_queue_->PostTask([this, ratio, timestamp_ms] {
-      // This runs on the WebRTC network thread
-      delay_based_bwe_->UpdateCellularResourceRatio(
-          ratio, 
-          Timestamp::Millis(timestamp_ms));
+    double saturation = packet.saturation;
+
+    task_queue_->PostTask([this, ratio, saturation] {
+      Timestamp now = Timestamp::Millis(TimeMillis());
+      delay_based_bwe_->UpdateCellularResourceRatio(ratio, saturation, now);
     });
   }
 }

@@ -3,28 +3,35 @@
 # 参数解析
 ROLE="$1"
 REMOTE_IP="$2"
+CELLULAR_RATIO_ENABLED="$3"
 
 if [ "$ROLE" != "sender" ] && [ "$ROLE" != "receiver" ]; then
     echo "🎯 智能WebRTC本地启动脚本"
     echo ""
-    echo "用法: $0 <sender|receiver> <cloud_server_ip>"
+    echo "用法: $0 <sender|receiver> <cloud_server_ip> [cellular_ratio_enabled]"
     echo ""
     echo "参数说明:"
-    echo "  sender           - 本地作为发送端运行（连接到云服务器信令服务器）"
-    echo "  receiver         - 本地作为接收端运行（连接到云服务器信令服务器）"
-    echo "  cloud_server_ip  - 云服务器IP地址（必须，因为本地是私网）"
+    echo "  sender                   - 本地作为发送端运行（连接到云服务器信令服务器）"
+    echo "  receiver                 - 本地作为接收端运行（连接到云服务器信令服务器）"
+    echo "  cloud_server_ip          - 云服务器IP地址（必须，因为本地是私网）"
+    echo "  cellular_ratio_enabled   - Cellular ratio影响开关 (可选):"
+    echo "                            1 = 启用影响决策 (默认)"
+    echo "                            0 = 仅记录日志，不影响决策"
     echo ""
     echo "网络架构:"
     echo "  - 云服务器（有公网IP）: 运行信令服务器"
     echo "  - 本地电脑（私网）: 连接到云服务器的信令服务器"
     echo ""
     echo "示例:"
-    echo "  $0 sender 154.64.230.224     # 本地作为发送端，连接云服务器"
-    echo "  $0 receiver 154.64.230.224   # 本地作为接收端，连接云服务器"
+    echo "  $0 sender 173.208.210.62        # 本地作为发送端，启用cellular ratio影响"
+    echo "  $0 sender 173.208.210.62 1      # 本地作为发送端，启用cellular ratio影响"
+    echo "  $0 sender 173.208.210.62 0      # 本地作为发送端，仅记录cellular ratio"
+    echo "  $0 receiver 173.208.210.62      # 本地作为接收端，启用cellular ratio影响"
+    echo "  $0 receiver 173.208.210.62 0    # 本地作为接收端，仅记录cellular ratio"
     echo ""
     echo "兼容性说明:"
     echo "  如果只提供一个IP参数，将默认作为接收端模式运行:"
-    echo "  $0 154.64.230.224           # 等同于 $0 receiver 154.64.230.224"
+    echo "  $0 173.208.210.62           # 等同于 $0 receiver 173.208.210.62 1"
     exit 1
 fi
 
@@ -33,9 +40,24 @@ if [[ "$ROLE" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     echo "🔄 检测到旧版本用法，自动转换为接收端模式"
     REMOTE_IP="$ROLE"
     ROLE="receiver"
+    CELLULAR_RATIO_ENABLED="$2"  # 第二个参数作为cellular ratio开关
+fi
+
+# 设置cellular ratio默认值
+if [ -z "$CELLULAR_RATIO_ENABLED" ]; then
+    CELLULAR_RATIO_ENABLED="1"  # 默认启用
+fi
+
+# 验证cellular ratio参数
+if [ "$CELLULAR_RATIO_ENABLED" != "0" ] && [ "$CELLULAR_RATIO_ENABLED" != "1" ]; then
+    echo "❌ 错误: cellular_ratio_enabled 参数必须是 0 或 1"
+    echo "   0 = 仅记录日志，不影响决策"
+    echo "   1 = 启用影响决策"
+    exit 1
 fi
 
 echo "🎯 智能WebRTC本地启动脚本 - 运行模式: $ROLE"
+echo "📱 Cellular Ratio影响开关: $([ "$CELLULAR_RATIO_ENABLED" = "1" ] && echo "✅ 启用 (影响决策)" || echo "📝 禁用 (仅记录日志)")"
 
 # 清理现有进程
 echo "🧹 清理现有进程..."
@@ -98,7 +120,7 @@ if [ "$ROLE" = "sender" ]; then
     "camera": {"enabled": false},
     "video_file": {
       "enabled": true,
-      "file_path": "$(pwd)/VCD_th_1920x1080_30_120s_compressed.yuv",
+      "file_path": "/home/wuq/webrtc-local/VCD/download/vcd1/yuv420/merged_all_1920x1080.yuv",
       "width": 1920, "height": 1080, "fps": 30
     },
     "video_disabled": {"enabled": false}
@@ -116,22 +138,27 @@ if [ "$ROLE" = "sender" ]; then
     "auto_connect": true,
     "auto_call": true
   },
+  "cellular_ratio": {
+    "influence_enabled": $CELLULAR_RATIO_ENABLED
+  },
   "auto_close_on_completion": true,
-  "transmission_time_seconds": 15
+  "transmission_time_seconds": 8
 }
 EOF
     
     echo "4️⃣ 启动本地发送端..."
+    # Enable core dumps
+    ulimit -c unlimited
     ./src/out/Default/peerconnection_client \
         --config=webrtc_config_results/sender_config_local.json \
-        --force_fieldtrials=WebRTC-DefaultBitrateLimitsKillSwitch/Enabled/ \
         > webrtc_config_results/sender_local.log 2>&1 &
     CLIENT_PID=$!
     
     echo "✅ 本地发送端已启动:"
     echo "   - Xvfb (PID: $XVFB_PID)"
     echo "   - Sender (PID: $CLIENT_PID) - 连接到 $REMOTE_IP:8888"
-    echo "   - 🔥 码率限制已解除 (Field Trial: DefaultBitrateLimitsKillSwitch)"
+    echo "   - 📊 使用默认码率限制设置"
+    echo "   - 📱 Cellular Ratio: $([ "$CELLULAR_RATIO_ENABLED" = "1" ] && echo "✅ 影响决策" || echo "📝 仅记录")"
     echo ""
     echo "📝 日志文件: webrtc_config_results/sender_local.log"
     echo "📊 监控传输状态..."
@@ -164,22 +191,25 @@ elif [ "$ROLE" = "receiver" ]; then
     "auto_connect": true,
     "auto_call": false
   },
+  "cellular_ratio": {
+    "influence_enabled": $CELLULAR_RATIO_ENABLED
+  },
   "auto_close_on_completion": true,
-  "transmission_time_seconds": 15
+  "transmission_time_seconds": 8
 }
 EOF
     
     echo "4️⃣ 启动本地接收端..."
     ./src/out/Default/peerconnection_client \
         --config=webrtc_config_results/receiver_config_local.json \
-        --force_fieldtrials=WebRTC-DefaultBitrateLimitsKillSwitch/Enabled/ \
         > webrtc_config_results/receiver_local.log 2>&1 &
     CLIENT_PID=$!
     
     echo "✅ 本地接收端已启动:"
     echo "   - Xvfb (PID: $XVFB_PID)"
     echo "   - Receiver (PID: $CLIENT_PID) - 连接到 $REMOTE_IP:8888"
-    echo "   - 🔥 码率限制已解除 (Field Trial: DefaultBitrateLimitsKillSwitch)"
+    echo "   - 📊 使用默认码率限制设置"
+    echo "   - 📱 Cellular Ratio: $([ "$CELLULAR_RATIO_ENABLED" = "1" ] && echo "✅ 影响决策" || echo "📝 仅记录")"
     echo ""
     echo "📝 日志文件: webrtc_config_results/receiver_local.log"
     echo "📁 接收视频将保存到: webrtc_config_results/received_local.y4m"

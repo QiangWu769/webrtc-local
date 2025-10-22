@@ -60,11 +60,14 @@ class GccDecisionAnalyzer:
             'overuse': re.compile(r'CheckForOveruse: encode usage (\d+) .*?overuse detections (\d+) .*?rampup delay (\d+) .*?action (\w+)', re.IGNORECASE),
             # Resource adaptation signals
             'encode_usage_signal': re.compile(r'Resource "EncoderUsageResource" signalled (kOveruse|kUnderuse)', re.IGNORECASE),
-            # Cellular ratio patterns
-            'cellular_ratio': re.compile(r'\[AIMD-Cellular\] Resource ratio updated: ([0-9.]+) \(smoothed: ([0-9.]+)\), trend: ([0-9.-]+)'),
+            # Cellular ratio patterns - updated for new log format
+            'cellular_ratio': re.compile(r'\[AIMD-Cellular\] Resource ratio updated: ([0-9.]+) \(EWMA smoothed: ([0-9.]+), samples: \d+/\d+, consecutive high: (\d+)(?:, influence: \w+)?\)'),
             'cellular_limiting': re.compile(r'\[AIMD-Cellular\] Limiting to additive increase due to ratio: ([0-9.]+)'),
             'cellular_hold': re.compile(r'\[AIMD-Cellular\] Preventive HOLD due to low ratio: ([0-9.]+)'),
-            'cellular_received': re.compile(r'\[DelayBWE-Cellular\].*Ratio: ([0-9.]+)')
+            'cellular_received': re.compile(r'\[DelayBWE-Cellular\].*Ratio: ([0-9.]+)'),
+            'cellular_decision_enabled': re.compile(r'\[DelayBWE-Cellular\].*decision-making enabled'),
+            'cellular_decision_disabled': re.compile(r'\[DelayBWE-Cellular\].*decision-making disabled'),
+            'cellular_data_received': re.compile(r'\[DelayBWE-Cellular\] ✅ DATA RECEIVED!')
         }
 
     def calculate_cellular_precise_time(self, df):
@@ -257,7 +260,13 @@ class GccDecisionAnalyzer:
         last_wallclock_ms = None  # wall-clock in milliseconds since epoch
 
         with open(self.log_file_path, 'r', encoding='utf-8') as f:
-            for line in f:
+            for line_number, line in enumerate(f):
+                # Skip cellular processing if we have enough data (performance optimization)
+                skip_cellular = False  # No limit - process all cellular data
+                
+                # Quick skip for cellular lines if we have enough data
+                if skip_cellular and ('[AIMD-Cellular]' in line or '[DelayBWE-Cellular]' in line or '[CellularReceiver]' in line):
+                    continue
                 # Extract wall-clock if present: [seconds.microseconds]
                 wc_match = self.patterns['wallclock'].search(line)
                 if wc_match:
@@ -617,18 +626,18 @@ class GccDecisionAnalyzer:
                         })
                     continue
                 
-                # Match cellular ratio updates
+                # Match cellular ratio updates - parse all data
                 cellular_ratio_match = self.patterns['cellular_ratio'].search(line)
                 if cellular_ratio_match:
-                    timestamp = last_wallclock_ms if last_wallclock_ms is not None else last_timestamp
-                    if timestamp:
-                        cellular_ratio_data.append({
-                            'timestamp': timestamp,
-                            'raw_ratio': float(cellular_ratio_match.group(1)),
-                            'smoothed_ratio': float(cellular_ratio_match.group(2)),
-                            'trend': float(cellular_ratio_match.group(3))
-                        })
-                    continue
+                        timestamp = last_wallclock_ms if last_wallclock_ms is not None else last_timestamp
+                        if timestamp:
+                            cellular_ratio_data.append({
+                                'timestamp': timestamp,
+                                'raw_ratio': float(cellular_ratio_match.group(1)),
+                                'smoothed_ratio': float(cellular_ratio_match.group(2)),
+                                'trend': float(cellular_ratio_match.group(3))  # consecutive high count as trend
+                            })
+                        continue
                 
                 # Match cellular limiting actions
                 cellular_limiting_match = self.patterns['cellular_limiting'].search(line)
@@ -667,6 +676,29 @@ class GccDecisionAnalyzer:
                             'trend': None
                         })
                     continue
+                
+                # Match cellular decision enabled/disabled status - parse all data
+                cellular_decision_enabled_match = self.patterns['cellular_decision_enabled'].search(line)
+                if cellular_decision_enabled_match:
+                        timestamp = last_wallclock_ms if last_wallclock_ms is not None else last_timestamp
+                        if timestamp:
+                            cellular_action_data.append({
+                                'timestamp': timestamp,
+                                'action': 'Decision-Enabled',
+                                'ratio': None
+                            })
+                        continue
+                    
+                cellular_decision_disabled_match = self.patterns['cellular_decision_disabled'].search(line)
+                if cellular_decision_disabled_match:
+                        timestamp = last_wallclock_ms if last_wallclock_ms is not None else last_timestamp
+                        if timestamp:
+                            cellular_action_data.append({
+                                'timestamp': timestamp,
+                                'action': 'Decision-Disabled',
+                                'ratio': None
+                            })
+                        continue
 
         # Convert to DataFrames
         trendline_df = pd.DataFrame(trendline_data)
@@ -748,11 +780,11 @@ class GccDecisionAnalyzer:
         except:
             plt.style.use('default')
             
-        # Create 12 vertical subplots (original 6 + 3 diag overlays + 2 cellular timing + 1 cellular ratio)
-        fig, axes = plt.subplots(12, 1, figsize=(18, 48), sharex=True)
+        # Create 7 vertical subplots with more vertical space
+        fig, axes = plt.subplots(7, 1, figsize=(14, 42), sharex=True)
         fig.suptitle(f'WebRTC GCC Internal Parameters Analysis\n({self.log_file_path})', 
                      fontsize=16, fontweight='bold')
-        plt.subplots_adjust(hspace=0.35)
+        plt.subplots_adjust(hspace=0.7, top=0.96, bottom=0.04)
 
         # Determine common time range
         all_timestamps = []
@@ -968,6 +1000,42 @@ class GccDecisionAnalyzer:
                              transform=axes[1].transAxes, ha='right', va='bottom', fontsize=8,
                              bbox=dict(boxstyle='round,pad=0.2', facecolor='white', alpha=0.85), zorder=10, clip_on=False)
             
+            # Add EWMA ratio overlay on secondary right axis
+            cellular_ratio_df = data_dict.get('cellular_ratio', pd.DataFrame())
+            if not cellular_ratio_df.empty and 'smoothed_ratio' in cellular_ratio_df.columns:
+                cellular_ratio_df = cellular_ratio_df.copy()
+                cellular_ratio_df['time_s'] = (cellular_ratio_df['timestamp'] - start_time_ms) / 1000.0
+                
+                # Filter and sample cellular data for overlay
+                smoothed_data = cellular_ratio_df.dropna(subset=['smoothed_ratio'])
+                if not smoothed_data.empty:
+                    # Sample for better performance and visibility
+                    if len(smoothed_data) > 1000:
+                        step = max(1, len(smoothed_data) // 1000)
+                        smoothed_data_sampled = smoothed_data.iloc[::step].copy()
+                    else:
+                        smoothed_data_sampled = smoothed_data
+                    
+                    # Create third axis for ratio overlay
+                    ax1_ratio = axes[1].twinx()
+                    ax1_ratio.spines['right'].set_position(('outward', 60))
+                    
+                    # Plot EWMA ratio with different style
+                    ax1_ratio.plot(smoothed_data_sampled['time_s'], smoothed_data_sampled['smoothed_ratio'],
+                                  '-', color='crimson', linewidth=1.5, alpha=0.7, label='EWMA Ratio')
+                    
+                    ax1_ratio.set_ylabel('EWMA Ratio', fontsize=10, color='crimson')
+                    ax1_ratio.tick_params(axis='y', labelcolor='crimson', labelsize=8)
+                    ax1_ratio.set_ylim(0, max(3.0, smoothed_data_sampled['smoothed_ratio'].max() * 1.1))
+                    
+                    # Add ratio threshold lines
+                    ax1_ratio.axhline(y=0.6, color='orange', linestyle='--', alpha=0.5, linewidth=1)
+                    ax1_ratio.axhline(y=1.4, color='orange', linestyle='--', alpha=0.5, linewidth=1)
+                    
+                    # Add ratio legend
+                    ratio_legend = ax1_ratio.legend(fontsize=8, loc='center right')
+                    ratio_legend.set_zorder(1000)
+            
             # Bitrate averages box (merged, minimal)
             avg_target = bwe_decision_df['new_target'].mean() / 1000
             avg_acked = bwe_decision_df['acked_bitrate'].mean() / 1000
@@ -1005,23 +1073,30 @@ class GccDecisionAnalyzer:
                 # Filter out None values for smoothed ratio
                 smoothed_data = cellular_ratio_df.dropna(subset=['smoothed_ratio'])
                 if not smoothed_data.empty:
+                    # Intelligent sampling for better visualization
+                    if len(smoothed_data) > 3000:  # If too many points, sample intelligently
+                        # Sample every Nth point to get ~3000 points for clarity
+                        step = max(1, len(smoothed_data) // 3000)
+                        smoothed_data_sampled = smoothed_data.iloc[::step].copy()
+                        print(f"[*] Cellular ratio: Sampling {len(smoothed_data)} points -> {len(smoothed_data_sampled)} points (step={step}) for clearer visualization")
+                    else:
+                        smoothed_data_sampled = smoothed_data
+                    
                     # Main smoothed ratio curve
-                    axes[2].plot(smoothed_data['time_s'], smoothed_data['smoothed_ratio'],
+                    axes[2].plot(smoothed_data_sampled['time_s'], smoothed_data_sampled['smoothed_ratio'],
                                  '-', color='darkblue', linewidth=2.5, alpha=0.9, label='Smoothed Cellular Ratio')
                     
-                    # Fill area under curve with gradient
-                    axes[2].fill_between(smoothed_data['time_s'], 0, smoothed_data['smoothed_ratio'],
+                    # Fill area under curve with gradient (use sampled data)
+                    axes[2].fill_between(smoothed_data_sampled['time_s'], 0, smoothed_data_sampled['smoothed_ratio'],
                                         alpha=0.2, color='lightblue')
             
             # Add threshold lines
-            axes[2].axhline(y=1.0, color='green', linestyle='-', alpha=0.3, linewidth=1)
-            axes[2].axhline(y=0.9, color='orange', linestyle='--', alpha=0.6, linewidth=1.5)
-            axes[2].axhline(y=0.7, color='red', linestyle='--', alpha=0.6, linewidth=1.5)
+            axes[2].axhline(y=1.0, color='orange', linestyle='--', alpha=0.6, linewidth=1.5)
+            axes[2].axhline(y=0.6, color='red', linestyle='--', alpha=0.6, linewidth=1.5)
             
             # Add threshold labels on the right
-            axes[2].text(axes[2].get_xlim()[1] * 0.98, 1.02, 'Normal', fontsize=9, color='green', ha='right')
-            axes[2].text(axes[2].get_xlim()[1] * 0.98, 0.92, 'Limit→Additive', fontsize=9, color='orange', ha='right')
-            axes[2].text(axes[2].get_xlim()[1] * 0.98, 0.72, 'Force Hold', fontsize=9, color='red', ha='right')
+            axes[2].text(axes[2].get_xlim()[1] * 0.98, 1.02, 'Limit→Additive', fontsize=9, color='orange', ha='right')
+            axes[2].text(axes[2].get_xlim()[1] * 0.98, 0.62, 'Force Hold', fontsize=9, color='red', ha='right')
             
             # Mark cellular actions with vertical lines and annotations
             if not cellular_action_df.empty:
@@ -1038,10 +1113,27 @@ class GccDecisionAnalyzer:
                     axes[2].scatter(hold['time_s'], hold['ratio'],
                                   marker='s', s=100, color='red', alpha=0.8,
                                   label='Forced Hold', zorder=5)
+                
+                # Mark decision enabled/disabled status with vertical lines
+                decision_enabled = cellular_action_df[cellular_action_df['action'] == 'Decision-Enabled']
+                if not decision_enabled.empty:
+                    for _, row in decision_enabled.iterrows():
+                        axes[2].axvline(x=row['time_s'], color='green', linestyle='-', alpha=0.5, linewidth=2)
+                    # Add legend entry (only once)
+                    axes[2].axvline(x=-1, color='green', linestyle='-', alpha=0.7, linewidth=2, 
+                                   label='Decision Enabled')
+                
+                decision_disabled = cellular_action_df[cellular_action_df['action'] == 'Decision-Disabled']
+                if not decision_disabled.empty:
+                    for _, row in decision_disabled.iterrows():
+                        axes[2].axvline(x=row['time_s'], color='red', linestyle='--', alpha=0.5, linewidth=2)
+                    # Add legend entry (only once)
+                    axes[2].axvline(x=-1, color='red', linestyle='--', alpha=0.7, linewidth=2, 
+                                   label='Decision Disabled')
             
             # Set axis properties
             axes[2].set_ylabel('Cellular Resource Ratio', fontsize=11)
-            axes[2].set_title('3. Cellular Ratio & Preventive Control (▲=Limit to Additive, ■=Hold)', 
+            axes[2].set_title('3. Cellular Ratio & Preventive Control (Enable/Disable | <1.0=Additive, <0.6=Hold)', 
                              fontsize=12, fontweight='bold')
             
             # Dynamically set Y-axis range based on actual data
@@ -1076,7 +1168,11 @@ class GccDecisionAnalyzer:
                     if not cellular_action_df.empty:
                         n_limiting = len(cellular_action_df[cellular_action_df['action'] == 'Limiting'])
                         n_hold = len(cellular_action_df[cellular_action_df['action'] == 'Hold'])
+                        n_enabled = len(cellular_action_df[cellular_action_df['action'] == 'Decision-Enabled'])
+                        n_disabled = len(cellular_action_df[cellular_action_df['action'] == 'Decision-Disabled'])
                         stats_text += f' | Actions: {n_limiting} Limit, {n_hold} Hold'
+                        if n_enabled > 0 or n_disabled > 0:
+                            stats_text += f', Enable: {n_enabled}, Disable: {n_disabled}'
                     
                     axes[2].text(0.02, 0.95, stats_text,
                                 transform=axes[2].transAxes,
@@ -1137,12 +1233,12 @@ class GccDecisionAnalyzer:
                 estimates_df['time_s'] = (estimates_df['timestamp'] - start_time_ms) / 1000.0
                 
                 # Primary axis for bandwidth (line plot)
-                axes[6].plot(estimates_df['time_s'], estimates_df['bandwidth']/1000, 
+                axes[4].plot(estimates_df['time_s'], estimates_df['bandwidth']/1000, 
                             'o-', color='mediumpurple', label='Bandwidth (kbps)', 
                             markersize=4, linewidth=2, alpha=0.8)
                 
                 # Secondary axis for state
-                ax4_twin = axes[6].twinx()
+                ax4_twin = axes[4].twinx()
                 ax4_twin.plot(estimates_df['time_s'], estimates_df['state'], 'o-', color='lightcoral', 
                              label='State', markersize=4, linewidth=2)
                 ax4_twin.set_ylabel('State', fontsize=11, color='lightcoral')
@@ -1159,11 +1255,11 @@ class GccDecisionAnalyzer:
                         ax4_twin.text(time, estimates_df['state'].iloc[i] + 0.1, f'{obs}', 
                                      fontsize=8, ha='center', alpha=0.7)
                 
-                axes[6].set_ylabel('Bandwidth (kbps)', fontsize=11)
-                axes[6].set_title('5. Loss BWE: State, Bandwidth & Observations (Time-aligned)', 
+                axes[4].set_ylabel('Bandwidth (kbps)', fontsize=11)
+                axes[4].set_title('5. Loss BWE: State, Bandwidth & Observations (Time-aligned)', 
                                  fontsize=12, fontweight='bold')
-                axes[6].set_ylim(bottom=0)
-                axes[6].grid(True, alpha=0.3)
+                axes[4].set_ylim(bottom=0)
+                axes[4].grid(True, alpha=0.3)
                 
                 # Add statistics
                 avg_bandwidth = estimates_df['bandwidth'].mean() / 1000
@@ -1174,10 +1270,10 @@ class GccDecisionAnalyzer:
                 state_names = {0: 'Increasing', 1: 'IncPadding', 2: 'Decreasing', 3: 'DelayBased'}
                 state_name = state_names.get(most_common_state, f'Unknown({most_common_state})')
                 
-                axes[6].text(0.02, 0.95, f'Avg BW: {avg_bandwidth:.0f}kbps, Obs: {avg_observations:.1f}, State: {state_name}', 
-                            transform=axes[6].transAxes, 
+                axes[4].text(0.02, 0.95, f'Avg BW: {avg_bandwidth:.0f}kbps, Obs: {avg_observations:.1f}, State: {state_name}', 
+                            transform=axes[4].transAxes, 
                             bbox=dict(boxstyle="round,pad=0.3", facecolor="plum", alpha=0.5), fontsize=9)
-                axes[6].legend(fontsize=10)
+                axes[4].legend(fontsize=10)
 
         # 5. Probe BWE Results
         if not probe_df.empty:
@@ -1192,63 +1288,63 @@ class GccDecisionAnalyzer:
                     probe_with_time['time_s'] = (probe_with_time['timestamp'] - start_time_ms) / 1000.0
                     
                     # Create scatter plot with time alignment
-                    axes[6].scatter(probe_with_time['time_s'], probe_with_time['estimate']/1000, 
+                    axes[4].scatter(probe_with_time['time_s'], probe_with_time['estimate']/1000, 
                                    c=probe_with_time['cluster_id'], cmap='viridis', 
                                    s=60, alpha=0.8, label='Probe Estimates', edgecolors='black')
                     
                     # Add trend line if there are enough points
                     if len(probe_with_time) > 1:
-                        axes[6].plot(probe_with_time['time_s'], probe_with_time['estimate']/1000, 
+                        axes[4].plot(probe_with_time['time_s'], probe_with_time['estimate']/1000, 
                                     '--', color='gray', alpha=0.5, linewidth=1)
                     
-                    axes[6].set_ylabel('Bandwidth (kbps)', fontsize=11)
-                    axes[6].set_title('5. Probe BWE: Bandwidth Estimates by Cluster (Time-aligned)', 
+                    axes[4].set_ylabel('Bandwidth (kbps)', fontsize=11)
+                    axes[4].set_title('5. Probe BWE: Bandwidth Estimates by Cluster (Time-aligned)', 
                                      fontsize=12, fontweight='bold')
-                    axes[6].set_ylim(bottom=0)
-                    axes[6].grid(True, alpha=0.3)
+                    axes[4].set_ylim(bottom=0)
+                    axes[4].grid(True, alpha=0.3)
                     
                     # Add statistics
                     avg_estimate = probe_with_time['estimate'].mean() / 1000
                     cluster_count = probe_with_time['cluster_id'].nunique()
-                    axes[6].text(0.02, 0.95, f'Avg Estimate: {avg_estimate:.0f}kbps, Clusters: {cluster_count}, Points: {len(probe_with_time)}', 
-                                transform=axes[6].transAxes, 
+                    axes[4].text(0.02, 0.95, f'Avg Estimate: {avg_estimate:.0f}kbps, Clusters: {cluster_count}, Points: {len(probe_with_time)}', 
+                                transform=axes[4].transAxes, 
                                 bbox=dict(boxstyle="round,pad=0.3", facecolor="lightcyan", alpha=0.5), fontsize=9)
-                    axes[6].legend(fontsize=10)
+                    axes[4].legend(fontsize=10)
                 else:
                     # Show message if no timestamps available
-                    axes[6].text(0.5, 0.5, 'No Probe Data with Timestamps', 
-                                transform=axes[6].transAxes, ha='center', va='center',
+                    axes[4].text(0.5, 0.5, 'No Probe Data with Timestamps', 
+                                transform=axes[4].transAxes, ha='center', va='center',
                                 fontsize=14, alpha=0.5)
-                    axes[6].set_title('5. Probe BWE: Bandwidth Estimates by Cluster', 
+                    axes[4].set_title('5. Probe BWE: Bandwidth Estimates by Cluster', 
                                      fontsize=12, fontweight='bold')
-                    axes[6].grid(True, alpha=0.3)
+                    axes[4].grid(True, alpha=0.3)
             else:
                 # Fallback to index-based plotting if no timestamps
-                axes[6].scatter(range(len(probe_df)), probe_df['estimate']/1000, 
+                axes[4].scatter(range(len(probe_df)), probe_df['estimate']/1000, 
                                c=probe_df['cluster_id'], cmap='viridis', 
                                s=50, alpha=0.7, label='Probe Estimates')
                 
-                axes[6].set_ylabel('Bandwidth (kbps)', fontsize=11)
-                axes[6].set_title('5. Probe BWE: Bandwidth Estimates by Cluster (Index-based)', 
+                axes[4].set_ylabel('Bandwidth (kbps)', fontsize=11)
+                axes[4].set_title('5. Probe BWE: Bandwidth Estimates by Cluster (Index-based)', 
                                  fontsize=12, fontweight='bold')
-                axes[6].set_xlabel('Probe Index')
-                axes[6].grid(True, alpha=0.3)
+                axes[4].set_xlabel('Probe Index')
+                axes[4].grid(True, alpha=0.3)
                 
                 # Add statistics
                 avg_estimate = probe_df['estimate'].mean() / 1000
                 cluster_count = probe_df['cluster_id'].nunique()
-                axes[6].text(0.02, 0.95, f'Avg Estimate: {avg_estimate:.0f}kbps, Clusters: {cluster_count}', 
-                            transform=axes[6].transAxes, 
+                axes[4].text(0.02, 0.95, f'Avg Estimate: {avg_estimate:.0f}kbps, Clusters: {cluster_count}', 
+                            transform=axes[4].transAxes, 
                             bbox=dict(boxstyle="round,pad=0.3", facecolor="lightcyan", alpha=0.5), fontsize=9)
-                axes[6].legend(fontsize=10)
+                axes[4].legend(fontsize=10)
         else:
             # Show empty plot with message
-            axes[6].text(0.5, 0.5, 'No Probe Data Available', 
-                        transform=axes[6].transAxes, ha='center', va='center',
+            axes[4].text(0.5, 0.5, 'No Probe Data Available', 
+                        transform=axes[4].transAxes, ha='center', va='center',
                         fontsize=14, alpha=0.5)
-            axes[6].set_title('5. Probe BWE: Bandwidth Estimates by Cluster', 
+            axes[4].set_title('5. Probe BWE: Bandwidth Estimates by Cluster', 
                              fontsize=12, fontweight='bold')
-            axes[6].grid(True, alpha=0.3)
+            axes[4].grid(True, alpha=0.3)
 
         # 6. Final Decision Reasons
         if not decision_df.empty:
@@ -1265,135 +1361,25 @@ class GccDecisionAnalyzer:
             decision_df['decision_numeric'] = decision_df['decision_reason'].map(reason_map).fillna(0)
             
             # Create stepped plot for decision changes
-            axes[6].step(decision_df['time_s'], decision_df['decision_numeric'], where='post', 
+            axes[5].step(decision_df['time_s'], decision_df['decision_numeric'], where='post', 
                          color='mediumslateblue', linewidth=3, label='Final Decision')
-            axes[6].fill_between(decision_df['time_s'], decision_df['decision_numeric'], alpha=0.3, 
+            axes[5].fill_between(decision_df['time_s'], decision_df['decision_numeric'], alpha=0.3, 
                                  color='lightsteelblue', step='post')
-            axes[6].set_ylabel('Decision Type', fontsize=11)
-            axes[6].set_title('7. Final GCC Decision (Priority: DelayLimit > RTT > Probe > Loss)', 
+            axes[5].set_ylabel('Decision Type', fontsize=11)
+            axes[5].set_title('6. Final GCC Decision (Priority: DelayLimit > RTT > Probe > Loss)', 
                              fontsize=12, fontweight='bold')
-            axes[6].set_yticks([0, 1, 2, 3, 4])
-            axes[6].set_yticklabels(['Hold', 'Loss', 'Probe', 'RTT', 'DelayLimit'])
-            axes[6].grid(True, alpha=0.3)
+            axes[5].set_yticks([0, 1, 2, 3, 4])
+            axes[5].set_yticklabels(['Hold', 'Loss', 'Probe', 'RTT', 'DelayLimit'])
+            axes[5].grid(True, alpha=0.3)
             
             # Add decision statistics
             decision_counts = decision_df['decision_reason'].value_counts()
             decision_text = ', '.join([f'{reason}: {count}' for reason, count in decision_counts.items()])
-            axes[6].text(0.02, 0.95, f'Decisions: {decision_text}', transform=axes[6].transAxes, 
+            axes[5].text(0.02, 0.95, f'Decisions: {decision_text}', transform=axes[5].transAxes, 
                          bbox=dict(boxstyle="round,pad=0.3", facecolor="lightgreen", alpha=0.5), fontsize=9)
-            axes[6].legend(fontsize=10)
+            axes[5].legend(fontsize=10)
 
-        # 8. Diag: LCG_3 Average (overlay subplot)
-        if not diag_df.empty:
-            axes[7].plot(diag_df['time_s'], diag_df['lcg3_avg'], '-', color='tab:blue', linewidth=2, alpha=0.8, label='LCG_3 Avg (>0)')
-            # Add occasional markers for clarity without overcrowding
-            step = max(1, len(diag_df) // 50)  # Show markers every 50th point
-            axes[7].plot(diag_df['time_s'][::step], diag_df['lcg3_avg'][::step], 'o', color='tab:blue', markersize=4, alpha=0.9)
-            axes[7].set_ylabel('LCG_3 Avg', fontsize=11)
-            axes[7].set_title('8. Diag: LCG_3 Average (>0 values, Aligned to GCC Timeline)', fontsize=12, fontweight='bold')
-            axes[7].grid(True, alpha=0.3)
-            axes[7].legend(fontsize=9, loc='upper right')
-        else:
-            axes[7].text(0.5, 0.5, 'No Diag Data (LCG_3)', transform=axes[7].transAxes, ha='center', va='center',
-                         fontsize=14, alpha=0.5)
-            axes[7].set_title('8. Diag: LCG_3 Average (>0 values, Aligned to GCC Timeline)', fontsize=12, fontweight='bold')
-            axes[7].grid(True, alpha=0.3)
 
-        # 9. Diag: TBS_Index Average
-        if not diag_df.empty:
-            axes[8].plot(diag_df['time_s'], diag_df['tbs_avg'], '-', color='tab:red', linewidth=2, alpha=0.8, label='TBS_Index Avg (>0)')
-            # Add occasional markers for clarity without overcrowding
-            step = max(1, len(diag_df) // 50)  # Show markers every 50th point
-            axes[8].plot(diag_df['time_s'][::step], diag_df['tbs_avg'][::step], 'o', color='tab:red', markersize=4, alpha=0.9)
-            axes[8].set_ylabel('TBS Avg', fontsize=11)
-            axes[8].set_title('9. Diag: TBS_Index Average (>0 values, Aligned to GCC Timeline)', fontsize=12, fontweight='bold')
-            axes[8].grid(True, alpha=0.3)
-            axes[8].legend(fontsize=9, loc='upper right')
-        else:
-            axes[8].text(0.5, 0.5, 'No Diag Data (TBS_Index)', transform=axes[8].transAxes, ha='center', va='center',
-                         fontsize=14, alpha=0.5)
-            axes[8].set_title('9. Diag: TBS_Index Average (>0 values, Aligned to GCC Timeline)', fontsize=12, fontweight='bold')
-            axes[8].grid(True, alpha=0.3)
-
-        # 10. Diag: Num_RBs Average
-        if not diag_df.empty:
-            axes[9].plot(diag_df['time_s'], diag_df['num_rbs_avg'], '-', color='tab:green', linewidth=2, alpha=0.8, label='Num_RBs Avg (>0)')
-            # Add occasional markers for clarity without overcrowding
-            step = max(1, len(diag_df) // 50)  # Show markers every 50th point
-            axes[9].plot(diag_df['time_s'][::step], diag_df['num_rbs_avg'][::step], 'o', color='tab:green', markersize=4, alpha=0.9)
-            axes[9].set_ylabel('Num_RBs Avg', fontsize=11)
-            axes[9].set_title('10. Diag: Num_RBs Average (>0 values, Aligned to GCC Timeline)', fontsize=12, fontweight='bold')
-            axes[9].grid(True, alpha=0.3)
-            axes[9].legend(fontsize=9, loc='upper right')
-        else:
-            axes[9].text(0.5, 0.5, 'No Diag Data (Num_RBs)', transform=axes[9].transAxes, ha='center', va='center',
-                         fontsize=14, alpha=0.5)
-            axes[9].set_title('10. Diag: Num_RBs Average (>0 values, Aligned to GCC Timeline)', fontsize=12, fontweight='bold')
-            axes[9].grid(True, alpha=0.3)
-
-        # 11. Cellular Network Time: SysFN Distribution and Timeline
-        if not diag_df.empty and 'sysfn_avg' in diag_df.columns and diag_df['sysfn_avg'].sum() > 0:
-            # Primary axis for SysFN values over time  
-            axes[10].plot(diag_df['time_s'], diag_df['sysfn_avg'], '-', color='mediumorchid', linewidth=2, alpha=0.8, label='SysFN Avg')
-            step = max(1, len(diag_df) // 50)
-            axes[10].plot(diag_df['time_s'][::step], diag_df['sysfn_avg'][::step], 'o', color='mediumorchid', markersize=4, alpha=0.9)
-            
-            # Secondary axis for SubFN values
-            ax10_twin = axes[10].twinx()
-            ax10_twin.plot(diag_df['time_s'], diag_df['subfn_avg'], '--', color='darkorange', linewidth=1.5, alpha=0.8, label='SubFN Avg')
-            ax10_twin.set_ylabel('SubFN (0-9)', fontsize=11, color='darkorange')
-            ax10_twin.set_ylim(0, 10)
-            ax10_twin.tick_params(axis='y', labelcolor='darkorange')
-            
-            axes[10].set_ylabel('SysFN (0-1023)', fontsize=11, color='mediumorchid')
-            axes[10].set_ylim(0, 1024)
-            axes[10].tick_params(axis='y', labelcolor='mediumorchid')
-            axes[10].set_title('11. Cellular Network Time: SysFN (10ms) + SubFN (1ms) Distribution', fontsize=12, fontweight='bold')
-            axes[10].grid(True, alpha=0.3)
-            
-            # Add statistics annotation
-            sysfn_range = f"{diag_df['sysfn_avg'].min():.0f}-{diag_df['sysfn_avg'].max():.0f}"
-            subfn_range = f"{diag_df['subfn_avg'].min():.0f}-{diag_df['subfn_avg'].max():.0f}"
-            axes[10].text(0.02, 0.95, f'SysFN Range: {sysfn_range} | SubFN Range: {subfn_range}', 
-                        transform=axes[10].transAxes, 
-                        bbox=dict(boxstyle="round,pad=0.3", facecolor="lavender", alpha=0.7), fontsize=9)
-            
-            axes[10].legend(loc='upper left', fontsize=9)
-            ax10_twin.legend(loc='upper right', fontsize=9)
-        else:
-            axes[10].text(0.5, 0.5, 'No Cellular Timing Data (SysFN/SubFN)', transform=axes[10].transAxes, ha='center', va='center',
-                         fontsize=14, alpha=0.5)
-            axes[10].set_title('11. Cellular Network Time: SysFN (10ms) + SubFN (1ms) Distribution', fontsize=12, fontweight='bold')
-            axes[10].grid(True, alpha=0.3)
-
-        # 12. Cellular Time Precision: Event Order within Same Unix Timestamp
-        if not diag_df.empty and 'cellular_time_ms' in diag_df.columns and diag_df['cellular_time_ms'].sum() > 0:
-            # Show cellular time progression (SysFN*10 + SubFN*1)
-            axes[11].plot(diag_df['time_s'], diag_df['cellular_time_ms'], '-', color='darkviolet', linewidth=2, alpha=0.8, label='Cellular Time (ms)')
-            step = max(1, len(diag_df) // 50)
-            axes[11].plot(diag_df['time_s'][::step], diag_df['cellular_time_ms'][::step], 'o', color='darkviolet', markersize=4, alpha=0.9)
-            
-            axes[11].set_ylabel('Cellular Time (ms)', fontsize=11)
-            axes[11].set_title('12. Cellular Time Precision: SysFN×10ms + SubFN×1ms (Event Ordering)', fontsize=12, fontweight='bold')
-            axes[11].grid(True, alpha=0.3)
-            
-            # Add cellular timing statistics
-            cellular_range = diag_df['cellular_time_ms'].max() - diag_df['cellular_time_ms'].min()
-            unique_cellular_times = diag_df['cellular_time_ms'].nunique()
-            axes[11].text(0.02, 0.95, f'Range: {cellular_range:.0f}ms | Unique Times: {unique_cellular_times}', 
-                         transform=axes[11].transAxes, 
-                         bbox=dict(boxstyle="round,pad=0.3", facecolor="lightsteelblue", alpha=0.7), fontsize=9)
-            axes[11].legend(fontsize=9, loc='upper right')
-            
-            # Highlight time precision improvement
-            axes[11].text(0.98, 0.05, 'This shows precise event timing within same Unix timestamps', 
-                         transform=axes[11].transAxes, ha='right', va='bottom', fontsize=8,
-                         bbox=dict(boxstyle="round,pad=0.3", facecolor="lightyellow", alpha=0.8), style='italic')
-        else:
-            axes[11].text(0.5, 0.5, 'No Cellular Time Precision Data', transform=axes[11].transAxes, ha='center', va='center',
-                          fontsize=14, alpha=0.5)
-            axes[11].set_title('12. Cellular Time Precision: SysFN×10ms + SubFN×1ms (Event Ordering)', fontsize=12, fontweight='bold')
-            axes[11].grid(True, alpha=0.3)
 
         # Set x-axis label only for the bottom subplot
         axes[-1].set_xlabel('Time (seconds)', fontsize=12)
@@ -1402,7 +1388,7 @@ class GccDecisionAnalyzer:
         for ax in axes:
             ax.set_xlim(0, time_limit)
         
-        plt.tight_layout(rect=[0, 0, 1, 0.96])
+        plt.tight_layout(rect=[0, 0.02, 1, 0.96], h_pad=6.0)
         plt.show()
         
         return fig
@@ -1649,3 +1635,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

@@ -60,6 +60,13 @@ class WebRTCConfig {
   int server_port() const { return server_port_; }
   bool auto_connect() const { return auto_connect_; }
   bool auto_call() const { return auto_call_; }
+  
+  // Cellular ratio configuration getter
+  bool cellular_ratio_influence_enabled() const { return cellular_ratio_influence_enabled_; }
+
+  // Global instance management for network controller access
+  static WebRTCConfig* GetGlobalInstance() { return global_instance_; }
+  void SetAsGlobalInstance() { global_instance_ = this; }
 
   // Convert log level to WebRTC log severity
   std::string GetLogSeverityString() const;
@@ -96,6 +103,12 @@ class WebRTCConfig {
   int server_port_;
   bool auto_connect_;
   bool auto_call_;
+  
+  // Cellular ratio configuration
+  bool cellular_ratio_influence_enabled_;
+  
+  // Global instance for network controller access
+  static WebRTCConfig* global_instance_;
 };
 
 #endif  // EXAMPLES_PEERCONNECTION_CLIENT_WEBRTC_CONFIG_H_

@@ -37,6 +37,9 @@ struct RtpTransportConfig {
 
   // The burst interval of the pacer, see TaskQueuePacedSender constructor.
   std::optional<TimeDelta> pacer_burst_interval;
+
+  // Whether cellular ratio should influence BWE decisions (default: false, log only)
+  bool cellular_ratio_influence_enabled = false;
 };
 }  // namespace webrtc
 

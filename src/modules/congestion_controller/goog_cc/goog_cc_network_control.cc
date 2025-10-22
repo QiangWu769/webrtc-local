@@ -11,12 +11,22 @@
  #include "modules/congestion_controller/goog_cc/goog_cc_network_control.h"
 
  #include <algorithm>
+
+// Forward declaration to avoid circular dependency
+namespace {
+// External configuration reader (defined in examples/peerconnection/client)
+// This is weak-linked to avoid requiring the configuration module
+extern "C" __attribute__((weak)) bool GetCellularRatioInfluenceEnabled();
+}  // namespace
+
+ #include <algorithm>
 #include <cstdint>
 #include <cstdio>
 #include <iomanip>
 #include <memory>
 #include <optional>
 #include <sstream>
+#include <string>
 #include <utility>
 #include <vector>
  
@@ -95,6 +105,10 @@ std::string GetWallClockTimestampString() {
   return ss.str();
 }
 
+std::string ToMsString(Timestamp value) {
+  return value.IsFinite() ? std::to_string(value.ms()) : "INF";
+}
+
 }  // namespace
  
  GoogCcNetworkController::GoogCcNetworkController(NetworkControllerConfig config,
@@ -147,6 +161,20 @@ std::string GetWallClockTimestampString() {
        max_padding_rate_(config.stream_based_config.max_padding_rate.value_or(
            DataRate::Zero())) {
    RTC_DCHECK(config.constraints.at_time.IsFinite());
+
+   // Critical safety check: verify initialized rates are finite
+   if (!last_loss_based_target_rate_.IsFinite()) {
+     RTC_LOG(LS_ERROR) << "[GoogCC-FATAL] last_loss_based_target_rate_ initialized with infinite value! "
+                       << "Falling back to 300 kbps";
+     last_loss_based_target_rate_ = DataRate::KilobitsPerSec(300);
+   }
+
+   if (!last_pushback_target_rate_.IsFinite()) {
+     RTC_LOG(LS_ERROR) << "[GoogCC-FATAL] last_pushback_target_rate_ initialized with infinite value! "
+                       << "Falling back to 300 kbps";
+     last_pushback_target_rate_ = DataRate::KilobitsPerSec(300);
+   }
+
    ParseFieldTrial(
        {&safe_reset_on_route_change_, &safe_reset_acknowledged_rate_},
        env_.field_trials().Lookup("WebRTC-Bwe-SafeResetOnRouteChange"));
@@ -171,6 +199,28 @@ std::string GetWallClockTimestampString() {
        RTC_LOG(LS_INFO) << "[GoogCC] CellularRatioReceiver started successfully";
        // Keep the task queue alive
        cellular_task_queue_ = std::move(task_queue);
+
+       // Set cellular ratio influence based on config
+       // Priority order:
+       // 1. Explicit config passed through GoogCcConfig
+       // 2. External configuration (e.g., from webrtc_config.json)
+       // 3. Field trial
+       bool influence_enabled = goog_cc_config.cellular_ratio_influence_enabled;
+
+       if (!influence_enabled && GetCellularRatioInfluenceEnabled != nullptr) {
+         // Check external configuration (from webrtc_config.json if available)
+         influence_enabled = GetCellularRatioInfluenceEnabled();
+       }
+
+       if (!influence_enabled) {
+         // Check field trial as final fallback
+         influence_enabled = env_.field_trials().IsEnabled("WebRTC-CellularRatioInfluence");
+       }
+
+       delay_based_bwe_->SetCellularRatioInfluenceEnabled(influence_enabled);
+       RTC_LOG(LS_INFO) << "[GoogCC] Cellular ratio influence configured: "
+                        << (influence_enabled ?
+                            "ENABLED (affects decisions)" : "DISABLED (log only)");
      }
    }
  }
@@ -445,11 +495,11 @@ std::string GetWallClockTimestampString() {
  NetworkControlUpdate GoogCcNetworkController::OnTransportPacketsFeedback(
      TransportPacketsFeedback report) {
    // 添加GCC输入日志，记录收到的反馈包数量和时间
-   RTC_LOG(LS_INFO) << "[GCC-INPUT] Received TransportFeedback at " 
-                    << report.feedback_time.ms() << " ms, "
-                    << "NumPackets: " << report.packet_feedbacks.size()
-                    << ", InFlight: " << report.data_in_flight.bytes()
-                    << " bytes";
+  RTC_LOG(LS_INFO) << "[GCC-INPUT] Received TransportFeedback at "
+                   << ToMsString(report.feedback_time) << " ms, "
+                   << "NumPackets: " << report.packet_feedbacks.size()
+                   << ", InFlight: " << report.data_in_flight.bytes()
+                   << " bytes";
  
    if (report.packet_feedbacks.empty()) {
      // TODO(bugs.webrtc.org/10125): Design a better mechanism to safe-guard
@@ -520,17 +570,36 @@ std::string GetWallClockTimestampString() {
    }
    if (limit_probes_lower_than_throughput_estimate_ && probe_bitrate &&
        acknowledged_bitrate) {
-     // Limit the backoff to something slightly below the acknowledged
-     // bitrate. ("Slightly below" because we want to drain the queues
-     // if we are actually overusing.)
-     // The acknowledged bitrate shouldn't normally be higher than the delay
-     // based estimate, but it could happen e.g. due to packet bursts or
-     // encoder overshoot. We use std::min to ensure that a probe result
-     // below the current BWE never causes an increase.
-     DataRate limit =
-         std::min(delay_based_bwe_->last_estimate(),
-                  *acknowledged_bitrate * kProbeDropThroughputFraction);
-     probe_bitrate = std::max(*probe_bitrate, limit);
+     // Verify probe_bitrate is finite before adjustment
+     if (!probe_bitrate->IsFinite()) {
+       RTC_LOG(LS_ERROR) << "[GoogCC-Error] probe_bitrate is not finite before throughput limit adjustment!";
+       probe_bitrate.reset();  // Discard the invalid probe result
+     } else {
+       // Limit the backoff to something slightly below the acknowledged
+       // bitrate. ("Slightly below" because we want to drain the queues
+       // if we are actually overusing.)
+       // The acknowledged bitrate shouldn't normally be higher than the delay
+       // based estimate, but it could happen e.g. due to packet bursts or
+       // encoder overshoot. We use std::min to ensure that a probe result
+       // below the current BWE never causes an increase.
+       DataRate limit =
+           std::min(delay_based_bwe_->last_estimate(),
+                    *acknowledged_bitrate * kProbeDropThroughputFraction);
+
+       // Verify limit is finite
+       if (!limit.IsFinite()) {
+         RTC_LOG(LS_ERROR) << "[GoogCC-Error] Computed limit is not finite!";
+         probe_bitrate.reset();  // Discard to avoid crash
+       } else {
+         probe_bitrate = std::max(*probe_bitrate, limit);
+
+         // Final check after std::max
+         if (!probe_bitrate->IsFinite()) {
+           RTC_LOG(LS_ERROR) << "[GoogCC-Error] probe_bitrate became infinite after std::max!";
+           probe_bitrate.reset();
+         }
+       }
+     }
    }
  
    NetworkControlUpdate update;
@@ -542,14 +611,19 @@ std::string GetWallClockTimestampString() {
        alr_start_time.has_value());
  
    if (result.updated) {
-     if (result.probe) {
-       bandwidth_estimation_->SetSendBitrate(result.target_bitrate,
-                                             report.feedback_time);
+     // Critical safety check: verify result.target_bitrate is finite
+     if (!result.target_bitrate.IsFinite()) {
+       RTC_LOG(LS_ERROR) << "[GoogCC-Error] result.target_bitrate from DelayBasedBwe is not finite! Skipping update.";
+     } else {
+       if (result.probe) {
+         bandwidth_estimation_->SetSendBitrate(result.target_bitrate,
+                                               report.feedback_time);
+       }
+       // Since SetSendBitrate now resets the delay-based estimate, we have to
+       // call UpdateDelayBasedEstimate after SetSendBitrate.
+       bandwidth_estimation_->UpdateDelayBasedEstimate(report.feedback_time,
+                                                       result.target_bitrate);
      }
-     // Since SetSendBitrate now resets the delay-based estimate, we have to
-     // call UpdateDelayBasedEstimate after SetSendBitrate.
-     bandwidth_estimation_->UpdateDelayBasedEstimate(report.feedback_time,
-                                                     result.target_bitrate);
    }
    bandwidth_estimation_->UpdateLossBasedEstimator(
        report, result.delay_detector_state, probe_bitrate,
@@ -615,10 +689,11 @@ std::string GetWallClockTimestampString() {
    }
    
    // 输出完整的决策快照
-   RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]" << " [GCC-DECISION-SNAPSHOT] MonoTime: " << report.feedback_time.ms() << "ms"
-                    << " | DelayState: " << delay_state_str 
-                    << ", DelayTargetBps: " << delay_target.bps()
-                    << " | RttBackoff: " << (rtt_backoff_active ? "true" : "false")
+  RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
+                   << " [GCC-DECISION-SNAPSHOT] MonoTime: " << ToMsString(report.feedback_time) << " ms"
+                   << " | DelayState: " << delay_state_str 
+                   << ", DelayTargetBps: " << delay_target.bps()
+                   << " | RttBackoff: " << (rtt_backoff_active ? "true" : "false")
                     << " | ProbeResultBps: " << probe_result.bps()
                     << " | BweTargetBps: " << bandwidth_target.bps()
                     << " | AckedBitrateBps: " << acked_bitrate.bps()
@@ -679,23 +754,44 @@ std::string GetWallClockTimestampString() {
  
    double cwnd_reduce_ratio = 0.0;
    if (congestion_window_pushback_controller_) {
+     // Verify loss_based_target_rate is finite before using
+     if (!loss_based_target_rate.IsFinite()) {
+       RTC_LOG(LS_ERROR) << "[GoogCC-Error] loss_based_target_rate is not finite!";
+       loss_based_target_rate = DataRate::KilobitsPerSec(300);  // Fallback to 300 kbps
+     }
+
      int64_t original_rate = loss_based_target_rate.bps();
      int64_t pushback_rate =
          congestion_window_pushback_controller_->UpdateTargetBitrate(original_rate);
      int64_t min_bitrate = bandwidth_estimation_->GetMinBitrate();
      pushback_rate = std::max<int64_t>(min_bitrate, pushback_rate);
-         pushback_target_rate = DataRate::BitsPerSec(pushback_rate);
-    
+
+     // Validate pushback_rate is reasonable before creating DataRate
+     const int64_t kMaxReasonableBitrate = 1000000000LL;  // 1 Gbps
+     if (pushback_rate < 0 || pushback_rate > kMaxReasonableBitrate) {
+       RTC_LOG(LS_ERROR) << "[GoogCC-Error] pushback_rate out of range: " << pushback_rate;
+       pushback_rate = std::min(kMaxReasonableBitrate, std::max(min_bitrate, pushback_rate));
+     }
+
+     pushback_target_rate = DataRate::BitsPerSec(pushback_rate);
+
+     // Final safety check
+     if (!pushback_target_rate.IsFinite()) {
+       RTC_LOG(LS_ERROR) << "[GoogCC-Error] pushback_target_rate became infinite!";
+       pushback_target_rate = loss_based_target_rate;
+     }
+
     // 只在有实际reduction时才记录拥塞窗口pushback日志
     int64_t reduction = original_rate - pushback_rate;
-    if (reduction > 0) {
-      RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]" << " [BWE-CongestionWindowPushback] MonoTime: " << at_time.ms() << " ms"
-                       << ", OriginalRate: " << original_rate << " bps"
-                       << ", PushbackRate: " << pushback_rate << " bps"
-                       << ", MinBitrate: " << min_bitrate << " bps"
-                       << ", Reduction: " << reduction << " bps"
-                       << ", ReductionRatio: " << (double)reduction / original_rate * 100 << "%";
-    }
+  if (reduction > 0) {
+    RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
+                     << " [BWE-CongestionWindowPushback] MonoTime: " << ToMsString(at_time) << " ms"
+                     << ", OriginalRate: " << original_rate << " bps"
+                     << ", PushbackRate: " << pushback_rate << " bps"
+                     << ", MinBitrate: " << min_bitrate << " bps"
+                     << ", Reduction: " << reduction << " bps"
+                     << ", ReductionRatio: " << (double)reduction / original_rate * 100 << "%";
+  }
      
      if (rate_control_settings_.UseCongestionWindowDropFrameOnly()) {
        cwnd_reduce_ratio = static_cast<double>(loss_based_target_rate.bps() -
@@ -727,12 +823,20 @@ std::string GetWallClockTimestampString() {
      } else {
        target_rate_msg.target_rate = pushback_target_rate;
      }
-     
+
+     // Final check: ensure target_rate_msg.target_rate is finite before logging
+     if (!target_rate_msg.target_rate.IsFinite()) {
+       RTC_LOG(LS_ERROR) << "[GoogCC-Error] target_rate_msg.target_rate is not finite! "
+                         << "Falling back to 300 kbps";
+       target_rate_msg.target_rate = DataRate::KilobitsPerSec(300);
+     }
+
      // 添加GCC输出日志，记录最终的码率决策
-     RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]" << " [GCC-OUTPUT] TargetRateUpdate MonoTime: " << at_time.ms() << " ms, "
-                      << "DelayBasedBps: " << delay_based_bwe_->last_estimate().bps() << ", "
-                      << "LossBasedBps: " << loss_based_target_rate.bps() << ", "
-                      << "FinalTargetBps: " << target_rate_msg.target_rate.bps();
+  RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
+                   << " [GCC-OUTPUT] TargetRateUpdate MonoTime: " << ToMsString(at_time) << " ms, "
+                   << "DelayBasedBps: " << delay_based_bwe_->last_estimate().bps() << ", "
+                   << "LossBasedBps: " << loss_based_target_rate.bps() << ", "
+                   << "FinalTargetBps: " << target_rate_msg.target_rate.bps();
      
  #pragma clang diagnostic push
  #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -754,39 +858,79 @@ std::string GetWallClockTimestampString() {
      update->probe_cluster_configs.insert(update->probe_cluster_configs.end(),
                                           probes.begin(), probes.end());
      update->pacer_config = GetPacingRates(at_time);
-     RTC_LOG(LS_VERBOSE) << "bwe " << at_time.ms() << " pushback_target_bps="
+    RTC_LOG(LS_VERBOSE) << "bwe " << ToMsString(at_time) << " pushback_target_bps="
                          << last_pushback_target_rate_.bps()
                          << " estimate_bps=" << loss_based_target_rate.bps();
    }
  }
  
- PacerConfig GoogCcNetworkController::GetPacingRates(Timestamp at_time) const {
-   // Pacing rate is based on target rate before congestion window pushback,
-   // because we don't want to build queues in the pacer when pushback occurs.
-   DataRate pacing_rate =
-       std::max(min_total_allocated_bitrate_, last_loss_based_target_rate_) *
-       pacing_factor_;
- 
-   if (limit_pacingfactor_by_upper_link_capacity_estimate_ && estimate_ &&
-       estimate_->link_capacity_upper.IsFinite() &&
-       pacing_rate > estimate_->link_capacity_upper) {
-     pacing_rate =
-         std::max({estimate_->link_capacity_upper, min_total_allocated_bitrate_,
-                   last_loss_based_target_rate_});
-   }
- 
-   DataRate padding_rate =
-       (last_loss_base_state_ == LossBasedState::kIncreaseUsingPadding)
-           ? std::max(max_padding_rate_, last_loss_based_target_rate_)
-           : max_padding_rate_;
-   padding_rate = std::min(padding_rate, last_pushback_target_rate_);
-   PacerConfig msg;
-   msg.at_time = at_time;
-   msg.time_window = TimeDelta::Seconds(1);
-   msg.data_window = pacing_rate * msg.time_window;
-   msg.pad_window = padding_rate * msg.time_window;
-   return msg;
- }
+PacerConfig GoogCcNetworkController::GetPacingRates(Timestamp at_time) const {
+  // Safety check: verify rates are finite
+  DataRate safe_loss_based = last_loss_based_target_rate_;
+  DataRate safe_pushback = last_pushback_target_rate_;
+
+  if (!safe_loss_based.IsFinite()) {
+    RTC_LOG(LS_ERROR) << "[GoogCC-Error] last_loss_based_target_rate_ is not finite in GetPacingRates!";
+    safe_loss_based = DataRate::KilobitsPerSec(300);
+  }
+
+  if (!safe_pushback.IsFinite()) {
+    RTC_LOG(LS_ERROR) << "[GoogCC-Error] last_pushback_target_rate_ is not finite in GetPacingRates!";
+    safe_pushback = DataRate::KilobitsPerSec(300);
+  }
+
+  // Pacing rate is based on target rate before congestion window pushback,
+  // because we don't want to build queues in the pacer when pushback occurs.
+  DataRate pacing_rate =
+      std::max(min_total_allocated_bitrate_, safe_loss_based) *
+      pacing_factor_;
+
+  // Check pacing_rate is finite after multiplication
+  if (!pacing_rate.IsFinite()) {
+    RTC_LOG(LS_ERROR) << "[GoogCC-Error] pacing_rate became infinite after multiplication!";
+    pacing_rate = safe_loss_based;
+  }
+
+  if (limit_pacingfactor_by_upper_link_capacity_estimate_ && estimate_ &&
+      estimate_->link_capacity_upper.IsFinite() &&
+      pacing_rate > estimate_->link_capacity_upper) {
+    pacing_rate =
+        std::max({estimate_->link_capacity_upper, min_total_allocated_bitrate_,
+                  safe_loss_based});
+  }
+
+  DataRate padding_rate =
+      (last_loss_base_state_ == LossBasedState::kIncreaseUsingPadding)
+          ? std::max(max_padding_rate_, safe_loss_based)
+          : max_padding_rate_;
+  padding_rate = std::min(padding_rate, safe_pushback);
+
+  // Verify padding_rate is finite
+  if (!padding_rate.IsFinite()) {
+    RTC_LOG(LS_ERROR) << "[GoogCC-Error] padding_rate is not finite!";
+    padding_rate = DataRate::KilobitsPerSec(100);
+  }
+
+  PacerConfig msg;
+  msg.at_time = at_time;
+  msg.time_window = TimeDelta::Seconds(1);
+  msg.data_window = pacing_rate * msg.time_window;
+  msg.pad_window = padding_rate * msg.time_window;
+
+  // Final safety check on data windows
+  if (!msg.data_window.IsFinite()) {
+    RTC_LOG(LS_ERROR) << "[GoogCC-Error] data_window is not finite!";
+    msg.data_window = DataSize::Bytes(37500);  // 300 kbps * 1 sec
+  }
+
+  if (!msg.pad_window.IsFinite()) {
+    RTC_LOG(LS_ERROR) << "[GoogCC-Error] pad_window is not finite!";
+    msg.pad_window = DataSize::Bytes(12500);  // 100 kbps * 1 sec
+  }
+
+  return msg;
+}
+
  
  }  // namespace webrtc
  

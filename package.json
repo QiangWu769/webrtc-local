@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@anthropic-ai/claude-code": "^1.0.124",
     "@anthropic-ai/sdk": "^0.59.0"
   }
 }

@@ -20,10 +20,9 @@ class DelayBasedBwe;
 
 // Data packet format (must match sender)
 struct CellularRatioPacket {
-  uint64_t timestamp_ms;    // 8 bytes
-  double ratio;             // 8 bytes  
-  uint32_t sequence_number; // 4 bytes
-} __attribute__((packed));  // Total: 20 bytes
+  double ratio;       // 8 bytes
+  double saturation;  // 8 bytes
+} __attribute__((packed));  // Total: 16 bytes
 
 class CellularRatioReceiver {
  public:
@@ -75,7 +74,6 @@ class CellularRatioReceiver {
   
   // Statistics
   uint32_t packets_received_ = 0;
-  uint32_t last_sequence_ = 0;
 };
 
 }  // namespace webrtc

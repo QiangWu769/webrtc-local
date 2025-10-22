@@ -16,6 +16,7 @@
 #include <memory>
 #include <optional>
 #include <sstream>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -57,6 +58,15 @@ std::string GetWallClockTimestampString() {
   ss << std::fixed << std::setprecision(6) << unix_seconds;
   return ss.str();
 }
+
+std::string ToMsString(Timestamp value) {
+  return value.IsFinite() ? std::to_string(value.ms()) : "INF";
+}
+
+std::string ToMsString(TimeDelta value) {
+  return value.IsFinite() ? std::to_string(value.ms()) : "INF";
+}
+
 }  // namespace
 
 constexpr char BweSeparateAudioPacketsSettings::kKey[];
@@ -125,8 +135,8 @@ DelayBasedBwe::Result DelayBasedBwe::IncomingPacketFeedbackVector(
     return DelayBasedBwe::Result();
   }
   
-  RTC_LOG(LS_VERBOSE) << "[DelayBWE-Feedback] Processing " << packet_feedback_vector.size() 
-                      << " packets. Feedback time: " << msg.feedback_time.ms() 
+  RTC_LOG(LS_VERBOSE) << "[DelayBWE-Feedback] Processing " << packet_feedback_vector.size()
+                      << " packets. Feedback time: " << ToMsString(msg.feedback_time)
                       << " ms, In ALR: " << (in_alr ? "yes" : "no");
 
   if (!uma_recorded_) {
@@ -167,7 +177,8 @@ DelayBasedBwe::Result DelayBasedBwe::IncomingPacketFeedbackVector(
   
   // 只记录probe和recovery信息（其他信息在BWE-DECISION中已包含）
   if (final_result.probe || final_result.recovered_from_overuse) {
-    RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]" << " [DelayBWE-Special] MonoTime: " << msg.feedback_time.ms() << " ms"
+    RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
+                     << " [DelayBWE-Special] MonoTime: " << ToMsString(msg.feedback_time) << " ms"
                      << ", Probe: " << (final_result.probe ? "yes" : "no")
                      << ", Recovered: " << (final_result.recovered_from_overuse ? "yes" : "no");
   }
@@ -181,8 +192,8 @@ void DelayBasedBwe::IncomingPacketFeedback(const PacketResult& packet_feedback,
   if (last_seen_packet_.IsInfinite() ||
       at_time - last_seen_packet_ > kStreamTimeOut) {
     RTC_LOG(LS_INFO) << "[DelayBWE-Reset] Stream timeout detected, resetting estimators. "
-                     << "Last packet: " << last_seen_packet_.ms() 
-                     << " ms, Current: " << at_time.ms() << " ms";
+                     << "Last packet: " << ToMsString(last_seen_packet_)
+                     << " ms, Current: " << ToMsString(at_time) << " ms";
     
     video_inter_arrival_delta_ =
         std::make_unique<InterArrivalDelta>(kSendTimeGroupLength);
@@ -217,7 +228,7 @@ void DelayBasedBwe::IncomingPacketFeedback(const PacketResult& packet_feedback,
       
       RTC_LOG(LS_VERBOSE) << "[DelayBWE-Audio] Audio packet processed. "
                           << "Audio packets since video: " << audio_packets_since_last_video_
-                          << ", Time since video: " << (packet_feedback.receive_time - last_video_packet_recv_time_).ms()
+                          << ", Time since video: " << ToMsString(packet_feedback.receive_time - last_video_packet_recv_time_)
                           << " ms, Switched to audio detector: " << (switched_to_audio ? "yes" : "no");
     } else {
       bool switched_to_video = (active_delay_detector_ != video_delay_detector_.get());
@@ -246,19 +257,23 @@ void DelayBasedBwe::IncomingPacketFeedback(const PacketResult& packet_feedback,
       at_time, packet_size.bytes(), &send_delta, &recv_delta, &size_delta);
 
   if (calculated_deltas) {
-    double delta_ms = recv_delta.ms<double>() - send_delta.ms<double>();
+    std::string network_delay_delta =
+        (recv_delta.IsFinite() && send_delta.IsFinite())
+            ? std::to_string(recv_delta.ms<double>() - send_delta.ms<double>())
+            : "INF";
     RTC_LOG(LS_VERBOSE) << "[DelayBWE-Packet] "
-                        << "Send time: " << packet_feedback.sent_packet.send_time.ms()
-                        << " ms, Recv time: " << packet_feedback.receive_time.ms()
+                        << "Send time: " << ToMsString(packet_feedback.sent_packet.send_time)
+                        << " ms, Recv time: " << ToMsString(packet_feedback.receive_time)
                         << " ms, Packet size: " << packet_size.bytes()
-                        << " bytes, Send delta: " << send_delta.ms()
-                        << " ms, Recv delta: " << recv_delta.ms()
-                        << " ms, Network delay delta: " << delta_ms
+                        << " bytes, Send delta: " << ToMsString(send_delta)
+                        << " ms, Recv delta: " << ToMsString(recv_delta)
+                        << " ms, Network delay delta: " << network_delay_delta
                         << " ms, Size delta: " << size_delta
-                        << " bytes, Audio: " << (packet_feedback.sent_packet.audio ? "yes" : "no");
+                        << " bytes, Audio: "
+                        << (packet_feedback.sent_packet.audio ? "yes" : "no");
   } else {
     RTC_LOG(LS_VERBOSE) << "[DelayBWE-Packet] Deltas not calculated for packet at "
-                        << packet_feedback.receive_time.ms() << " ms";
+                        << ToMsString(packet_feedback.receive_time) << " ms";
   }
 
   delay_detector_for_packet->Update(recv_delta.ms<double>(),
@@ -271,7 +286,7 @@ void DelayBasedBwe::IncomingPacketFeedback(const PacketResult& packet_feedback,
 DataRate DelayBasedBwe::TriggerOveruse(Timestamp at_time,
                                        std::optional<DataRate> link_capacity) {
   RTC_LOG(LS_INFO) << "[DelayBWE-TriggerOveruse] Manually triggering overuse. "
-                   << "Time: " << at_time.ms() << " ms, Link capacity: " 
+                   << "Time: " << ToMsString(at_time) << " ms, Link capacity: "
                    << (link_capacity ? link_capacity->bps() : -1) << " bps";
   
   RateControlInput input(BandwidthUsage::kBwOverusing, link_capacity);
@@ -328,17 +343,25 @@ DelayBasedBwe::Result DelayBasedBwe::MaybeUpdateEstimate(
     }
   } else {
     if (probe_bitrate) {
-      result.probe = true;
-      result.updated = true;
-      DataRate old_estimate = rate_control_.ValidEstimate() ? rate_control_.LatestEstimate() : DataRate::Zero();
-      rate_control_.SetEstimate(*probe_bitrate, at_time);
-      result.target_bitrate = rate_control_.LatestEstimate();
-      
-      RTC_LOG(LS_INFO) << "[DelayBWE-Probe] Using probe result. "
-                       << "Probe bitrate: " << probe_bitrate->bps() 
-                       << " bps, Old estimate: " << old_estimate.bps()
-                       << " bps, New target: " << result.target_bitrate.bps() << " bps";
-    } else {
+      // Safety check: verify probe_bitrate is finite before using
+      if (!probe_bitrate->IsFinite()) {
+        RTC_LOG(LS_ERROR) << "[DelayBWE-Error] probe_bitrate is not finite! Ignoring probe result.";
+        // Fall through to normal update below
+      } else {
+        result.probe = true;
+        result.updated = true;
+        DataRate old_estimate = rate_control_.ValidEstimate() ? rate_control_.LatestEstimate() : DataRate::Zero();
+        rate_control_.SetEstimate(*probe_bitrate, at_time);
+        result.target_bitrate = rate_control_.LatestEstimate();
+
+        RTC_LOG(LS_INFO) << "[DelayBWE-Probe] Using probe result. "
+                         << "Probe bitrate: " << probe_bitrate->bps()
+                         << " bps, Old estimate: " << old_estimate.bps()
+                         << " bps, New target: " << result.target_bitrate.bps() << " bps";
+      }
+    }
+
+    if (!probe_bitrate || !probe_bitrate->IsFinite()) {
       // Normal update - detailed info in BWE-DECISION log
       result.updated =
           UpdateEstimate(at_time, acked_bitrate, &result.target_bitrate);
@@ -360,7 +383,7 @@ DelayBasedBwe::Result DelayBasedBwe::MaybeUpdateEstimate(
     }
 
     RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
-                     << " [DelayBWE-Decision] MonoTime: " << at_time.ms()
+                     << " [DelayBWE-Decision] MonoTime: " << ToMsString(at_time)
                      << " ms, Detector state: " << detector_state
                      << ", Old bitrate: " << prev_bitrate_.bps()
                      << " bps, New bitrate: " << bitrate.bps()
@@ -396,7 +419,8 @@ bool DelayBasedBwe::UpdateEstimate(Timestamp at_time,
   auto strategy_info = rate_control_.GetLastStrategyInfo();
   
   // 综合BWE决策日志
-  RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]" << " [BWE-DECISION] MonoTime: " << at_time.ms() << " ms"
+  RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
+                   << " [BWE-DECISION] MonoTime: " << ToMsString(at_time) << " ms"
                    << ", BWState: " << bw_state_str 
                    << ", Strategy: " << strategy_info.strategy_name
                    << ", Params: [" << strategy_info.parameters << "]"
@@ -447,23 +471,30 @@ TimeDelta DelayBasedBwe::GetExpectedBwePeriod() const {
   return rate_control_.GetExpectedBandwidthPeriod();
 }
 
-void DelayBasedBwe::UpdateCellularResourceRatio(double ratio, Timestamp at_time) {
-  // Log the received data
-  RTC_LOG(LS_INFO) << "================================================";
-  RTC_LOG(LS_INFO) << "[DelayBWE-Cellular] ✅ DATA RECEIVED!";
-  RTC_LOG(LS_INFO) << "  Ratio: " << ratio;
-  RTC_LOG(LS_INFO) << "  Time: " << at_time.ms() << " ms";
-  RTC_LOG(LS_INFO) << "  Status: " << (ratio < 0.5 ? "⚠️ CONGESTED" : 
-                                       ratio < 0.8 ? "⚡ WARNING" : 
-                                       "✅ NORMAL");
-  RTC_LOG(LS_INFO) << "================================================";
-  
-  // Pass the ratio to AIMD rate control
-  rate_control_.SetCellularResourceRatio(ratio, at_time);
-  
-  // Log the impact on AIMD
-  RTC_LOG(LS_INFO) << "[DelayBWE-Cellular] Ratio forwarded to AIMD. "
-                   << "Current estimate: " << rate_control_.LatestEstimate().bps() << " bps";
+void DelayBasedBwe::UpdateCellularResourceRatio(double ratio,
+                                                double saturation,
+                                                Timestamp at_time) {
+  RTC_LOG(LS_INFO) << "[CellularRatio] MonoTime: " << ToMsString(at_time) << " ms"
+                   << ", Ratio: " << ratio
+                   << ", Saturation: " << saturation
+                   << ", Influence: "
+                   << (cellular_ratio_influence_enabled_ ? "enabled" : "disabled");
+
+  rate_control_.SetCellularResourceRatio(ratio, saturation, at_time);
+}
+
+void DelayBasedBwe::SetCellularRatioInfluenceEnabled(bool enabled) {
+  cellular_ratio_influence_enabled_ = enabled;
+  rate_control_.SetCellularRatioInfluenceEnabled(enabled);
+  RTC_LOG(LS_INFO) << "[DelayBWE] Cellular ratio influence "
+                   << (enabled ? "enabled" : "disabled");
+}
+
+void DelayBasedBwe::SetCUSUMInfluenceEnabled(bool enabled) {
+  cusum_influence_enabled_ = enabled;
+  rate_control_.SetCUSUMInfluenceEnabled(enabled);
+  RTC_LOG(LS_INFO) << "[DelayBWE] CUSUM influence "
+                   << (enabled ? "enabled" : "disabled");
 }
 
 }  // namespace webrtc

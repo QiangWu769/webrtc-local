@@ -186,6 +186,8 @@ class HexFileParser:
                             num_rbs = record.get('num_of_resource_blocks', '-')
                             tbs_index = record.get('tbs_index', '-')
                             mcs_index = record.get('mcs_index', '-')
+                            # 新增代码：处理 B16C 中的 redundancy_version
+                            redund_ver = record.get('redundancy_version', '-')
                         elif logcode == 0xB139:
                             redund_ver = record.get('redund_ver', '-')
                             pusch_tb_size = record.get('pusch_tb_size', '-')

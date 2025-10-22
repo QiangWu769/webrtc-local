@@ -120,3 +120,27 @@ alphartc_config_results/output_video_old.y4m
 alphartc_config_results/received_video.y4m
 alphartc_config_results/received_video_old.y4m
 VCD_th_1920x1080_30.yuv
+
+# Node.js dependencies
+node_modules/
+
+# Build dependencies
+depot_tools/
+_bad_scm/
+
+# Python cache
+__pycache__/
+*.prof
+
+# Test results and temporary files (excluding committed ones)
+logcode/test0/
+logcode/5g/
+
+# Analysis results
+webrtc_config_results/__pycache__/
+
+# Temporary directories
+VCD/
+scripts/
+slides/
+src_original_webrtc/

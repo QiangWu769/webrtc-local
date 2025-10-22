@@ -42,6 +42,7 @@ namespace webrtc {
 struct GoogCcConfig {
   std::unique_ptr<NetworkStateEstimator> network_state_estimator = nullptr;
   std::unique_ptr<NetworkStatePredictor> network_state_predictor = nullptr;
+  bool cellular_ratio_influence_enabled = false;  // Whether cellular ratio affects BWE decisions
 };
 
 class GoogCcNetworkController : public NetworkControllerInterface {

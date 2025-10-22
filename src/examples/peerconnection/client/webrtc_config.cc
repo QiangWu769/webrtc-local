@@ -13,6 +13,17 @@
 #include <fstream>
 #include <iostream>
 
+// Define the static member
+WebRTCConfig* WebRTCConfig::global_instance_ = nullptr;
+
+// External C function for GoogCC to query cellular ratio influence setting
+extern "C" bool GetCellularRatioInfluenceEnabled() {
+  if (WebRTCConfig::GetGlobalInstance()) {
+    return WebRTCConfig::GetGlobalInstance()->cellular_ratio_influence_enabled();
+  }
+  return false;  // Default to disabled if no config loaded
+}
+
 #include "json/reader.h"
 #include "json/value.h"
 #include "rtc_base/logging.h"
@@ -37,7 +48,8 @@ WebRTCConfig::WebRTCConfig()
       server_host_("localhost"),
       server_port_(8888),
       auto_connect_(true),
-      auto_call_(true) {
+      auto_call_(true),
+      cellular_ratio_influence_enabled_(true) {  // Default enabled
 }
 
 bool WebRTCConfig::ParseFromFile(const std::string& config_file_path) {
@@ -162,6 +174,14 @@ bool WebRTCConfig::ParseFromFile(const std::string& config_file_path) {
     }
   }
 
+  // Parse cellular ratio configuration
+  if (root.isMember("cellular_ratio")) {
+    Json::Value cellular_ratio = root["cellular_ratio"];
+    if (cellular_ratio.isMember("influence_enabled")) {
+      cellular_ratio_influence_enabled_ = cellular_ratio["influence_enabled"].asBool();
+    }
+  }
+
   return true;
 }
 
@@ -228,6 +248,9 @@ void WebRTCConfig::PrintConfig() const {
   RTC_LOG(LS_INFO) << "  Server Port: " << server_port_;
   RTC_LOG(LS_INFO) << "  Auto Connect: " << (auto_connect_ ? "Yes" : "No");
   RTC_LOG(LS_INFO) << "  Auto Call: " << (auto_call_ ? "Yes" : "No");
+  
+  // Cellular ratio configuration
+  RTC_LOG(LS_INFO) << "  Cellular Ratio Influence: " << (cellular_ratio_influence_enabled_ ? "Enabled" : "Disabled");
   
   RTC_LOG(LS_INFO) << "============================";
 }

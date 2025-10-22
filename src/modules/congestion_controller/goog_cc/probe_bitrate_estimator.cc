@@ -179,13 +179,28 @@ std::optional<DataRate> ProbeBitrateEstimator::HandleProbeAndEstimateBitrate(
                    << ", Receive: " << ToString(receive_size) << " / " << ToString(receive_interval)
                    << ", Probes: " << cluster->num_probes;
 
+  // Verify rates are finite before computing result
+  if (!send_rate.IsFinite() || !receive_rate.IsFinite()) {
+    RTC_LOG(LS_ERROR) << "[ProbeBWE-Error] Non-finite rate detected! "
+                      << "send_rate: " << (send_rate.IsFinite() ? "finite" : "infinite")
+                      << ", receive_rate: " << (receive_rate.IsFinite() ? "finite" : "infinite");
+    return std::nullopt;
+  }
+
   DataRate res = std::min(send_rate, receive_rate);
   // If we're receiving at significantly lower bitrate than we were sending at,
   // it suggests that we've found the true capacity of the link. In this case,
   // set the target bitrate slightly lower to not immediately overuse.
-  if (receive_rate < kMinRatioForUnsaturatedLink * send_rate) {
+  if (receive_rate < send_rate * kMinRatioForUnsaturatedLink) {
     RTC_DCHECK_GT(send_rate, receive_rate);
-    res = kTargetUtilizationFraction * receive_rate;
+    res = receive_rate * kTargetUtilizationFraction;
+
+    // Verify result is finite
+    if (!res.IsFinite()) {
+      RTC_LOG(LS_ERROR) << "[ProbeBWE-Error] Computed res is not finite after saturation adjustment! "
+                        << "kTargetUtilizationFraction: " << kTargetUtilizationFraction;
+      return std::nullopt;
+    }
     
     // 添加链路饱和检测日志
     RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]" << " [ProbeBWE-Saturated] Cluster ID: " << cluster_id
@@ -194,11 +209,17 @@ std::optional<DataRate> ProbeBitrateEstimator::HandleProbeAndEstimateBitrate(
                      << ", Adjusted: " << res.bps() << " bps";
   }
   
+  // Final safety check: verify res is finite before using
+  if (!res.IsFinite()) {
+    RTC_LOG(LS_ERROR) << "[ProbeBWE-Error] Final res is not finite! Cannot return result.";
+    return std::nullopt;
+  }
+
   // 添加最终探测结果日志
   RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]" << " [ProbeBWE-Result] Cluster ID: " << cluster_id
                    << ", Final estimate: " << res.bps() << " bps"
-                   << ", Method: " << (receive_rate < kMinRatioForUnsaturatedLink * send_rate ? "Saturated" : "Min(send,receive)");
-  
+                   << ", Method: " << (receive_rate < send_rate * kMinRatioForUnsaturatedLink ? "Saturated" : "Min(send,receive)");
+
   if (event_log_) {
     event_log_->Log(
         std::make_unique<RtcEventProbeResultSuccess>(cluster_id, res.bps()));

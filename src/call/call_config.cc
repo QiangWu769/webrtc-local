@@ -30,6 +30,7 @@ RtpTransportConfig CallConfig::ExtractTransportConfig() const {
   transport_config.network_state_predictor_factory =
       network_state_predictor_factory;
   transport_config.pacer_burst_interval = pacer_burst_interval;
+  transport_config.cellular_ratio_influence_enabled = cellular_ratio_influence_enabled;
 
   return transport_config;
 }

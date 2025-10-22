@@ -24,6 +24,7 @@ struct GoogCcFactoryConfig {
   std::unique_ptr<NetworkStateEstimatorFactory> network_state_estimator_factory;
   NetworkStatePredictorFactoryInterface* network_state_predictor_factory =
       nullptr;
+  bool cellular_ratio_influence_enabled = false;  // Whether cellular ratio affects BWE decisions
 };
 
 class RTC_EXPORT GoogCcNetworkControllerFactory

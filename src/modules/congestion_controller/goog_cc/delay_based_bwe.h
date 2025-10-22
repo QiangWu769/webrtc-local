@@ -89,7 +89,11 @@ class DelayBasedBwe {
   BandwidthUsage last_state() const { return prev_state_; }
   
   // Cellular resource ratio support (for testing data pipeline)
-  void UpdateCellularResourceRatio(double ratio, Timestamp at_time);
+  void UpdateCellularResourceRatio(double ratio,
+                                   double saturation,
+                                   Timestamp at_time);
+  void SetCellularRatioInfluenceEnabled(bool enabled);
+  void SetCUSUMInfluenceEnabled(bool enabled);
 
  private:
   friend class GoogCcStatePrinter;
@@ -132,6 +136,10 @@ class DelayBasedBwe {
   AimdRateControl rate_control_;
   DataRate prev_bitrate_;
   BandwidthUsage prev_state_;
+
+  // Cellular ratio influence control
+  bool cellular_ratio_influence_enabled_ = true;
+  bool cusum_influence_enabled_ = false;
 };
 
 }  // namespace webrtc

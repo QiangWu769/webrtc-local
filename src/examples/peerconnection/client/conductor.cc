@@ -63,6 +63,7 @@
  #include "examples/peerconnection/client/main_wnd.h"
  #include "examples/peerconnection/client/peer_connection_client.h"
  #include "examples/peerconnection/client/webrtc_config.h"
+ #include "modules/congestion_controller/goog_cc/goog_cc_network_control.h"
  
  // Declare flags defined in flag_defs.h
  ABSL_DECLARE_FLAG(bool, use_video_file);
@@ -250,6 +251,8 @@
      if (config_->ParseFromFile(config_file)) {
        RTC_LOG(LS_INFO) << "Loaded configuration from: " << config_file;
        config_->PrintConfig();
+       // Set as global instance for network controller access
+       config_->SetAsGlobalInstance();
      } else {
        RTC_LOG(LS_ERROR) << "Failed to load configuration from: " << config_file;
      }
@@ -805,7 +808,7 @@
         // 设置编码器层面的比特率限制，移除2500kbps默认限制
         // 🔥 关键修复：不能设置nullopt，要设置一个很高的正数值
         // 因为EncoderStreamFactory只认为 > 0 的值是有效的API设置
-        parameters.encodings[0].max_bitrate_bps = 50000000;  // 50 Mbps，足够高的限制
+        parameters.encodings[0].max_bitrate_bps = 50000000;   // 50 Mbps，合理的高限制
         parameters.encodings[0].min_bitrate_bps = 0;         // 0 kbps 最小比特率
         // 不设置 target_bitrate_bps，让系统自动调整
         

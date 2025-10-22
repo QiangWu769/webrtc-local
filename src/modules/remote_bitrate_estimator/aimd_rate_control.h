@@ -74,8 +74,12 @@ class AimdRateControl {
   StrategyInfo GetLastStrategyInfo() const;
 
   // Cellular resource ratio support
-  void SetCellularResourceRatio(double ratio, Timestamp at_time);
+  void SetCellularResourceRatio(double ratio,
+                                double saturation,
+                                Timestamp at_time);
   double GetCellularResourceRatio() const { return cellular_resource_ratio_; }
+  void SetCellularRatioInfluenceEnabled(bool enabled);
+  void SetCUSUMInfluenceEnabled(bool enabled);
 
  private:
   enum class RateControlState { kRcHold, kRcIncrease, kRcDecrease };
@@ -128,21 +132,20 @@ class AimdRateControl {
   
   // Cellular resource ratio tracking
   double cellular_resource_ratio_ = 1.0;  // Default: no constraint
+  double cellular_resource_saturation_ = 0.0;
   double smoothed_cellular_ratio_ = 1.0;  // Smoothed ratio for stability
   Timestamp last_ratio_update_time_ = Timestamp::MinusInfinity();
   double previous_ratio_ = 1.0;  // For trend detection
-  
-  // Fourth layer: multiplicative growth when ratio consistently high
-  int consecutive_high_ratio_count_ = 0;  // Count of consecutive high ratios
-  static constexpr double kMultiplicativeGrowthThreshold = 0.95;
-  static constexpr int kConsecutiveHighRatioThreshold = 3;
+  bool cellular_ratio_influence_enabled_ = false;  // Whether to apply cellular ratio influence
+  bool cusum_influence_enabled_ = false;  // Whether to apply CUSUM influence
   
   // Helper functions for cellular ratio
   bool HasFreshCellularData(Timestamp at_time) const;
-  bool ShouldForceDecrease() const;
-  bool ShouldForceHold() const;
-  bool ShouldLimitIncrease() const;
-  bool ShouldForceMultiplicativeGrowth() const;  // Fourth layer: force multiplicative growth
+
+  // Compute gain factor from cellular ratio using sigmoid function
+  // gain = 0.95 + 0.13 * sigmoid((ratio - 0.35) * 10.73)
+  // Maps ratio [0, 2] to gain [0.95, 1.08]
+  double ComputeGainFromRatio(double ratio) const;
 };
 }  // namespace webrtc
 

@@ -18,6 +18,7 @@
 #include <limits>
 #include <optional>
 #include <sstream>
+#include <string>
 #include <vector>
 
 #include "absl/algorithm/container.h"
@@ -92,6 +93,14 @@ std::string GetWallClockTimestampString() {
   return ss.str();
 }
 
+std::string ToMsString(Timestamp value) {
+  return value.IsFinite() ? std::to_string(value.ms()) : "INF";
+}
+
+std::string ToMsString(TimeDelta value) {
+  return value.IsFinite() ? std::to_string(value.ms()) : "INF";
+}
+
 }  // namespace
 
 LossBasedBweV2::LossBasedBweV2(const FieldTrialsView* key_value_config)
@@ -159,7 +168,8 @@ LossBasedBweV2::Result LossBasedBweV2::GetLossBasedResult() const {
   
   // 添加丢包带宽估算日志
   RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
-                   << " [LossBWE-Estimate] MonoTime: " << last_send_time_most_recent_observation_.ms() << " ms"
+                   << " [LossBWE-Estimate] MonoTime: "
+                   << ToMsString(last_send_time_most_recent_observation_) << " ms"
                    << ", State: " << static_cast<int>(loss_based_result_.state)
                    << ", Bandwidth: " << loss_based_result_.bandwidth_estimate.bps() << " bps"
                    << ", Observations: " << num_observations_;
@@ -247,7 +257,8 @@ void LossBasedBweV2::UpdateBandwidthEstimate(
   // 记录候选带宽日志
   StringBuilder log_msg;
   log_msg << "[" << GetWallClockTimestampString() << "]"
-          << " [LossBWE-Candidates] MonoTime: " << last_send_time_most_recent_observation_.ms()
+          << " [LossBWE-Candidates] MonoTime: "
+          << ToMsString(last_send_time_most_recent_observation_)
           << " ms, Candidate Bandwidths (kbps): ";
   for (const auto& candidate : candidates) {
     log_msg << candidate.loss_limited_bandwidth.kbps() << ", ";
@@ -390,7 +401,7 @@ void LossBasedBweV2::UpdateBandwidthEstimate(
       RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
                        << " [LossBWE-HOLD] " << this << " Switch to HOLD. Bounded BWE: "
                        << bounded_bandwidth_estimate.kbps()
-                       << ", duration: " << last_hold_info_.duration.ms()
+                       << ", duration: " << ToMsString(last_hold_info_.duration)
                        << ", avg loss rate: " << average_reported_loss_ratio_;
       last_hold_info_ = {
           .timestamp = last_send_time_most_recent_observation_ +
@@ -798,7 +809,7 @@ bool LossBasedBweV2::IsConfigValid() const {
   }
   if (config_->delayed_increase_window <= TimeDelta::Zero()) {
     RTC_LOG(LS_WARNING) << "The delayed increase window must be positive: "
-                        << config_->delayed_increase_window.ms();
+                        << ToMsString(config_->delayed_increase_window);
     valid = false;
   }
   if (config_->min_num_observations <= 0) {

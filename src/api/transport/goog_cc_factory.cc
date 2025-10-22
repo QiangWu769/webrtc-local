@@ -37,6 +37,10 @@ GoogCcNetworkControllerFactory::Create(NetworkControllerConfig config) {
         factory_config_.network_state_predictor_factory
             ->CreateNetworkStatePredictor();
   }
+  // Pass cellular ratio influence configuration
+  goog_cc_config.cellular_ratio_influence_enabled =
+      factory_config_.cellular_ratio_influence_enabled;
+
   return std::make_unique<GoogCcNetworkController>(config,
                                                    std::move(goog_cc_config));
 }

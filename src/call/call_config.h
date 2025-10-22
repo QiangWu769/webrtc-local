@@ -89,6 +89,9 @@ struct CallConfig {
 
   // Enables send packet batching from the egress RTP sender.
   bool enable_send_packet_batching = false;
+
+  // Whether cellular ratio should influence BWE decisions (default: false, log only)
+  bool cellular_ratio_influence_enabled = false;
 };
 
 }  // namespace webrtc
