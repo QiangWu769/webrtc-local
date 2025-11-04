@@ -1,0 +1,1 @@
+Timestamp_us	TTI	Slot	Frame	Numerology	PhyChan_Type	RNTI	Num_PUCCH	Second_Hop_RB

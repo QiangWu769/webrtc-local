@@ -16,7 +16,7 @@
     "log_output_path": "/home/wuq/webrtc-local/webrtc_config_results/sender_local.log"
   },
   "server": {
-    "host": "173.208.210.62",
+    "host": "3.235.180.17",
     "port": 8888,
     "auto_connect": true,
     "auto_call": true

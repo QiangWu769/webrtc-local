@@ -63,6 +63,7 @@
 #include "video/video_source_sink_controller.h"
 #include "video/video_stream_encoder_interface.h"
 #include "video/video_stream_encoder_observer.h"
+#include "video/ntp_time_converter.h"
 
 namespace webrtc {
 
@@ -139,12 +140,17 @@ class VideoStreamEncoder : public VideoStreamEncoderInterface,
   DataRate UpdateTargetBitrate(DataRate target_bitrate,
                                double cwnd_reduce_ratio);
 
+  // C2R (Capture to Render) measurement initialization
+  void InitializeC2R() override;
+
+  // ACT (Absolute Capture Time) extension setup for Phase-2 C2R
+  void ConfigureACTExtension(const std::vector<RtpExtension>& extensions) override;
+
+  // Get the encoder task queue for scheduling encoder operations
+  TaskQueueBase* encoder_queue() override;
+
  protected:
   friend class VideoStreamEncoderFrameCadenceRestrictionTest;
-
-  // Used for testing. For example the `ScalingObserverInterface` methods must
-  // be called on `encoder_queue_`.
-  TaskQueueBase* encoder_queue() { return encoder_queue_.get(); }
 
   void OnVideoSourceRestrictionsUpdated(
       VideoSourceRestrictions restrictions,
@@ -459,6 +465,15 @@ class VideoStreamEncoder : public VideoStreamEncoderInterface,
   //  Required for automatic corruption detection.
   std::unique_ptr<FrameInstrumentationGenerator>
       frame_instrumentation_generator_;
+
+  // C2R (Capture to Render) measurement support
+  std::atomic<bool> c2r_enabled_{false};
+  NtpTimeConverter ntp_converter_ RTC_GUARDED_BY(encoder_queue_);
+  int64_t last_frame_ntp_ms_ RTC_GUARDED_BY(encoder_queue_) = 0;
+
+  // ACT (Absolute Capture Time) extension support for Phase-2 C2R
+  std::atomic<bool> act_enabled_{false};
+  uint32_t act_extension_id_ RTC_GUARDED_BY(encoder_queue_) = 0;
 };
 
 }  // namespace webrtc

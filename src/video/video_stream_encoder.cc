@@ -83,6 +83,7 @@
 #include "rtc_base/system/no_unique_address.h"
 #include "rtc_base/thread_annotations.h"
 #include "rtc_base/trace_event.h"
+#include "rtc_base/time_utils.h"
 #include "video/adaptation/overuse_frame_detector.h"
 #include "video/adaptation/video_stream_encoder_resource_manager.h"
 #include "video/alignment_adjuster.h"
@@ -781,6 +782,35 @@ VideoStreamEncoder::~VideoStreamEncoder() {
   // it doesn't expect member would be used after its destruction has started.
   encoder_queue_.get_deleter()(encoder_queue_.get());
   encoder_queue_.release();
+}
+
+void VideoStreamEncoder::InitializeC2R() {
+  RTC_DCHECK_RUN_ON(encoder_queue_.get());
+  ntp_converter_.Initialize();
+  c2r_enabled_.store(true);
+}
+
+void VideoStreamEncoder::ConfigureACTExtension(const std::vector<RtpExtension>& extensions) {
+  RTC_DCHECK_RUN_ON(encoder_queue_.get());
+
+  // Look for ACT extension in the provided extensions
+  for (const auto& extension : extensions) {
+    if (extension.uri == RtpExtension::kAbsoluteCaptureTimeUri) {
+      act_extension_id_ = extension.id;
+      act_enabled_.store(true);
+      RTC_LOG(LS_INFO) << "[C2R-EXT] ACT:negotiated=1, Id=" << extension.id;
+      return;
+    }
+  }
+
+  // ACT extension not found or negotiation failed
+  act_enabled_.store(false);
+  act_extension_id_ = 0;
+  RTC_LOG(LS_INFO) << "[C2R-EXT] ACT:negotiated=0, Id=0";
+}
+
+TaskQueueBase* VideoStreamEncoder::encoder_queue() {
+  return encoder_queue_.get();
 }
 
 void VideoStreamEncoder::Stop() {
@@ -1564,6 +1594,28 @@ void VideoStreamEncoder::OnFrame(Timestamp post_time,
   RTC_DCHECK_RUN_ON(encoder_queue_.get());
   VideoFrame incoming_frame = video_frame;
 
+  // C2R (Capture to Render) measurement - auto-initialize and record capture time
+  if (!c2r_enabled_.load() && !ntp_converter_.IsInitialized()) {
+    // Auto-initialize C2R measurement on first frame
+    ntp_converter_.Initialize();
+    c2r_enabled_.store(true);
+  }
+
+  if (c2r_enabled_.load()) {
+    int64_t mono_us = TimeMicros();
+    int64_t capture_ntp_us = ntp_converter_.MonotonicToNtpMicros(mono_us);
+
+    RTC_LOG(LS_INFO) << "[C2R-CAPTURE] MonoUs=" << mono_us
+                     << ", FrameId=" << video_frame.id()
+                     << ", CaptureNtpUs=" << capture_ntp_us;
+
+    // Set NTP time for downstream use (only set ntp_time_ms, don't touch RTP timestamp)
+    if (capture_ntp_us > 0) {
+      last_frame_ntp_ms_ = capture_ntp_us / 1000;
+      incoming_frame.set_ntp_time_ms(last_frame_ntp_ms_);
+    }
+  }
+
   // In some cases, e.g., when the frame from decoder is fed to encoder,
   // the timestamp may be set to the future. As the encoding pipeline assumes
   // capture time to be less than present time, we should reset the capture
@@ -1573,7 +1625,10 @@ void VideoStreamEncoder::OnFrame(Timestamp post_time,
 
   // Capture time may come from clock with an offset and drift from clock_.
   int64_t capture_ntp_time_ms;
-  if (video_frame.ntp_time_ms() > 0) {
+  if (c2r_enabled_.load()) {
+    // C2R: Use our precise NTP capture time
+    capture_ntp_time_ms = last_frame_ntp_ms_;
+  } else if (video_frame.ntp_time_ms() > 0) {
     capture_ntp_time_ms = video_frame.ntp_time_ms();
   } else if (video_frame.render_time_ms() != 0) {
     capture_ntp_time_ms = video_frame.render_time_ms() + delta_ntp_internal_ms_;
@@ -2201,6 +2256,12 @@ EncodedImageCallback::Result VideoStreamEncoder::OnEncodedImage(
                                         : VideoCodecType::kVideoCodecGeneric;
   EncodedImage image_copy =
       AugmentEncodedImage(encoded_image, codec_specific_info);
+
+  // C2R: Log NTP time in encoded image (should already be propagated from VideoFrame)
+  if (c2r_enabled_.load()) {
+    RTC_LOG(LS_INFO) << "[C2R-ENC-NTP] RtpTs=" << image_copy.RtpTimestamp()
+                     << ", NtpMs=" << image_copy.NtpTimeMs();
+  }
 
   // Post a task because `send_codec_` requires `encoder_queue_` lock and we
   // need to update on quality convergence.

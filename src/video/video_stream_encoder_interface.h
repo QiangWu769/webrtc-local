@@ -134,6 +134,15 @@ class VideoStreamEncoderInterface {
                                 size_t max_data_payload_length,
                                 SetParametersCallback callback) = 0;
 
+  // C2R (Capture to Render) measurement initialization
+  virtual void InitializeC2R() = 0;
+
+  // ACT (Absolute Capture Time) extension setup for Phase-2 C2R
+  virtual void ConfigureACTExtension(const std::vector<RtpExtension>& extensions) = 0;
+
+  // Get the encoder task queue for scheduling encoder operations
+  virtual TaskQueueBase* encoder_queue() = 0;
+
   // Permanently stop encoding. After this method has returned, it is
   // guaranteed that no encoded frames will be delivered to the sink.
   virtual void Stop() = 0;

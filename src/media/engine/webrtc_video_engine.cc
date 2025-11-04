@@ -875,7 +875,7 @@ WebRtcVideoEngine::GetRtpHeaderExtensions() const {
                       /*preferred_encrypt=*/true,
                       RtpTransceiverDirection::kStopped);
   for (const auto& uri : {RtpExtension::kAbsoluteCaptureTimeUri}) {
-    result.emplace_back(uri, id, RtpTransceiverDirection::kStopped);
+    result.emplace_back(uri, id, RtpTransceiverDirection::kSendRecv);
   }
   result.emplace_back(RtpExtension::kGenericFrameDescriptorUri00, id,
                       trials_.IsEnabled("WebRTC-GenericDescriptorAdvertised")

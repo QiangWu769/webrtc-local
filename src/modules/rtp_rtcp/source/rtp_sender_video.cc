@@ -517,6 +517,17 @@ bool RTPSenderVideo::SendVideo(int payload_type,
                                std::vector<uint32_t> csrcs) {
   RTC_CHECK_RUNS_SERIALIZED(&send_checker_);
 
+  // C2R (Capture to Render) measurement - record frame mapping
+  if (video_header.generic) {
+    RTC_LOG(LS_INFO) << "[C2R-MAPPING] FrameId=" << video_header.generic->frame_id
+                     << ", RtpTs=" << rtp_timestamp;
+  }
+
+  // C2R: TODO - Set Absolute Capture Time extension
+  // For MVP, focus on CAPTURE and MAPPING logs first
+  // ACT extension implementation needs proper NTP time propagation
+  // which requires more complex integration work
+
   if (video_header.frame_type == VideoFrameType::kEmptyFrame)
     return true;
 
@@ -594,6 +605,9 @@ bool RTPSenderVideo::SendVideo(int payload_type,
 
   // Let `absolute_capture_time_sender_` decide if the extension should be sent.
   if (video_header.absolute_capture_time.has_value()) {
+    // Store original values for logging
+    uint64_t original_ntp = video_header.absolute_capture_time->absolute_capture_timestamp;
+
     video_header.absolute_capture_time =
         absolute_capture_time_sender_.OnSendPacket(
             AbsoluteCaptureTimeSender::GetSource(single_packet->Ssrc(), csrcs),
@@ -601,6 +615,26 @@ bool RTPSenderVideo::SendVideo(int payload_type,
             NtpTime(
                 video_header.absolute_capture_time->absolute_capture_timestamp),
             video_header.absolute_capture_time->estimated_capture_clock_offset);
+
+    // C2R ACT extension logging (when extension will be sent)
+    if (video_header.absolute_capture_time.has_value()) {
+      // Convert back to microseconds and extract NTP components
+      uint64_t ntp_timestamp = original_ntp;
+      uint32_t ntp_sec = (ntp_timestamp >> 32) & 0xFFFFFFFF;
+      uint32_t ntp_frac = ntp_timestamp & 0xFFFFFFFF;
+      uint64_t cap_ntp_us = (static_cast<uint64_t>(ntp_sec) * 1000000ULL) +
+                           ((static_cast<uint64_t>(ntp_frac) * 1000000ULL) >> 32);
+
+      // Log ACT transmission with frame info
+      if (video_header.generic) {
+        RTC_LOG(LS_INFO) << "[C2R-ACT-TX] FrameId=" << video_header.generic->frame_id
+                         << ", RtpTs=" << rtp_timestamp
+                         << ", CapNtpUs=" << cap_ntp_us
+                         << ", NtpSec=" << ntp_sec
+                         << ", NtpFrac=" << ntp_frac
+                         << ", Ssrc=" << single_packet->Ssrc();
+      }
+    }
   }
 
   auto first_packet = std::make_unique<RtpPacketToSend>(*single_packet);

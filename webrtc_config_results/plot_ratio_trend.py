@@ -1,0 +1,1047 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+EWMA Ratio Trend Analyzer
+
+This script extracts and visualizes the EWMA smoothed ratio trend from WebRTC logs,
+showing the relationship between cellular ratio changes and network events like overusing.
+"""
+
+import re
+import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+import pandas as pd
+from datetime import datetime
+import numpy as np
+import argparse
+# from scipy import stats  # 使用numpy替代
+from dataclasses import dataclass
+from typing import List, Tuple, Optional
+from enum import Enum
+import sys
+import os
+
+class TrendType(Enum):
+    STRONG_RISING = "Strong Rising"      # slope > +0.04/s (基于95%分位数)
+    WEAK_RISING = "Weak Rising"          # slope > +0.02/s (基于80%分位数)
+    STABLE = "Stable"                    # -0.03/s ≤ slope ≤ +0.02/s (数据驱动)
+    WEAK_FALLING = "Weak Falling"        # -0.1/s ≤ slope < -0.03/s (保持敏感)
+    STRONG_FALLING = "Strong Falling"    # slope < -0.1/s (保持敏感)
+    NO_TREND = "No Trend"               # R² < 0.2
+
+@dataclass
+class TrendResult:
+    slope: float           # 斜率（每秒变化率）
+    r_squared: float       # 拟合优度 R²
+    confidence: float      # 置信度
+    intercept: float       # 截距
+    is_significant: bool   # 趋势是否显著
+    trend_type: TrendType  # 趋势类型
+
+class ExponentialDecayTrendAnalyzer:
+    """50点窗口指数衰减趋势分析器"""
+    
+    def __init__(self, window_size=100, min_confidence=0.7):
+        self.window_size = window_size
+        self.min_confidence = min_confidence
+    
+    def _fit_exponential_decay(self, time_points: np.ndarray, ratio_values: np.ndarray) -> Tuple[float, float, float, float]:
+        """拟合指数衰减模型: y = A * exp(-lambda*t) + C"""
+        if len(time_points) < 10:
+            return 0.0, 0.0, np.mean(ratio_values), 0.0
+        
+        # 转换为相对时间
+        time_relative = time_points - time_points[0]
+        
+        # 简化参数估计
+        y_min = np.min(ratio_values)
+        y_max = np.max(ratio_values)
+        y_mean = np.mean(ratio_values)
+        
+        # 估计参数
+        C = y_min * 0.9  # 稳态值
+        A = y_max - C    # 初始幅度
+        
+        # 尝试不同的lambda值，找到最佳拟合
+        best_lambda = 0.1
+        best_r_squared = 0.0
+        
+        for lambda_val in np.linspace(0.01, 2.0, 50):
+            try:
+                y_pred = A * np.exp(-lambda_val * time_relative) + C
+                
+                # 计算R²
+                ss_tot = np.sum((ratio_values - y_mean) ** 2)
+                ss_res = np.sum((ratio_values - y_pred) ** 2)
+                r_squared = 1.0 - (ss_res / ss_tot) if ss_tot > 1e-10 else 0.0
+                
+                if r_squared > best_r_squared:
+                    best_r_squared = r_squared
+                    best_lambda = lambda_val
+            except:
+                continue
+        
+        return A, best_lambda, C, best_r_squared
+    
+    def _calculate_exp_trend(self, time_points: np.ndarray, ratio_values: np.ndarray) -> TrendResult:
+        """计算指数衰减趋势"""
+        if len(time_points) < 10:
+            return TrendResult(
+                slope=0.0, r_squared=0.0, confidence=0.0, intercept=0.0,
+                is_significant=False, trend_type=TrendType.NO_TREND
+            )
+        
+        A, lambda_val, C, r_squared = self._fit_exponential_decay(time_points, ratio_values)
+        
+        # 计算等效斜率（初始斜率）
+        equivalent_slope = -A * lambda_val
+        
+        # 计算置信度 - 大幅降低阈值
+        confidence = r_squared if r_squared > 0.05 else 0.0
+        is_significant = confidence > self.min_confidence and r_squared > 0.05
+        
+        # 确定趋势类型 - 降低阈值使更多趋势可见
+        if r_squared < 0.05:
+            trend_type = TrendType.NO_TREND
+        elif equivalent_slope < -0.5:
+            trend_type = TrendType.STRONG_FALLING
+        elif equivalent_slope < -0.1:
+            trend_type = TrendType.WEAK_FALLING
+        elif equivalent_slope <= 0.1:
+            trend_type = TrendType.STABLE
+        elif equivalent_slope <= 0.5:
+            trend_type = TrendType.WEAK_RISING
+        else:
+            trend_type = TrendType.STRONG_RISING
+        
+        return TrendResult(
+            slope=equivalent_slope,
+            r_squared=r_squared,
+            confidence=confidence,
+            intercept=C,
+            is_significant=is_significant,
+            trend_type=trend_type
+        )
+    
+    def analyze_trend_series(self, ratio_series: pd.Series, time_series: pd.Series) -> List[TrendResult]:
+        """对整个时间序列进行滚动指数趋势分析"""
+        trend_results = []
+        
+        for i in range(len(ratio_series)):
+            if i < self.window_size - 1:
+                # 数据不足，使用默认值
+                trend_results.append(TrendResult(
+                    slope=0.0, r_squared=0.0, confidence=0.0, intercept=0.0,
+                    is_significant=False, trend_type=TrendType.NO_TREND
+                ))
+                continue
+            
+            # 提取当前窗口的数据
+            start_idx = i - self.window_size + 1
+            end_idx = i + 1
+            
+            window_time = time_series.iloc[start_idx:end_idx].values
+            window_ratio = ratio_series.iloc[start_idx:end_idx].values
+            
+            # 计算趋势
+            trend = self._calculate_exp_trend(window_time, window_ratio)
+            trend_results.append(trend)
+        
+        return trend_results
+
+class CUSUMTrendAnalyzer:
+    """CUSUM累积和趋势分析器 - 使用与实际GoogleCC代码完全相同的实现包括20点平滑"""
+    
+    def __init__(self, idle_threshold=0.7, congestion_threshold=0.4, k=0.05, h_upper=2.0, h_lower=2.0, smoothing_window=20):
+        """
+        初始化CUSUM分析器 - 与aimd_rate_control.cc完全一致的参数
+        congestion_threshold: 0.4 (kCUSUMCongestionThreshold)
+        k: 0.05 (kCUSUMK)  
+        h_lower: 2.0 (kCUSUMHLower) - 实际代码中的检测阈值
+        smoothing_window: 20 (kCUSUMSmoothingWindow) - 20点移动平均窗口
+        """
+        self.idle_threshold = idle_threshold  # Not used in actual implementation
+        self.congestion_threshold = congestion_threshold  # kCUSUMCongestionThreshold = 0.4
+        self.k = k  # kCUSUMK = 0.05
+        self.h_upper = h_upper  # Not used in actual implementation
+        self.h_lower = h_lower  # kCUSUMHLower = 2.0
+        self.smoothing_window = smoothing_window  # kCUSUMSmoothingWindow = 20
+    
+    def calculate_cusum(self, ratio_series):
+        """计算CUSUM统计量 - 精确复制aimd_rate_control.cc的UpdateCUSUMAnalysis实现包括20点平滑"""
+        cusum_lower_values = []  # 记录CUSUM_lower历史值
+        cusum_detections = []    # 记录检测事件
+        cusum_clearances = []    # 记录清除事件
+        actual_reductions = []   # 记录实际会触发减速的时机
+        
+        # 状态变量 (对应C++代码中的成员变量)
+        cusum_lower_ = 0.0           # 对应 cusum_lower_
+        cusum_congestion_alert_ = False  # 对应 cusum_congestion_alert_
+        cusum_ratio_buffer = []      # 对应 cusum_ratio_buffer_
+        
+        for i, ratio in enumerate(ratio_series):
+            # 添加ratio到20点平滑缓冲区 (精确复制C++代码)
+            cusum_ratio_buffer.append(ratio)
+            
+            # 维护20点窗口
+            if len(cusum_ratio_buffer) > self.smoothing_window:
+                cusum_ratio_buffer.pop(0)
+            
+            # 只有当我们有足够数据点时才应用CUSUM
+            if len(cusum_ratio_buffer) < self.smoothing_window:
+                cusum_lower_values.append(cusum_lower_)
+                continue
+            
+            # 计算20点移动平均 (像C++代码一样)
+            smoothed_ratio = sum(cusum_ratio_buffer) / self.smoothing_window
+            
+            # 精确复制 UpdateCUSUMAnalysis 的计算 - 使用smoothed_ratio而不是原始ratio
+            # cusum_lower_ = std::max(0.0, cusum_lower_ + (kCUSUMCongestionThreshold - smoothed_ratio - kCUSUMK));
+            cusum_lower_ = max(0.0, cusum_lower_ + (self.congestion_threshold - smoothed_ratio - self.k))
+            cusum_lower_values.append(cusum_lower_)
+            
+            # 只有当我们有足够数据时才检测拥塞警报
+            if len(cusum_ratio_buffer) < self.smoothing_window:
+                continue
+                
+            # 检测拥塞警报 - 精确复制C++逻辑
+            detection_occurred = False
+            clearance_occurred = False
+            
+            if cusum_lower_ > self.h_lower and not cusum_congestion_alert_:
+                # if (cusum_lower_ > kCUSUMHLower && !cusum_congestion_alert_)
+                cusum_congestion_alert_ = True
+                detection_occurred = True
+                cusum_detections.append(i)
+                
+            elif cusum_lower_ <= self.h_lower * 0.5 and cusum_congestion_alert_:
+                # } else if (cusum_lower_ <= kCUSUMHLower * 0.5 && cusum_congestion_alert_) {
+                cusum_congestion_alert_ = False
+                cusum_lower_ = 0.0  # 重置CUSUM
+                clearance_occurred = True  
+                cusum_clearances.append(i)
+            
+            # 判断是否会实际触发减速 (基于ShouldApplyCUSUMDecrease逻辑)
+            # 实际减速需要: 1) 有拥塞警报 2) 在Increase或Hold状态 
+            # 在这里我们假设大部分时候都可能触发 (因为我们修改了代码允许Hold状态)
+            would_reduce = cusum_congestion_alert_ and detection_occurred
+            actual_reductions.append(would_reduce)
+        
+        # 转换为numpy数组并创建兼容原接口的返回格式
+        alerts_lower = np.array([i in cusum_detections for i in range(len(ratio_series))])
+        alerts_upper = np.zeros(len(ratio_series), dtype=bool)  # 实际代码中不使用上侧CUSUM
+        
+        return {
+            'cusum_upper': np.zeros(len(ratio_series)),  # 实际代码中不使用
+            'cusum_lower': np.array(cusum_lower_values), 
+            'alerts_upper': alerts_upper,
+            'alerts_lower': alerts_lower,
+            'detections': cusum_detections,
+            'clearances': cusum_clearances,
+            'would_reduce': np.array(actual_reductions)
+        }
+
+class LinearRegressionTrendAnalyzer:
+    """20点窗口线性回归趋势分析器"""
+    
+    def __init__(self, window_size=20, min_confidence=0.5):
+        self.window_size = window_size
+        self.min_confidence = min_confidence
+    
+    def analyze_trend_series(self, ratio_series: pd.Series, time_series: pd.Series) -> List[TrendResult]:
+        """对整个时间序列进行滚动趋势分析"""
+        trend_results = []
+        
+        for i in range(len(ratio_series)):
+            if i < self.window_size - 1:
+                # 数据不足，使用默认值
+                trend_results.append(TrendResult(
+                    slope=0.0, r_squared=0.0, confidence=0.0, intercept=0.0,
+                    is_significant=False, trend_type=TrendType.NO_TREND
+                ))
+                continue
+            
+            # 提取当前窗口的数据
+            start_idx = i - self.window_size + 1
+            end_idx = i + 1
+            
+            window_time = time_series.iloc[start_idx:end_idx].values
+            window_ratio = ratio_series.iloc[start_idx:end_idx].values
+            
+            # 计算趋势
+            trend = self._calculate_trend(window_time, window_ratio)
+            trend_results.append(trend)
+        
+        return trend_results
+    
+    def _calculate_trend(self, time_points: np.ndarray, ratio_values: np.ndarray) -> TrendResult:
+        """计算单个窗口的线性回归趋势"""
+        if len(time_points) < 2:
+            return TrendResult(0.0, 0.0, 0.0, 0.0, False, TrendType.NO_TREND)
+        
+        # 时间归一化（转换为相对秒数）
+        time_relative = (time_points - time_points[0])
+        
+        try:
+            # 使用numpy进行线性回归
+            n = len(time_relative)
+            if n < 2:
+                return TrendResult(0.0, 0.0, 0.0, 0.0, False, TrendType.NO_TREND)
+                
+            # 计算线性回归参数
+            x_mean = np.mean(time_relative)
+            y_mean = np.mean(ratio_values)
+            
+            # 计算斜率和截距
+            numerator = np.sum((time_relative - x_mean) * (ratio_values - y_mean))
+            denominator = np.sum((time_relative - x_mean) ** 2)
+            
+            if abs(denominator) < 1e-10:
+                return TrendResult(0.0, 0.0, 0.0, 0.0, False, TrendType.NO_TREND)
+                
+            slope = numerator / denominator
+            intercept = y_mean - slope * x_mean
+            
+            # 计算R²
+            y_pred = slope * time_relative + intercept
+            ss_tot = np.sum((ratio_values - y_mean) ** 2)
+            ss_res = np.sum((ratio_values - y_pred) ** 2)
+            
+            r_squared = 1.0 - (ss_res / ss_tot) if ss_tot > 1e-10 else 0.0
+            r_squared = max(0.0, min(1.0, r_squared))  # 限制在[0,1]
+            
+            confidence = r_squared * min(1.0, n / 50.0)
+            
+            # 判断趋势是否显著 - 降低阈值提高敏感度
+            is_significant = (confidence >= self.min_confidence) and (abs(slope) > 0.02)  # 从0.05降到0.02
+            
+            # 分类趋势类型
+            trend_type = self._classify_trend(slope, r_squared)
+            
+            return TrendResult(
+                slope=slope, r_squared=r_squared, confidence=confidence,
+                intercept=intercept, is_significant=is_significant, trend_type=trend_type
+            )
+            
+        except Exception as e:
+            print(f"Error in trend calculation: {e}")
+            return TrendResult(0.0, 0.0, 0.0, 0.0, False, TrendType.NO_TREND)
+    
+    def _classify_trend(self, slope: float, r_squared: float) -> TrendType:
+        """数据驱动的非对称趋势分类：下降敏感，上升现实"""
+        if r_squared < 0.2:  # 降低R²要求，检测更多趋势
+            return TrendType.NO_TREND
+        
+        if slope > 0.3:  # 极高的强上升阈值
+            return TrendType.STRONG_RISING
+        elif slope > 0.05:  # 弱上升
+            return TrendType.WEAK_RISING
+        elif slope >= -0.05:  # 稳定区间
+            return TrendType.STABLE
+        elif slope >= -0.2:  # 弱下降区间
+            return TrendType.WEAK_FALLING
+        else:  # slope < -0.2，强下降
+            return TrendType.STRONG_FALLING
+
+class RatioTrendAnalyzer:
+    def __init__(self, log_file_path):
+        self.log_file_path = log_file_path
+        
+        # Regular expressions for parsing
+        self.patterns = {
+            'ewma_ratio': re.compile(r'\(smoothed: ([0-9.]+)(?:,|\))'),  # Updated to handle "smoothed: X," or "smoothed: X)"
+            'wall_clock': re.compile(r'\[([0-9]{10}\.[0-9]{3,6})\]'),
+            'actual_overusing': re.compile(r'\[([0-9]{10}\.[0-9]{3,6})\].*\[GCC-DECISION-SNAPSHOT\].*DelayState: Overusing'),
+            'underusing': re.compile(r'\[([0-9]{10}\.[0-9]{3,6})\].*State: Underusing'),
+            'bwe_decision': re.compile(r'\[BWE-DECISION\] (?:Time|MonoTime): (\d+) ms.*?AckedBitrate: (\d+) bps.*?NewTarget: (\d+) bps'),
+            'rtt_bwe': re.compile(r'\[RttBWE-Update\] (?:Time|MonoTime): (\d+) ms, PropagationRtt: (\d+) ms, CorrectedRtt: (\d+) ms'),
+            'cellular_ratio': re.compile(r'\[CellularRatio\] MonoTime: (\d+) ms, Ratio: ([0-9.]+), Bandwidth: ([0-9.]+) Mbps'),
+            'm_value': re.compile(r'\[AIMD-Cellular\] Ratio: ([0-9.]+), Saturation: ([-0-9.]+), M: ([0-9.]+)')
+        }
+
+    def parse_logs(self):
+        """Parse logs to extract EWMA ratio data and network events"""
+        ratio_data = []
+        actual_overusing_events = []
+        underusing_events = []
+        bwe_decision_data = []
+        rtt_data = []
+        cellular_bandwidth_data = []
+        m_value_data = []
+        current_wall_clock = None
+        start_time = None
+        
+        with open(self.log_file_path, 'r', encoding='utf-8') as f:
+            for line_number, line in enumerate(f):
+                # Track wall-clock timestamps
+                wall_clock_match = self.patterns['wall_clock'].search(line)
+                if wall_clock_match:
+                    current_wall_clock = float(wall_clock_match.group(1))
+                    if start_time is None:
+                        start_time = current_wall_clock
+
+                # Extract M value data and EWMA ratio from AIMD-Cellular lines
+                if 'AIMD-Cellular' in line:
+                    m_match = self.patterns['m_value'].search(line)
+                    ewma_match = self.patterns['ewma_ratio'].search(line)
+
+                    if m_match and current_wall_clock is not None and start_time is not None:
+                        ratio = float(m_match.group(1))
+                        saturation = float(m_match.group(2))
+                        m_value = float(m_match.group(3))
+                        relative_time = current_wall_clock - start_time
+
+                        m_value_data.append({
+                            'timestamp': relative_time,
+                            'ratio': ratio,
+                            'saturation': saturation,
+                            'm_value': m_value,
+                            'line_number': line_number
+                        })
+
+                    if ewma_match and current_wall_clock is not None:
+                        ratio = float(ewma_match.group(1))
+                        relative_time = current_wall_clock - start_time if start_time else 0
+
+                        ratio_data.append({
+                            'timestamp': relative_time,
+                            'ratio': ratio,
+                            'line_number': line_number,
+                            'wall_clock': current_wall_clock
+                        })
+                    continue
+
+                # Extract EWMA ratio data from other lines (not needed anymore since we extract from AIMD-Cellular)
+                # Keeping this for backward compatibility but it won't match current log format
+                if 'EWMA smoothed:' in line:
+                    ewma_match = self.patterns['ewma_ratio'].search(line)
+                    if ewma_match and current_wall_clock is not None:
+                        ratio = float(ewma_match.group(1))
+
+                        # Convert to relative time in seconds
+                        relative_time = current_wall_clock - start_time if start_time else 0
+
+                        ratio_data.append({
+                            'timestamp': relative_time,
+                            'ratio': ratio,
+                            'line_number': line_number,
+                            'wall_clock': current_wall_clock
+                        })
+                    continue
+                
+                # Extract overusing events
+                actual_over_match = self.patterns['actual_overusing'].search(line)
+                if actual_over_match:
+                    wall_time = float(actual_over_match.group(1))
+                    if start_time is not None:
+                        relative_time = wall_time - start_time
+                        actual_overusing_events.append({
+                            'timestamp': relative_time,
+                            'line_number': line_number,
+                            'raw_line': line.strip()
+                        })
+                
+                # Extract underusing events
+                under_match = self.patterns['underusing'].search(line)
+                if under_match:
+                    wall_time = float(under_match.group(1))
+                    if start_time is not None:
+                        relative_time = wall_time - start_time
+                        underusing_events.append(relative_time)
+                    continue
+                
+                # Extract BWE decision data (using original code's approach)
+                if 'BWE-DECISION' in line and current_wall_clock is not None:
+                    bwe_match = self.patterns['bwe_decision'].search(line)
+                    if bwe_match:
+                        # Following original code pattern: MonoTime, AckedBitrate, NewTarget
+                        monotime = int(bwe_match.group(1))
+                        acked_bitrate = int(bwe_match.group(2))
+                        new_target = int(bwe_match.group(3))
+                        relative_time = current_wall_clock - start_time if start_time else 0
+                        
+                        bwe_decision_data.append({
+                            'timestamp': relative_time,
+                            'new_target': new_target,  # Following original naming convention
+                            'acked_bitrate': acked_bitrate,
+                            'line_number': line_number
+                        })
+                    continue
+                
+                # Extract RTT data
+                if 'RttBWE-Update' in line and current_wall_clock is not None:
+                    rtt_match = self.patterns['rtt_bwe'].search(line)
+                    if rtt_match:
+                        monotime = int(rtt_match.group(1))
+                        propagation_rtt = int(rtt_match.group(2))
+                        corrected_rtt = int(rtt_match.group(3))
+                        relative_time = current_wall_clock - start_time if start_time else 0
+
+                        rtt_data.append({
+                            'timestamp': relative_time,
+                            'propagation_rtt': propagation_rtt,
+                            'corrected_rtt': corrected_rtt,
+                            'line_number': line_number
+                        })
+                    continue
+
+                # Extract Cellular Bandwidth data
+                if 'CellularRatio' in line and current_wall_clock is not None:
+                    cellular_match = self.patterns['cellular_ratio'].search(line)
+                    if cellular_match:
+                        monotime = int(cellular_match.group(1))
+                        cellular_ratio = float(cellular_match.group(2))
+                        bandwidth_mbps = float(cellular_match.group(3))
+                        relative_time = current_wall_clock - start_time if start_time else 0
+
+                        cellular_bandwidth_data.append({
+                            'timestamp': relative_time,
+                            'cellular_ratio': cellular_ratio,
+                            'bandwidth_mbps': bandwidth_mbps,
+                            'bandwidth_kbps': bandwidth_mbps * 1000,  # Convert to kbps for consistency
+                            'line_number': line_number
+                        })
+                    continue
+
+        # Convert to DataFrames and sort by timestamp
+        ratio_df = pd.DataFrame(ratio_data)
+        if not ratio_df.empty:
+            ratio_df = ratio_df.sort_values('timestamp').reset_index(drop=True)
+
+        bwe_df = pd.DataFrame(bwe_decision_data)
+        if not bwe_df.empty:
+            bwe_df = bwe_df.sort_values('timestamp').reset_index(drop=True)
+
+        rtt_df = pd.DataFrame(rtt_data)
+        if not rtt_df.empty:
+            rtt_df = rtt_df.sort_values('timestamp').reset_index(drop=True)
+
+        cellular_df = pd.DataFrame(cellular_bandwidth_data)
+        if not cellular_df.empty:
+            cellular_df = cellular_df.sort_values('timestamp').reset_index(drop=True)
+
+        m_value_df = pd.DataFrame(m_value_data)
+        if not m_value_df.empty:
+            m_value_df = m_value_df.sort_values('timestamp').reset_index(drop=True)
+
+        print(f"[*] Parsed {len(ratio_df)} ratio data points")
+        print(f"[*] Found {len(actual_overusing_events)} GCC overusing snapshots")
+        print(f"[*] Found {len(underusing_events)} underusing events")
+        print(f"[*] Found {len(bwe_df)} BWE decision points")
+        print(f"[*] Found {len(rtt_df)} RTT data points")
+        print(f"[*] Found {len(cellular_df)} cellular bandwidth points")
+        print(f"[*] Found {len(m_value_df)} M value points")
+
+        return ratio_df, actual_overusing_events, underusing_events, bwe_df, rtt_df, cellular_df, m_value_df
+    
+
+    def plot_ratio_trend(self, ratio_df, actual_overusing_events, underusing_events, bwe_df, rtt_df, cellular_df, m_value_df):
+        """Create comprehensive ratio trend visualization"""
+        if ratio_df.empty:
+            print("[!] No ratio data to plot")
+            return
+
+        # Use timestamps as-is since they're already relative
+        ratio_df['time_s'] = ratio_df['timestamp']
+        actual_overusing_times = [evt['timestamp'] for evt in actual_overusing_events]
+        underusing_times = underusing_events
+
+        # Create figure with ratio and RTT subplots sharing the same x-axis
+        fig, (ax1, ax_rtt) = plt.subplots(2, 1, figsize=(15, 12), sharex=True,
+                                          gridspec_kw={'height_ratios': [2.5, 1.5], 'hspace': 0.25})
+        
+        # LINEAR REGRESSION ANALYSIS COMMENTED OUT
+        # # We need to prepare the linear regression analysis for the second subplot
+        # # Apply asymmetric linear regression trend analysis with 50-point window
+        # print("[*] Performing 50-point asymmetric linear regression (downward-sensitive, upward-strict)...")
+        # trend_analyzer = LinearRegressionTrendAnalyzer(window_size=50, min_confidence=0.2)  # 增加窗口大小到50点
+        # trend_results = trend_analyzer.analyze_trend_series(ratio_df['ratio'], ratio_df['time_s'])
+        # 
+        # # Add trend results to dataframe
+        # ratio_df['trend_slope'] = [tr.slope for tr in trend_results]
+        # ratio_df['trend_r_squared'] = [tr.r_squared for tr in trend_results]
+        # ratio_df['trend_confidence'] = [tr.confidence for tr in trend_results]
+        # ratio_df['trend_type'] = [tr.trend_type.value for tr in trend_results]
+        # ratio_df['trend_significant'] = [tr.is_significant for tr in trend_results]
+        # 
+        # # Calculate 50-point rolling mean for comparison
+        # ratio_df['rolling_mean_50'] = ratio_df['ratio'].rolling(window=50, center=True).mean()
+
+        # Parse target bitrate and acked bitrate from BWE data (for both subplots)
+        target_bitrates = []
+        acked_bitrates = []
+        bitrate_times = []
+        if not bwe_df.empty and 'new_target' in bwe_df.columns:
+            target_bitrates = (bwe_df['new_target'] / 1000000).tolist()  # Convert to Mbps
+            bitrate_times = bwe_df['timestamp'].tolist()
+        if not bwe_df.empty and 'acked_bitrate' in bwe_df.columns:
+            acked_bitrates = (bwe_df['acked_bitrate'] / 1000000).tolist()  # Convert to Mbps
+
+        # Parse cellular bandwidth data - only when 0 < ratio < 0.2
+        cellular_bandwidths = []
+        cellular_times = []
+        if not cellular_df.empty and bitrate_times:
+            # Only plot cellular bandwidth when 0 < ratio < 0.2 and at target bitrate time points
+            for t in bitrate_times:
+                # Find the closest cellular bandwidth measurement
+                time_diffs = abs(cellular_df['timestamp'] - t)
+                closest_idx = time_diffs.idxmin()
+                cellular_ratio = cellular_df.loc[closest_idx, 'cellular_ratio']
+
+                # Only include if 0 < ratio < 0.2
+                if 0 < cellular_ratio < 0.2:
+                    cellular_times.append(t)
+                    cellular_bandwidths.append(cellular_df.loc[closest_idx, 'bandwidth_mbps'])
+        elif not cellular_df.empty:
+            # If no target bitrate data, plot cellular data where 0 < ratio < 0.2
+            for _, row in cellular_df.iterrows():
+                if 0 < row['cellular_ratio'] < 0.2:
+                    cellular_times.append(row['timestamp'])
+                    cellular_bandwidths.append(row['bandwidth_mbps'])
+
+        # Create secondary y-axis for target bitrate in first subplot
+        ax1_bitrate = ax1.twinx()
+
+        # Calculate 20-point rolling window ratio for CUSUM analysis
+        ratio_df['rolling_mean_20_cusum'] = ratio_df['ratio'].rolling(window=20, center=True).mean()
+
+        # Apply CUSUM analysis with actual GoogleCC parameters
+        print("[*] Performing CUSUM analysis with actual GoogleCC implementation...")
+        cusum_analyzer = CUSUMTrendAnalyzer(idle_threshold=0.7, congestion_threshold=0.4, k=0.05, h_upper=2.0, h_lower=2.0, smoothing_window=20)  # Exact parameters from aimd_rate_control.h including 20-point smoothing
+        print(f"[DEBUG] CUSUM parameters: idle_threshold={cusum_analyzer.idle_threshold}, h_upper={cusum_analyzer.h_upper}, h_lower={cusum_analyzer.h_lower}")
+        cusum_results = cusum_analyzer.calculate_cusum(ratio_df['ratio'])  # Use raw EWMA ratios like actual code
+        print(f"[DEBUG] Total upper alerts: {np.sum(cusum_results['alerts_upper'])}, Total lower alerts: {np.sum(cusum_results['alerts_lower'])}")
+
+        # Note: ratio_df['ratio'] already contains EWMA smoothed values from logs
+        # Apply weighted moving average: latest * 0.6 + average(previous 19) * 0.4
+        # This matches the C++ implementation in aimd_rate_control.cc
+        def weighted_moving_average(series, window_size=20, latest_weight=0.6):
+            """Calculate weighted moving average with latest value having weight 0.6"""
+            result = []
+            for i in range(len(series)):
+                if i == 0:
+                    # First value, use it directly
+                    result.append(series.iloc[i])
+                else:
+                    # Get window of values up to current position
+                    start_idx = max(0, i - window_size + 1)
+                    window = series.iloc[start_idx:i+1]
+
+                    if len(window) == 1:
+                        result.append(window.iloc[0])
+                    else:
+                        # Weighted average: latest * 0.6 + average(previous) * 0.4
+                        latest_value = window.iloc[-1]
+                        historical_values = window.iloc[:-1]
+                        historical_avg = historical_values.mean()
+                        weighted_avg = latest_weight * latest_value + (1 - latest_weight) * historical_avg
+                        result.append(weighted_avg)
+            return pd.Series(result, index=series.index)
+
+        ratio_df['smoothed_ratio_20'] = weighted_moving_average(ratio_df['ratio'], window_size=20, latest_weight=0.6)
+
+        # Plot 20-point weighted smoothed ratio
+        ax1.plot(ratio_df['time_s'], ratio_df['smoothed_ratio_20'],
+                color='#2E86AB', linewidth=2.5, alpha=0.9, label='Smoothed Ratio (20-point weighted, latest=0.6)')
+
+        # Plot M value if available
+        if not m_value_df.empty:
+            ax1.plot(m_value_df['timestamp'], m_value_df['m_value'],
+                    color='#FF6B35', linewidth=2.5, alpha=0.9, label='M Value (Combined Metric)')
+
+        # Plot 20-point rolling window ratio - COMMENTED OUT
+        # ax1.plot(ratio_df['time_s'], ratio_df['rolling_mean_20_cusum'],
+        #         color='#2E86AB', linewidth=2.5, alpha=0.8, label='20-point Rolling Ratio (for CUSUM)')
+
+        # Add ratio thresholds - neutral point at 0.3 (gain=1.0)
+        ax1.axhline(y=0.3, color='green', linestyle='--', alpha=0.6, label='Gain Neutral (0.3)')
+        ax1.axhline(y=cusum_analyzer.congestion_threshold, color='red', linestyle=':', alpha=0.6, label=f'Congestion Threshold ({cusum_analyzer.congestion_threshold})')
+
+        # Plot cellular bandwidth first (so it appears behind target bitrate)
+        if cellular_bandwidths and cellular_times:
+            ax1_bitrate.plot(cellular_times, cellular_bandwidths,
+                           color='#00FF00', linewidth=2.5, alpha=0.8, linestyle='-', label='Cellular Bandwidth (Mbps, ratio<0.2)')
+
+        # Plot acked bitrate first (behind target)
+        if acked_bitrates and bitrate_times:
+            ax1_bitrate.plot(bitrate_times, acked_bitrates,
+                           color='#1E90FF', linewidth=2.5, alpha=0.8, linestyle='--', label='Acked Bitrate (Mbps)')
+
+        # Plot target bitrate on top
+        if target_bitrates and bitrate_times:
+            ax1_bitrate.plot(bitrate_times, target_bitrates,
+                           color='#C73E1D', linewidth=2.5, alpha=0.9, label='Target Bitrate (Mbps)')
+
+        # Configure y-axis for bandwidth overlay
+        if target_bitrates or cellular_bandwidths or acked_bitrates:
+            ax1_bitrate.set_ylabel('Bandwidth (Mbps)', fontsize=12, color='#C73E1D')
+            ax1_bitrate.tick_params(axis='y', labelcolor='#C73E1D')
+            max_bw = max((max(target_bitrates) if target_bitrates else 0),
+                         (max(cellular_bandwidths) if cellular_bandwidths else 0),
+                         (max(acked_bitrates) if acked_bitrates else 0))
+            if max_bw > 0:
+                ax1_bitrate.set_ylim(0, max_bw * 1.1)
+
+        # Configure ratio y-axis dynamically to keep scale tight
+        min_ratio = float(np.nanmin(ratio_df['ratio']))
+        max_ratio = float(np.nanmax(ratio_df['ratio']))
+        ratio_margin = max(0.05, (max_ratio - min_ratio) * 0.1)
+        lower_bound = max(0.0, min_ratio - ratio_margin)
+        upper_bound = max_ratio + ratio_margin
+        if lower_bound >= upper_bound:
+            upper_bound = lower_bound + 0.5
+
+        ax1.set_ylabel('Ratio', fontsize=12)
+        ax1.set_title('Smoothed Ratio, Bitrates & Network Events', fontsize=14, fontweight='bold')
+        ax1.grid(True, alpha=0.3)
+        ax1.set_ylim(lower_bound, upper_bound)
+
+        # Mark overusing events with consistent red triangles at baseline
+        if actual_overusing_times:
+            ax1.scatter(actual_overusing_times,
+                        np.full(len(actual_overusing_times), lower_bound),
+                        color='red',
+                        s=90,
+                        marker='^',
+                        alpha=0.9,
+                        edgecolors='darkred',
+                        linewidth=1.2,
+                        label=f'Overusing Events ({len(actual_overusing_times)})',
+                        zorder=15,
+                        clip_on=False)
+
+        # Add statistics text box in top right corner
+        stats_text = ""
+        if target_bitrates:
+            avg_target = np.mean(target_bitrates)
+            stats_text += f"Avg Target: {avg_target:.2f} Mbps\n"
+        if acked_bitrates:
+            avg_acked = np.mean(acked_bitrates)
+            stats_text += f"Avg Acked: {avg_acked:.2f} Mbps\n"
+        if target_bitrates and acked_bitrates:
+            ratio_bw = (np.mean(acked_bitrates) / np.mean(target_bitrates)) * 100
+            stats_text += f"Acked/Target: {ratio_bw:.1f}%\n"
+
+        # Add median RTT if available
+        if not rtt_df.empty and 'corrected_rtt' in rtt_df.columns:
+            median_rtt = rtt_df['corrected_rtt'].median()
+            stats_text += f"Median RTT: {median_rtt:.0f} ms"
+
+        if stats_text:
+            ax1.text(0.98, 0.98, stats_text.strip(),
+                    transform=ax1.transAxes,
+                    fontsize=11,
+                    verticalalignment='top',
+                    horizontalalignment='right',
+                    bbox=dict(boxstyle='round,pad=0.6', facecolor='lightyellow',
+                             alpha=0.9, edgecolor='black', linewidth=1.5),
+                    family='monospace')
+
+        # Combine legends from both y-axes and add overusing events
+        lines1, labels1 = ax1.get_legend_handles_labels()
+        legend_lines = lines1.copy()
+        legend_labels = labels1.copy()
+
+        if target_bitrates or cellular_bandwidths or acked_bitrates:
+            lines2, labels2 = ax1_bitrate.get_legend_handles_labels()
+            legend_lines.extend(lines2)
+            legend_labels.extend(labels2)
+
+        ax1.legend(legend_lines, legend_labels, fontsize=9, loc='upper left')
+
+        # Add summary statistics (retain calculations for logs if needed)
+        total_upper_alerts = np.sum(cusum_results['alerts_upper'])
+        total_lower_alerts = np.sum(cusum_results['alerts_lower'])
+        max_cusum_upper = np.max(cusum_results['cusum_upper'])
+        max_cusum_lower = np.max(cusum_results['cusum_lower'])
+        # LINEAR REGRESSION SUBPLOT COMMENTED OUT
+        # # Second subplot: Three-Info Strategy View - Target Bitrate, 20-point Ratio & Linear Regression State
+        # ax2 = axes[1]
+        # 
+        # # Create dual-axis subplot for bitrate and ratio
+        # ax2_twin = ax2.twinx()
+        # 
+        # # Map trend types to numerical values for state timeline
+        # trend_state_map = {
+        #     'Strong Falling': 1,
+        #     'Weak Falling': 2, 
+        #     'Stable': 3,
+        #     'Weak Rising': 4,
+        #     'Strong Rising': 5,
+        #     'No Trend': 3
+        # }
+        # ratio_df['trend_state'] = ratio_df['trend_type'].map(trend_state_map)
+        # 
+        # # 1. Plot Target Bitrate (primary y-axis, left)
+        # if target_bitrates and bitrate_times:
+        #     ax2.plot(bitrate_times, target_bitrates, 
+        #             color='#C73E1D', linewidth=3, alpha=0.8, label='Target Bitrate (kbps)')
+        #     ax2.set_ylabel('Target Bitrate (kbps)', fontsize=12, color='#C73E1D')
+        #     ax2.tick_params(axis='y', labelcolor='#C73E1D')
+        #     if target_bitrates:
+        #         ax2.set_ylim(0, max(target_bitrates) * 1.1)
+        # else:
+        #     # If no bitrate data, hide the main axis
+        #     ax2.set_ylabel('')
+        #     ax2.tick_params(axis='y', left=False, labelleft=False)
+        # 
+        # # 2. Plot 50-point smoothed ratio (secondary left axis)
+        # ax2_ratio = ax2.twinx()
+        # ax2_ratio.spines['left'].set_position(('outward', 60))
+        # ax2_ratio.yaxis.set_ticks_position('left')
+        # ax2_ratio.yaxis.set_label_position('left')
+        # 
+        # ax2_ratio.plot(ratio_df['time_s'], ratio_df['rolling_mean_50'], 
+        #               color='#2E86AB', linewidth=2.5, alpha=0.9, label='50-point Ratio')
+        # ax2_ratio.set_ylabel('50-point Ratio', fontsize=12, color='#2E86AB')
+        # ax2_ratio.tick_params(axis='y', labelcolor='#2E86AB')
+        # 
+        # # Set y-limits safely, handling NaN values
+        # valid_ratios = ratio_df['rolling_mean_50'].dropna()
+        # if not valid_ratios.empty:
+        #     ax2_ratio.set_ylim(0, max(valid_ratios) * 1.1)
+        # else:
+        #     ax2_ratio.set_ylim(0, 1)
+        # 
+        # # 3. Plot Linear Regression State (right y-axis) - scatter plot style
+        # # Filter significant trend data for plotting
+        # significant_data = ratio_df[ratio_df['trend_significant'] == True].copy()
+        # 
+        # # State colors matching the fifth subplot style
+        # state_colors = {
+        #     'Strong Rising': '#00FF00',    # 绿色
+        #     'Weak Rising': '#90EE90',      # 浅绿色  
+        #     'Stable': '#FFD700',           # 金色
+        #     'Weak Falling': '#FFA500',     # 橙色
+        #     'Strong Falling': '#FF4500',   # 红橙色
+        #     'No Trend': '#D3D3D3'          # 浅灰色
+        # }
+        # 
+        # # Plot each trend type separately with scatter points
+        # for trend_type, color in state_colors.items():
+        #     mask = significant_data['trend_type'] == trend_type
+        #     if mask.any():
+        #         trend_data = significant_data[mask]
+        #         ax2_twin.scatter(trend_data['time_s'], 
+        #                        trend_data['trend_state'],
+        #                        c=color, s=25, alpha=0.7, label=trend_type)
+        # 
+        # # Mark overusing events on x-axis as red dots
+        # if overusing_times:
+        #     # Add red markers on the x-axis itself
+        #     for t in overusing_times:
+        #         # Add vertical line at bottom
+        #         ax2.axvline(x=t, color='red', linestyle='-', alpha=0.8, linewidth=3, 
+        #                    ymin=0, ymax=0.02, zorder=10)
+        #         # Add red dot on x-axis
+        #         ax2.annotate('●', xy=(t, 0), xycoords=('data', 'axes fraction'),
+        #                    color='red', fontsize=12, ha='center', va='center', zorder=15)
+        # 
+        # # Configure right y-axis (trend states)
+        # ax2_twin.set_ylabel('Linear Regression State', fontsize=12, color='darkgreen')
+        # ax2_twin.tick_params(axis='y', labelcolor='darkgreen')
+        # ax2_twin.set_yticks([1, 2, 3, 4, 5])
+        # ax2_twin.set_yticklabels(['Strong-Fall', 'Weak-Fall', 'Stable', 'Weak-Rise', 'Strong-Rise'], 
+        #                         fontsize=9)
+        # ax2_twin.set_ylim(0.5, 5.5)
+        # 
+        # # Add horizontal reference lines for states
+        # for y in [1, 2, 3, 4, 5]:
+        #     ax2_twin.axhline(y=y, color='gray', linestyle=':', alpha=0.15, linewidth=0.8)
+        # 
+        # ax2.grid(True, alpha=0.3)
+        # 
+        # # Create simplified legend for three-info view
+        # main_legend_elements = []
+        # 
+        # # Add main data lines
+        # if target_bitrates:
+        #     main_legend_elements.append(plt.Line2D([0], [0], color='#C73E1D', linewidth=3, label='Target Bitrate (kbps)'))
+        # main_legend_elements.append(plt.Line2D([0], [0], color='#2E86AB', linewidth=2.5, label='50-point Ratio'))
+        # 
+        # # Add overusing events
+        # if overusing_times:
+        #     main_legend_elements.append(plt.Line2D([0], [0], marker='o', color='w', 
+        #                                           markerfacecolor='red', markersize=8, 
+        #                                           label=f'Overusing Events ({len(overusing_times)})', 
+        #                                           linestyle='None'))
+        # 
+        # ax2.legend(handles=main_legend_elements, fontsize=9, loc='upper left')
+        # 
+        # # Right axis legend for states
+        # if significant_data is not None and not significant_data.empty:
+        #     ax2_twin.legend(fontsize=8, loc='upper right')
+        # 
+        # ax2.set_xlabel('Time (seconds)', fontsize=12)
+        # ax2.set_title('2. Three-Info Strategy View: Target Bitrate + 50-point Ratio + Linear Regression State (50-point window)\nIntegrated view of bandwidth control, ratio analysis, and algorithmic decisions', fontsize=14, fontweight='bold')
+        
+        # Prepare RTT subplot - always plot if we have RTT data
+        if not rtt_df.empty:
+            rtt_times = rtt_df['timestamp'].to_numpy()
+            propagation_rtt = rtt_df['propagation_rtt'].to_numpy()
+            corrected_rtt = rtt_df['corrected_rtt'].to_numpy()
+
+            ax_rtt.plot(rtt_times, corrected_rtt, color='#2E86AB', linewidth=2.0, label='RTT (ms)')
+            ax_rtt.plot(rtt_times, propagation_rtt, color='#6C5B7B', linewidth=1.5, alpha=0.8, label='Propagation RTT (ms)')
+
+            # Horizontal lines for median and 90th percentile
+            median_rtt = float(np.median(corrected_rtt))
+            p90_rtt = float(np.percentile(corrected_rtt, 90))
+            ax_rtt.axhline(median_rtt, color='#FFA500', linestyle='-.', linewidth=1.6, label=f'Median RTT ({median_rtt:.0f} ms)')
+            ax_rtt.axhline(p90_rtt, color='#8B0000', linestyle=':', linewidth=1.6, label=f'90th Percentile RTT ({p90_rtt:.0f} ms)')
+
+            core_rtt_values = np.concatenate([corrected_rtt, propagation_rtt])
+            core_min = float(np.nanmin(core_rtt_values))
+            core_max = float(np.nanmax(core_rtt_values))
+            core_range = max(core_max - core_min, 1.0)
+            rtt_margin = max(5.0, core_range * 0.1)
+            lower_rtt = max(0.0, core_min - rtt_margin)
+            upper_rtt = core_max + rtt_margin
+            if lower_rtt >= upper_rtt:
+                upper_rtt = lower_rtt + 10.0
+
+            ax_rtt.set_ylabel('RTT (ms)', fontsize=12)
+            ax_rtt.set_title('RTT Trends & Overuse Events', fontsize=14, fontweight='bold')
+            ax_rtt.grid(True, alpha=0.3)
+
+            stats_lines = [
+                f"Median RTT: {median_rtt:.0f} ms",
+                f"90th Percentile RTT: {p90_rtt:.0f} ms",
+                f"Mean RTT: {np.mean(corrected_rtt):.1f} ms",
+                f"Max RTT: {np.max(corrected_rtt):.0f} ms"
+            ]
+
+            ax_rtt.text(0.02,
+                        0.95,
+                        "\n".join(stats_lines),
+                        transform=ax_rtt.transAxes,
+                        fontsize=11,
+                        verticalalignment='top',
+                        horizontalalignment='left',
+                        bbox=dict(boxstyle='round,pad=0.6',
+                                  facecolor='white',
+                                  alpha=0.85,
+                                  edgecolor='black',
+                                  linewidth=1.2),
+                        family='monospace')
+
+            ax_rtt.set_ylim(lower_rtt, upper_rtt)
+
+            # Mark overusing events with matching red triangles at RTT baseline
+            if actual_overusing_times:
+                ax_rtt.scatter(actual_overusing_times,
+                               np.full(len(actual_overusing_times), lower_rtt),
+                               color='red',
+                               s=90,
+                               marker='^',
+                               alpha=0.9,
+                               edgecolors='darkred',
+                               linewidth=1.2,
+                               label=f'Overusing Events ({len(actual_overusing_times)})',
+                               zorder=15,
+                               clip_on=False)
+
+            ax_rtt.legend(fontsize=9, loc='upper right')
+
+        ax_rtt.set_xlabel('Time (seconds)', fontsize=12)
+        if not ratio_df.empty:
+            ax1.set_xlim(ratio_df['time_s'].min(), ratio_df['time_s'].max())
+
+        fig.tight_layout()
+
+        # Save combined figure
+        output_file = self.log_file_path.replace('.log', '_ratio_rtt_trend.png')
+        fig.savefig(output_file, dpi=300, bbox_inches='tight')
+        print(f"[*] Combined ratio & RTT plot saved to: {output_file}")
+        plt.close(fig)
+
+        output_files = {'combined_plot': output_file}
+
+        # Print summary statistics
+        self.print_summary_stats(ratio_df, actual_overusing_times, underusing_times)
+
+        return output_files
+
+    def print_summary_stats(self, ratio_df, actual_overusing_times, underusing_times):
+        """Print summary statistics"""
+        print("\n" + "="*50)
+        print("EWMA RATIO TREND SUMMARY STATISTICS")
+        print("="*50)
+        
+        print(f"Total data points: {len(ratio_df)}")
+        print(f"Time range: {ratio_df['time_s'].min():.1f} - {ratio_df['time_s'].max():.1f} seconds")
+        print(f"Duration: {ratio_df['time_s'].max() - ratio_df['time_s'].min():.1f} seconds")
+        
+        print(f"\nRatio Statistics:")
+        print(f"  Mean: {ratio_df['ratio'].mean():.3f}")
+        print(f"  Median: {ratio_df['ratio'].median():.3f}")
+        print(f"  Std Dev: {ratio_df['ratio'].std():.3f}")
+        print(f"  Min: {ratio_df['ratio'].min():.3f}")
+        print(f"  Max: {ratio_df['ratio'].max():.3f}")
+        
+        print(f"\nRatio Distribution:")
+        print(f"  ≥ 2.0: {(ratio_df['ratio'] >= 2.0).sum()} ({(ratio_df['ratio'] >= 2.0).mean()*100:.1f}%)")
+        print(f"  ≥ 1.0: {(ratio_df['ratio'] >= 1.0).sum()} ({(ratio_df['ratio'] >= 1.0).mean()*100:.1f}%)")
+        print(f"  0.5-1.0: {((ratio_df['ratio'] >= 0.5) & (ratio_df['ratio'] < 1.0)).sum()} ({((ratio_df['ratio'] >= 0.5) & (ratio_df['ratio'] < 1.0)).mean()*100:.1f}%)")
+        print(f"  < 0.5: {(ratio_df['ratio'] < 0.5).sum()} ({(ratio_df['ratio'] < 0.5).mean()*100:.1f}%)")
+        print(f"  < 0.1: {(ratio_df['ratio'] < 0.1).sum()} ({(ratio_df['ratio'] < 0.1).mean()*100:.1f}%)")
+        
+        print(f"\nNetwork Events:")
+        print(f"  GCC overusing snapshots: {len(actual_overusing_times)}")
+        print(f"  Underusing events: {len(underusing_times)}")
+        
+        if actual_overusing_times:
+            first_overusing = min(actual_overusing_times)
+            print(f"  First overusing at: {first_overusing:.1f} seconds")
+            
+            # Analyze ratio before first overusing
+            before_overusing = ratio_df[ratio_df['time_s'] < first_overusing]
+            if not before_overusing.empty:
+                print(f"\nBefore First Overusing ({len(before_overusing)} points):")
+                print(f"  Mean ratio: {before_overusing['ratio'].mean():.3f}")
+                print(f"  ≥ 1.0: {(before_overusing['ratio'] >= 1.0).sum()} ({(before_overusing['ratio'] >= 1.0).mean()*100:.1f}%)")
+                print(f"  < 0.5: {(before_overusing['ratio'] < 0.5).sum()} ({(before_overusing['ratio'] < 0.5).mean()*100:.1f}%)")
+        
+
+def main():
+    parser = argparse.ArgumentParser(description='EWMA Ratio Trend Analyzer')
+    parser.add_argument('log_file', nargs='?', 
+                       default="/home/wuq/webrtc-local/webrtc_config_results/sender_local.log",
+                       help='Path to the log file to analyze (default: sender_local.log)')
+    
+    args = parser.parse_args()
+    
+    # Check if log file exists
+    if not os.path.exists(args.log_file):
+        print(f"[!] Error: Log file '{args.log_file}' not found")
+        sys.exit(1)
+    
+    print("EWMA Ratio Trend Analyzer")
+    print("="*50)
+    print(f"Log file: {args.log_file}")
+    print()
+    
+    analyzer = RatioTrendAnalyzer(args.log_file)
+    
+    # Parse logs
+    print("[*] Parsing log file...")
+    ratio_df, actual_overusing_events, underusing_events, bwe_df, rtt_df, cellular_df, m_value_df = analyzer.parse_logs()
+
+    if ratio_df.empty:
+        print("[!] No ratio data found in logs")
+        return
+
+    # Generate plot
+    print("[*] Generating ratio trend plot...")
+    output_files = analyzer.plot_ratio_trend(ratio_df, actual_overusing_events, underusing_events, bwe_df, rtt_df, cellular_df, m_value_df)
+    
+    if isinstance(output_files, dict):
+        print("\n[*] Analysis complete. Generated plots:")
+        for label, path in output_files.items():
+            if path:
+                print(f"    - {label}: {path}")
+    else:
+        print(f"\n[*] Analysis complete. Plot saved to: {output_files}")
+
+if __name__ == "__main__":
+    main()

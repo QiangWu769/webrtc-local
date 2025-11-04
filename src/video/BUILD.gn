@@ -431,6 +431,8 @@ rtc_library("video_stream_encoder_impl") {
     "video_source_sink_controller.h",
     "video_stream_encoder.cc",
     "video_stream_encoder.h",
+    "ntp_time_converter.cc",
+    "ntp_time_converter.h",
   ]
 
   deps = [

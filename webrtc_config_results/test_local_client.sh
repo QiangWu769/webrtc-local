@@ -23,15 +23,15 @@ if [ "$ROLE" != "sender" ] && [ "$ROLE" != "receiver" ]; then
     echo "  - 本地电脑（私网）: 连接到云服务器的信令服务器"
     echo ""
     echo "示例:"
-    echo "  $0 sender 173.208.210.62        # 本地作为发送端，启用cellular ratio影响"
-    echo "  $0 sender 173.208.210.62 1      # 本地作为发送端，启用cellular ratio影响"
-    echo "  $0 sender 173.208.210.62 0      # 本地作为发送端，仅记录cellular ratio"
-    echo "  $0 receiver 173.208.210.62      # 本地作为接收端，启用cellular ratio影响"
-    echo "  $0 receiver 173.208.210.62 0    # 本地作为接收端，仅记录cellular ratio"
+    echo "  $0 sender 3.235.180.17        # 本地作为发送端，启用cellular ratio影响"
+    echo "  $0 sender 3.235.180.17 1      # 本地作为发送端，启用cellular ratio影响"
+    echo "  $0 sender 3.235.180.17 0      # 本地作为发送端，仅记录cellular ratio"
+    echo "  $0 receiver 3.235.180.17      # 本地作为接收端，启用cellular ratio影响"
+    echo "  $0 receiver 3.235.180.17 0    # 本地作为接收端，仅记录cellular ratio"
     echo ""
     echo "兼容性说明:"
     echo "  如果只提供一个IP参数，将默认作为接收端模式运行:"
-    echo "  $0 173.208.210.62           # 等同于 $0 receiver 173.208.210.62 1"
+    echo "  $0 3.235.180.17           # 等同于 $0 receiver 3.235.180.17 1"
     exit 1
 fi
 

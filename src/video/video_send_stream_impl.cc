@@ -517,6 +517,15 @@ VideoSendStreamImpl::VideoSendStreamImpl(
   video_stream_encoder_->SetStartBitrate(
       bitrate_allocator_->GetStartBitrate(this));
   video_stream_encoder_->SetFecControllerOverride(rtp_video_sender_);
+
+  // Configure C2R (Capture to Render) measurement system
+  // Post these tasks to the encoder queue since they require encoder thread execution
+  auto extensions_copy = config_.rtp.extensions;
+  video_stream_encoder_->encoder_queue()->PostTask([this, extensions_copy]() {
+    static_cast<VideoStreamEncoder*>(video_stream_encoder_.get())->InitializeC2R();
+    static_cast<VideoStreamEncoder*>(video_stream_encoder_.get())->ConfigureACTExtension(extensions_copy);
+  });
+
   ReconfigureVideoEncoder(std::move(encoder_config));
 }
 
