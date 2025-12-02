@@ -523,6 +523,14 @@ bool RTPSenderVideo::SendVideo(int payload_type,
                      << ", RtpTs=" << rtp_timestamp;
   }
 
+  // C2R: Log sender NTP time for clock offset analysis
+  if (video_header.generic) {
+    NtpTime sender_ntp = clock_->ConvertTimestampToNtpTime(capture_time);
+    RTC_LOG(LS_INFO) << "[C2R-SENDER-NTP] RtpTs=" << rtp_timestamp
+                     << ", SenderNtpMs=" << sender_ntp.ToMs()
+                     << ", CaptureMs=" << capture_time.ms();
+  }
+
   // C2R: TODO - Set Absolute Capture Time extension
   // For MVP, focus on CAPTURE and MAPPING logs first
   // ACT extension implementation needs proper NTP time propagation
@@ -801,6 +809,21 @@ bool RTPSenderVideo::SendVideo(int payload_type,
             << "Sent last RTP packet of the first video frame (pre-pacer)";
       }
     }
+  }
+
+  // C2R: Log packetization completion
+  if (video_header.generic) {
+    int64_t packetize_us = clock_->TimeInMicroseconds();
+    RTC_LOG(LS_INFO) << "[C2R-PACKETIZED] FrameId=" << video_header.generic->frame_id
+                     << ", RtpTs=" << rtp_timestamp
+                     << ", MonoUs=" << packetize_us
+                     << ", NumPackets=" << num_packets;
+
+    // C2R: Log sending to network (before enqueuing to pacer)
+    int64_t send_us = clock_->TimeInMicroseconds();
+    RTC_LOG(LS_INFO) << "[C2R-SEND] FrameId=" << video_header.generic->frame_id
+                     << ", RtpTs=" << rtp_timestamp
+                     << ", MonoUs=" << send_us;
   }
 
   LogAndSendToNetwork(std::move(rtp_packets), encoder_output_size);

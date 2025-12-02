@@ -44,6 +44,7 @@ class GtkMainWnd : public MainWindow {
 
   virtual void RegisterObserver(MainWndCallback* callback);
   virtual bool IsWindow();
+  virtual bool Destroy();
   virtual void SwitchToConnectUI();
   virtual void SwitchToPeerList(const Peers& peers);
   virtual void SwitchToStreamingUI();
@@ -61,10 +62,6 @@ class GtkMainWnd : public MainWindow {
 
   // Creates and shows the main window with the |Connect UI| enabled.
   bool Create();
-
-  // Destroys the window.  When the window is destroyed, it ends the
-  // main message loop.
-  bool Destroy();
 
   // Callback for when the main window is destroyed.
   void OnDestroyed(GtkWidget* widget, GdkEvent* event);

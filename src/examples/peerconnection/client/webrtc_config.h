@@ -52,10 +52,7 @@ class WebRTCConfig {
   bool save_log_to_file() const { return save_log_to_file_; }
   const std::string& log_output_path() const { return log_output_path_; }
   
-  bool auto_close_on_completion() const { return auto_close_on_completion_; }
-  int transmission_time_seconds() const { return transmission_time_seconds_; }
-
-  // Server configuration getters
+  bool auto_close_on_completion() const { return auto_close_on_completion_; }  // Server configuration getters
   const std::string& server_host() const { return server_host_; }
   int server_port() const { return server_port_; }
   bool auto_connect() const { return auto_connect_; }
@@ -95,10 +92,7 @@ class WebRTCConfig {
   std::string log_output_path_;
 
   // Auto close when video transmission completes
-  bool auto_close_on_completion_;
-  int transmission_time_seconds_;
-
-  // Server connection configuration
+  bool auto_close_on_completion_;  // Server connection configuration
   std::string server_host_;
   int server_port_;
   bool auto_connect_;

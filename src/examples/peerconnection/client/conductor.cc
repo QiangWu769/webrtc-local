@@ -308,16 +308,12 @@
    deps.audio_decoder_factory = webrtc::CreateBuiltinAudioDecoderFactory();
    deps.video_encoder_factory =
        std::make_unique<webrtc::VideoEncoderFactoryTemplate<
-           webrtc::LibvpxVp8EncoderTemplateAdapter,
-           webrtc::LibvpxVp9EncoderTemplateAdapter,
-           webrtc::OpenH264EncoderTemplateAdapter,
-           webrtc::LibaomAv1EncoderTemplateAdapter>>();
+           webrtc::LibvpxVp8EncoderTemplateAdapter>>();  // VP8 only
+
    deps.video_decoder_factory =
        std::make_unique<webrtc::VideoDecoderFactoryTemplate<
-           webrtc::LibvpxVp8DecoderTemplateAdapter,
-           webrtc::LibvpxVp9DecoderTemplateAdapter,
-           webrtc::OpenH264DecoderTemplateAdapter,
-           webrtc::Dav1dDecoderTemplateAdapter>>();
+           webrtc::LibvpxVp8DecoderTemplateAdapter>>();  // VP8 only
+
  
    // =========================================================================
    // If we are not planning to send any audio, or if we are running in an
@@ -526,6 +522,28 @@
  
  void Conductor::OnPeerConnected(int id, const std::string& name) {
    RTC_LOG(LS_INFO) << __FUNCTION__;
+
+   // Send clock sync information if this is the sender
+   if (config_->video_source_option() == WebRTCConfig::kVideoFile) {
+     auto clock_info = webrtc::ClockSyncHelper::GetLocalClockOffset();
+     if (clock_info.valid) {
+       RTC_LOG(LS_INFO) << "[CLOCK-SYNC-INIT] Sender: sent clock offset "
+                        << clock_info.offset_ms << "ms, dispersion: "
+                        << clock_info.dispersion_ms << "ms";
+
+       Json::Value jmessage;
+       jmessage["type"] = "clock-sync";
+       jmessage["offset_ms"] = clock_info.offset_ms;
+       jmessage["dispersion_ms"] = clock_info.dispersion_ms;
+
+       Json::StreamWriterBuilder factory;
+       std::string msg = Json::writeString(factory, jmessage);
+       client_->SendToPeer(id, msg);
+     } else {
+       RTC_LOG(LS_WARNING) << "[CLOCK-SYNC-INIT] Failed to get local clock offset";
+     }
+   }
+
    // Refresh the list if we're showing it.
    if (main_wnd_->current_ui() == MainWindow::LIST_PEERS)
      main_wnd_->SwitchToPeerList(client_->peers());
@@ -622,6 +640,32 @@
            this, webrtc::PeerConnectionInterface::RTCOfferAnswerOptions());
      }
    } else {
+     // Check if this is a clock-sync message
+     std::string msg_type;
+     if (webrtc::GetStringFromJsonObject(jmessage, "type", &msg_type) &&
+         msg_type == "clock-sync") {
+       double offset_ms = 0.0;
+       double dispersion_ms = 0.0;
+
+       if (webrtc::GetDoubleFromJsonObject(jmessage, "offset_ms", &offset_ms) &&
+           webrtc::GetDoubleFromJsonObject(jmessage, "dispersion_ms", &dispersion_ms)) {
+         webrtc::ClockSyncHelper::SetRemoteClockOffset(offset_ms, dispersion_ms);
+
+         RTC_LOG(LS_INFO) << "[CLOCK-SYNC] Received remote clock offset: "
+                          << offset_ms << "ms, dispersion: " << dispersion_ms << "ms";
+
+         if (webrtc::ClockSyncHelper::IsInitialized()) {
+           auto delta = webrtc::ClockSyncHelper::GetClockOffsetDelta();
+           if (delta.has_value()) {
+             RTC_LOG(LS_INFO) << "[CLOCK-SYNC] Clock offset delta (local - remote): "
+                              << delta.value() << "ms";
+           }
+         }
+       }
+       return;
+     }
+
+     // Otherwise, try to parse as ICE candidate
      std::string sdp_mid;
      int sdp_mlineindex = 0;
      std::string sdp;
@@ -856,13 +900,6 @@
        }
      }
      
-     // Fallback to config value if file duration couldn't be calculated or source is camera
-     if (timer_duration_seconds <= 0) {
-       timer_duration_seconds = config_->transmission_time_seconds();
-       if (timer_duration_seconds > 0) {
-         RTC_LOG(LS_INFO) << "📅 Using config-based transmission time: " << timer_duration_seconds << " seconds";
-       }
-     }
      
      if (timer_duration_seconds > 0) {
        webrtc::Thread::Current()->PostDelayedTask(

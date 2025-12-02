@@ -43,9 +43,7 @@ WebRTCConfig::WebRTCConfig()
       log_level_(kLogInfo),
       save_log_to_file_(false),
       log_output_path_(""),
-      auto_close_on_completion_(false),
-      transmission_time_seconds_(30),  // Default 30 seconds
-      server_host_("localhost"),
+      auto_close_on_completion_(false),      server_host_("localhost"),
       server_port_(8888),
       auto_connect_(true),
       auto_call_(true),
@@ -150,14 +148,7 @@ bool WebRTCConfig::ParseFromFile(const std::string& config_file_path) {
   // Parse auto close configuration
   if (root.isMember("auto_close_on_completion")) {
     auto_close_on_completion_ = root["auto_close_on_completion"].asBool();
-  }
-  
-  // Parse transmission time configuration
-  if (root.isMember("transmission_time_seconds")) {
-    transmission_time_seconds_ = root["transmission_time_seconds"].asInt();
-  }
-
-  // Parse server connection configuration
+  }  // Parse server connection configuration
   if (root.isMember("server")) {
     Json::Value server = root["server"];
     if (server.isMember("host")) {
@@ -240,10 +231,7 @@ void WebRTCConfig::PrintConfig() const {
   }
   
   // Auto close
-  RTC_LOG(LS_INFO) << "  Auto Close: " << (auto_close_on_completion_ ? "Yes" : "No");
-  RTC_LOG(LS_INFO) << "  Transmission Time: " << transmission_time_seconds_ << " seconds";
-  
-  // Server configuration
+  RTC_LOG(LS_INFO) << "  Auto Close: " << (auto_close_on_completion_ ? "Yes" : "No");  // Server configuration
   RTC_LOG(LS_INFO) << "  Server Host: " << server_host_;
   RTC_LOG(LS_INFO) << "  Server Port: " << server_port_;
   RTC_LOG(LS_INFO) << "  Auto Connect: " << (auto_connect_ ? "Yes" : "No");

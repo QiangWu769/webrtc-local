@@ -33,6 +33,7 @@
 #include "examples/peerconnection/client/peer_connection_client.h"
 #include "examples/peerconnection/client/webrtc_config.h"
 #include "examples/peerconnection/client/video_frame_writer.h"
+#include "examples/peerconnection/client/clock_sync_helper.h"
 
 #include "rtc_base/thread.h"
 

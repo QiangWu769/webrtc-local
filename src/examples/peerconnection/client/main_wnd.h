@@ -52,6 +52,7 @@ class MainWindow {
   virtual void RegisterObserver(MainWndCallback* callback) = 0;
 
   virtual bool IsWindow() = 0;
+  virtual bool Destroy() = 0;
   virtual void MessageBox(const char* caption,
                           const char* text,
                           bool is_error) = 0;
@@ -85,11 +86,11 @@ class MainWnd : public MainWindow {
   ~MainWnd();
 
   bool Create();
-  bool Destroy();
   bool PreTranslateMessage(MSG* msg);
 
   virtual void RegisterObserver(MainWndCallback* callback);
   virtual bool IsWindow();
+  virtual bool Destroy();
   virtual void SwitchToConnectUI();
   virtual void SwitchToPeerList(const Peers& peers);
   virtual void SwitchToStreamingUI();

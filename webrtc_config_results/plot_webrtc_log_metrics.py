@@ -9,7 +9,7 @@ and renders a figure that mimics the illustrated reference:
 
 Example:
     python plot_webrtc_log_metrics.py \
-        --log /home/wuq/webrtc-local/webrtc_config_results/s1016ender_local.log \
+        --log /home/qwu26/webrtc-local/webrtc_config_results/s1016ender_local.log \
         --output webrtc_dashboard.png
 """
 
@@ -537,7 +537,7 @@ def plot_dashboard(
 
 
 def main() -> None:
-    default_log = pathlib.Path("/home/wuq/webrtc-local/webrtc_config_results/sender_local.log")
+    default_log = pathlib.Path("/home/qwu26/webrtc-local/webrtc_config_results/sender_local.log")
     parser = argparse.ArgumentParser(description="Plot WebRTC GCC metrics from a detailed log file.")
     parser.add_argument(
         "--log",

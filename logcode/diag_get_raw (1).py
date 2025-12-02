@@ -35,8 +35,8 @@ parseandlog_data_path = "parseandlog_data.txt"
 output_path = "diag_report.txt"
 bsr_log_path = "bsr_log.txt"
 all_tcp_raw_data_path = "all_tcp_raw_data.txt"
-decoded_messages_log_path = "/home/wuq/webrtc-local/logcode/test0/decoded_messages.txt"
-ratio_data_old_path = "/home/wuq/webrtc-local/logcode/test0/ratio_data_old.txt"
+decoded_messages_log_path = "/home/qwu26/webrtc-local/logcode/test0/decoded_messages.txt"
+ratio_data_old_path = "/home/qwu26/webrtc-local/logcode/test0/ratio_data_old.txt"
 
 def get_tbs_index_string(tbs_index):
     TBS_MAP = {
@@ -93,6 +93,9 @@ def get_grant_tbs(tbs_index, nof_prb):
         36: [1160, 2280, 3496, 4584, 5736, 6968, 7992, 9144, 10296, 11448, 12576, 13536, 14688, 15840, 16992, 18336, 19848, 20616, 22152, 22920, 24496, 25456, 26416, 27376, 28336, 29296, 30576, 31704, 32856, 34008, 35160, 36696, 37888, 39232, 40576, 40576, 42368, 43816, 45352, 45352, 46888, 48936, 48936, 51024, 51024, 52752, 55056, 55056, 57336, 57336, 59256, 59256, 61664, 61664, 63776, 63776, 66592, 66592, 68808, 68808, 71112, 71112, 73712, 73712, 75376, 76208, 76208, 78704, 78704, 81176, 81176, 81176, 84760, 84760, 84760, 87936, 87936, 90816, 90816, 90816, 93800, 93800, 93800, 97896, 97896, 97896, 101840, 101840, 101840, 101840, 105528, 105528, 107832, 107832, 110136, 110136, 112608, 112608, 115040, 115040, 117256, 117256, 117256, 119816, 119816, 119816, 124464, 124464, 125808, 125808],
         37: [1224, 2472, 3752, 4968, 6200, 7480, 8760, 9912, 11064, 12384, 13536, 14688, 15840, 17568, 18336, 19848, 21384, 22152, 23688, 24496, 26416, 27376, 28336, 29296, 30576, 31704, 32856, 35160, 35160, 36696, 37888, 39232, 40576, 42368, 43816, 43816, 45352, 46888, 48936, 48936, 51024, 52752, 52752, 55056, 55056, 57336, 57336, 59256, 61664, 61664, None, None, None, None, None, None, None, None, None, None, 76208, 76208, 78704, 78704, 81176, 81176, 81176, 84760, 84760, 87936, 87936, 87936, 90816, 90816, 93800, 93800, 93800, 97896, 97896, 97896, 101840, 101840, 101840, 105528, 105528, 107832, 107832, 110136, 110136, 112608, 112608, 115040, 115040, 115040, 117256, 119816, 119816, 119816, 124464, 125808, 125808, 125808, 128496, 128496, 128496, 133208, 133208, 133208, 133208, 137792],
     }
+    if tbs_index not in tbs_lookup_table:
+        print(f"[WARNING] Unknown tbs_index: {tbs_index}, skipping")
+        return 0
     return tbs_lookup_table[tbs_index][nof_prb+1]//8
 
 
@@ -923,7 +926,7 @@ class ConsistentRatioCalculator:
         self.first_nonzero_bsr = None  # (tti, allocated, requested, ratio) - first non-zero BSR in current group
         self.group_buffer = []  # [(tti, allocated, requested, ratio, cellular_timestamp)] - all BSRs in current group
         self.pending_writes = []  # Buffered writes to be flushed
-        self.ratio_file_path = "/home/wuq/webrtc-local/logcode/test0/ratio_data.txt"
+        self.ratio_file_path = "/home/qwu26/webrtc-local/logcode/test0/ratio_data.txt"
         self.rb_group = rb_group  # Reference to RingBufferGroup for sending to WebRTC
 
         # History for growth rate calculation
@@ -1383,7 +1386,7 @@ def reset_log_files():
     """Reset all log files"""
     log_files = [tcp_and_parse_log_path, parseandlog_data_path, all_tcp_raw_data_path, bsr_log_path,
                  decoded_messages_log_path, ratio_data_old_path,
-                 "/home/wuq/webrtc-local/logcode/test0/ratio_data.txt"]
+                 "/home/qwu26/webrtc-local/logcode/test0/ratio_data.txt"]
     for log_file in log_files:
         try:
             if os.path.isfile(log_file):
@@ -1493,7 +1496,7 @@ async def main():
                 end_recv_time = time.clock_gettime(time.CLOCK_REALTIME)
                 
                 if not new_data:
-                    # print("[MAIN] Connection closed by server.")
+                    print("[MAIN] Connection closed by server.")
                     break
 
                 recv_duration_ms = (end_recv_time - start_recv_time) * 1000
@@ -1641,13 +1644,16 @@ async def main():
             except asyncio.TimeoutError:
                 continue
             except Exception as e:
-                # print("[MAIN] Socket error: {}".format(e))
+                print("[MAIN] Socket error: {}".format(e))
+                import traceback
+                traceback.print_exc()
                 break
     except KeyboardInterrupt:
         print("\n[MAIN] Monitoring stopped by user.")
     except Exception as e:
-        # print("[MAIN] An error occurred: {}".format(e))
-        pass
+        print("[MAIN] An error occurred: {}".format(e))
+        import traceback
+        traceback.print_exc()
     finally:
         if drain_thread_running:
             # print("[MAIN] Stopping drain thread...")

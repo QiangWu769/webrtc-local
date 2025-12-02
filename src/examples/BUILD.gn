@@ -669,6 +669,8 @@ if (is_linux || is_chromeos || is_win) {
   rtc_executable("peerconnection_client") {
     testonly = true
     sources = [
+      "peerconnection/client/clock_sync_helper.cc",
+      "peerconnection/client/clock_sync_helper.h",
       "peerconnection/client/conductor.cc",
       "peerconnection/client/conductor.h",
       "peerconnection/client/defaults.cc",
@@ -679,6 +681,10 @@ if (is_linux || is_chromeos || is_win) {
       "peerconnection/client/webrtc_config.h",
       "peerconnection/client/video_frame_writer.cc",
       "peerconnection/client/video_frame_writer.h",
+      "peerconnection/client/qsv_vp9_encoder.h",
+      "peerconnection/client/qsv_vp9_encoder.cc",
+      "peerconnection/client/qsv_vp9_encoder_adapter.h",
+      "peerconnection/client/qsv_vp9_encoder_adapter.cc",
 
     ]
 
@@ -757,12 +763,18 @@ if (is_linux || is_chromeos || is_win) {
         "peerconnection/client/linux/main_wnd.cc",
         "peerconnection/client/linux/main_wnd.h",
       ]
-      cflags = [ "-Wno-deprecated-declarations" ]
+      cflags = [
+        "-Wno-deprecated-declarations",
+        # FFmpeg headers in sysroot
+        "-isystem../../build/linux/debian_bullseye_amd64-sysroot/usr/include/x86_64-linux-gnu",
+      ]
       libs = [
         "X11",
         "Xcomposite",
         "Xext",
         "Xrender",
+        "avcodec",
+        "avutil",
       ]
       configs += [ ":gtk_config" ]
     }

@@ -2144,8 +2144,24 @@ void VideoStreamEncoder::EncodeVideoFrame(const VideoFrame& video_frame,
     frame_instrumentation_generator_->OnCapturedFrame(out_frame);
   }
 
+  // C2R: Log encoding start
+  int64_t encode_start_us = 0;
+  if (c2r_enabled_.load()) {
+    encode_start_us = TimeMicros();
+    RTC_LOG(LS_INFO) << "[C2R-ENC-START] FrameId=" << out_frame.id()
+                     << ", MonoUs=" << encode_start_us;
+  }
+
   const int32_t encode_status = encoder_->Encode(out_frame, &next_frame_types_);
   was_encode_called_since_last_initialization_ = true;
+
+  // C2R: Log encoding completion
+  if (c2r_enabled_.load()) {
+    int64_t encode_done_us = TimeMicros();
+    RTC_LOG(LS_INFO) << "[C2R-ENC-DONE] FrameId=" << out_frame.id()
+                     << ", MonoUs=" << encode_done_us
+                     << ", EncodeUs=" << (encode_done_us - encode_start_us);
+  }
 
   if (encode_status < 0) {
     RTC_LOG(LS_ERROR) << "Encoder failed, failing encoder format: "

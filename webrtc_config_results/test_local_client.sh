@@ -23,15 +23,15 @@ if [ "$ROLE" != "sender" ] && [ "$ROLE" != "receiver" ]; then
     echo "  - 本地电脑（私网）: 连接到云服务器的信令服务器"
     echo ""
     echo "示例:"
-    echo "  $0 sender 3.235.180.17        # 本地作为发送端，启用cellular ratio影响"
-    echo "  $0 sender 3.235.180.17 1      # 本地作为发送端，启用cellular ratio影响"
-    echo "  $0 sender 3.235.180.17 0      # 本地作为发送端，仅记录cellular ratio"
-    echo "  $0 receiver 3.235.180.17      # 本地作为接收端，启用cellular ratio影响"
-    echo "  $0 receiver 3.235.180.17 0    # 本地作为接收端，仅记录cellular ratio"
+    echo "  $0 sender 34.135.137.149        # 本地作为发送端，启用cellular ratio影响"
+    echo "  $0 sender 34.135.137.149 1      # 本地作为发送端，启用cellular ratio影响"
+    echo "  $0 sender 34.135.137.149 0      # 本地作为发送端，仅记录cellular ratio"
+    echo "  $0 receiver 34.135.137.149      # 本地作为接收端，启用cellular ratio影响"
+    echo "  $0 receiver 34.135.137.149 0    # 本地作为接收端，仅记录cellular ratio"
     echo ""
     echo "兼容性说明:"
     echo "  如果只提供一个IP参数，将默认作为接收端模式运行:"
-    echo "  $0 3.235.180.17           # 等同于 $0 receiver 3.235.180.17 1"
+    echo "  $0 34.135.137.149           # 等同于 $0 receiver 34.135.137.149 1"
     exit 1
 fi
 
@@ -120,7 +120,7 @@ if [ "$ROLE" = "sender" ]; then
     "camera": {"enabled": false},
     "video_file": {
       "enabled": true,
-      "file_path": "/home/wuq/webrtc-local/VCD/download/vcd1/yuv420/merged_all_1920x1080.yuv",
+      "file_path": "/home/qwu26/webrtc-local/VCD_th_1920x1080_30_120s.yuv",
       "width": 1920, "height": 1080, "fps": 30
     },
     "video_disabled": {"enabled": false}
@@ -141,11 +141,10 @@ if [ "$ROLE" = "sender" ]; then
   "cellular_ratio": {
     "influence_enabled": $CELLULAR_RATIO_ENABLED
   },
-  "auto_close_on_completion": true,
-  "transmission_time_seconds": 8
+  "auto_close_on_completion": true
 }
 EOF
-    
+
     echo "4️⃣ 启动本地发送端..."
     # Enable core dumps
     ulimit -c unlimited
@@ -194,11 +193,10 @@ elif [ "$ROLE" = "receiver" ]; then
   "cellular_ratio": {
     "influence_enabled": $CELLULAR_RATIO_ENABLED
   },
-  "auto_close_on_completion": true,
-  "transmission_time_seconds": 8
+  "auto_close_on_completion": true
 }
 EOF
-    
+
     echo "4️⃣ 启动本地接收端..."
     ./src/out/Default/peerconnection_client \
         --config=webrtc_config_results/receiver_config_local.json \
