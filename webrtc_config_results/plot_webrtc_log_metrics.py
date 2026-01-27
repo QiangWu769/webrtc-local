@@ -122,6 +122,23 @@ def parse_log(path: pathlib.Path) -> Dict[str, pd.DataFrame]:
     return data_frames
 
 
+def filter_large_jumps(series: Sequence[float], threshold: float = 0.5) -> np.ndarray:
+    """Filter out samples with large jumps (|Δ| > threshold) compared to previous value."""
+    values = np.asarray(series, dtype=float)
+    if values.size == 0:
+        return np.array([])
+
+    # Use median of first few samples as initial reference
+    filtered = [values[0]]
+    for i in range(1, len(values)):
+        diff = abs(values[i] - filtered[-1])
+        if diff <= threshold:
+            filtered.append(values[i])
+        # else: skip this sample (large jump, likely noise)
+
+    return np.array(filtered)
+
+
 def weighted_ratio(series: Sequence[float], window: int = 20, latest_weight: float = 0.6) -> np.ndarray:
     """Compute a weighted moving average where the latest sample holds a fixed weight."""
     values = np.asarray(series, dtype=float)
@@ -155,13 +172,38 @@ def prepare_data(data: Dict[str, pd.DataFrame]) -> Dict[str, pd.DataFrame]:
         raise ValueError("No time-stamped records were found in the provided log.")
     time_zero = min(minima)
 
-    # Ratio data with smoothing
+    # Ratio data with filtering and smoothing
     ratio_df = data["ratio"].copy()
     if not ratio_df.empty:
         ratio_df.sort_values("time_ms", inplace=True)
         ratio_df["time_s"] = (ratio_df["time_ms"] - time_zero) / 1000.0
-        ratio_df["smoothed_ratio"] = weighted_ratio(ratio_df["ratio"].to_numpy())
-    frames["ratio"] = ratio_df
+
+        # Filter out ratio >= 1.0 (noise spikes, matching AIMD code filter)
+        ratio_df = ratio_df[ratio_df["ratio"] < 1.0].copy()
+
+        # Filter out large jumps (|Δ| > 0.5)
+        raw_ratios = ratio_df["ratio"].to_numpy()
+        keep_mask = np.ones(len(raw_ratios), dtype=bool)
+        for i in range(1, len(raw_ratios)):
+            # Compare with last kept value
+            last_kept_idx = np.where(keep_mask[:i])[0][-1] if keep_mask[:i].any() else 0
+            diff = abs(raw_ratios[i] - raw_ratios[last_kept_idx])
+            if diff > 0.5:
+                keep_mask[i] = False
+
+        ratio_df_filtered = ratio_df[keep_mask].copy()
+        ratio_df_filtered["smoothed_ratio"] = weighted_ratio(ratio_df_filtered["ratio"].to_numpy(), window=100)
+
+        # Downsample for clearer visualization (every 20th point)
+        downsample_step = 20
+        ratio_df_filtered = ratio_df_filtered.iloc[::downsample_step].copy()
+
+        # Log filtering stats
+        n_original = len(ratio_df)
+        n_filtered = len(ratio_df_filtered)
+        print(f"Ratio filtering: {n_original} -> {n_filtered} samples ({n_original - n_filtered} removed, {(n_original - n_filtered)*100/n_original:.1f}%)")
+
+    frames["ratio"] = ratio_df_filtered if not ratio_df.empty else ratio_df
 
     # RTT data
     rtt_df = data["rtt"].copy()
@@ -263,10 +305,11 @@ def summarize_metrics(aligned: pd.DataFrame, rtt_df: pd.DataFrame) -> Dict[str, 
         corrected = rtt_df["corrected_rtt_ms"]
         summary["median_rtt_ms"] = float(corrected.median())
         summary["p90_rtt_ms"] = float(corrected.quantile(0.9))
+        summary["p99_rtt_ms"] = float(corrected.quantile(0.99))
         summary["mean_rtt_ms"] = float(corrected.mean())
         summary["max_rtt_ms"] = float(corrected.max())
     else:
-        for key in ("median_rtt_ms", "p90_rtt_ms", "mean_rtt_ms", "max_rtt_ms"):
+        for key in ("median_rtt_ms", "p90_rtt_ms", "p99_rtt_ms", "mean_rtt_ms", "max_rtt_ms"):
             summary[key] = float("nan")
 
     return summary
@@ -332,30 +375,10 @@ def plot_dashboard(
             color=color_smoothed_ratio,
             linewidth=2.5,
             alpha=0.9,
-            label="Smoothed Ratio (20-point weighted, latest=0.6)",
+            label="Smoothed Ratio (100-point weighted, latest=0.6)",
         )[0]
         register_top(smoothed_handle)
 
-    gain_neutral = 0.3
-    congestion_threshold = 0.4
-    gain_handle = ax_top.axhline(
-        gain_neutral,
-        color=color_gain_neutral,
-        linestyle="--",
-        linewidth=1.4,
-        alpha=0.7,
-        label="Gain Neutral (0.3)",
-    )
-    register_top(gain_handle)
-    congestion_handle = ax_top.axhline(
-        congestion_threshold,
-        color=color_congestion,
-        linestyle=":",
-        linewidth=1.4,
-        alpha=0.7,
-        label="Congestion Threshold (0.4)",
-    )
-    register_top(congestion_handle)
 
     ax_top.set_ylabel("Ratio")
     ax_top.set_title("Smoothed Ratio, Bitrates & Network Events")
@@ -516,6 +539,7 @@ def plot_dashboard(
     rtt_lines = [
         f"Median RTT: {summary['median_rtt_ms']:.0f} ms",
         f"90th Percentile RTT: {summary['p90_rtt_ms']:.0f} ms",
+        f"99th Percentile RTT: {summary['p99_rtt_ms']:.0f} ms",
         f"Mean RTT: {summary['mean_rtt_ms']:.1f} ms",
         f"Max RTT: {summary['max_rtt_ms']:.0f} ms",
     ]

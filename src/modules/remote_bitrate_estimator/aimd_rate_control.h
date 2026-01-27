@@ -81,6 +81,9 @@ class AimdRateControl {
   void SetCellularRatioInfluenceEnabled(bool enabled);
   void SetCUSUMInfluenceEnabled(bool enabled);
 
+  // Trendline slope support for combined gain calculation
+  void SetTrendlineSlope(double slope);
+
  private:
   enum class RateControlState { kRcHold, kRcIncrease, kRcDecrease };
 
@@ -116,6 +119,7 @@ class AimdRateControl {
   double beta_;
   bool in_alr_;
   TimeDelta rtt_;
+  TimeDelta previous_rtt_;  // Track previous RTT for trend detection
   const bool send_side_;
   // Allow the delay based estimate to only increase as long as application
   // limited region (alr) is not detected.
@@ -146,6 +150,21 @@ class AimdRateControl {
   // gain = 0.95 + 0.13 * sigmoid((ratio - 0.35) * 10.73)
   // Maps ratio [0, 2] to gain [0.95, 1.08]
   double ComputeGainFromRatio(double ratio) const;
+
+  // Compute gain factor from trendline slope
+  // slope < 0 (delay decreasing) → gain > 1.0
+  // slope = 0 (delay stable)     → gain = 1.0
+  // slope > 0 (delay increasing) → gain < 1.0
+  double ComputeGainFromSlope(double slope) const;
+
+  // Trendline slope tracking
+  double trendline_slope_ = 0.0;
+
+  // Immediate ratio-driven reduction tracking
+  Timestamp last_ratio_immediate_reduction_time_ = Timestamp::MinusInfinity();
+
+  // Immediate ratio-driven increase tracking
+  Timestamp last_ratio_immediate_increase_time_ = Timestamp::MinusInfinity();
 };
 }  // namespace webrtc
 

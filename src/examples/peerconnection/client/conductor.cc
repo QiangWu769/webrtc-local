@@ -201,12 +201,23 @@
        return nullptr;
      }
  
-     capturer->Start();
-     
+     // NOTE: Don't start capturer here! Wait for ICE connection to be established
+     // to avoid losing frames during initialization
+     RTC_LOG(LS_INFO) << "📹 VideoFileTrackSource created, waiting for ICE connection to start";
+
      auto track_source = webrtc::make_ref_counted<VideoFileTrackSource>(
          std::move(capturer), completion_callback);
-     
+
      return track_source;
+   }
+
+   // Start the capturer - call this when ICE connection is established
+   void StartCapturer() {
+     if (capturer_ && !capturer_started_) {
+       capturer_started_ = true;
+       capturer_->Start();
+       RTC_LOG(LS_INFO) << "📹 VideoFileTrackSource: Capturer started after ICE connection";
+     }
    }
  
  
@@ -228,6 +239,7 @@
  
    std::unique_ptr<webrtc::test::FrameGeneratorCapturer> capturer_;
    CompletionCallback completion_callback_;
+   bool capturer_started_ = false;
  };
  
  }  // namespace
@@ -409,7 +421,11 @@
      RTC_LOG(LS_INFO) << "Stopping video quality stats collection due to peer connection cleanup";
      stats_collection_task_.Stop();
    }
-   
+
+   // Reset auto-close timer state for next connection
+   auto_close_timer_started_ = false;
+   pending_timer_duration_seconds_ = 0;
+
    peer_connection_ = nullptr;
    peer_connection_factory_ = nullptr;
    peer_id_ = -1;
@@ -501,7 +517,44 @@
    Json::StreamWriterBuilder factory;
    SendMessage(Json::writeString(factory, jmessage));
  }
- 
+
+ void Conductor::OnIceConnectionChange(
+     webrtc::PeerConnectionInterface::IceConnectionState new_state) {
+   RTC_LOG(LS_INFO) << "🧊 ICE connection state changed to: " << static_cast<int>(new_state);
+
+   // Start video capturer and auto-close timer when ICE connection is established
+   if (new_state == webrtc::PeerConnectionInterface::kIceConnectionConnected ||
+       new_state == webrtc::PeerConnectionInterface::kIceConnectionCompleted) {
+     // Start video capturer now that encoder is ready
+     if (start_video_capturer_callback_) {
+       start_video_capturer_callback_();
+       start_video_capturer_callback_ = nullptr;  // Only call once
+     }
+     StartAutoCloseTimer();
+   }
+ }
+
+ void Conductor::StartAutoCloseTimer() {
+   // Only start timer once, and only if we have a pending timer duration
+   if (auto_close_timer_started_ || pending_timer_duration_seconds_ <= 0) {
+     return;
+   }
+
+   auto_close_timer_started_ = true;
+   RTC_LOG(LS_INFO) << "⏰ ICE connected! Starting auto-close timer: "
+                    << pending_timer_duration_seconds_ << " seconds";
+
+   // Use UI thread callback to ensure proper thread handling
+   int timer_ms = pending_timer_duration_seconds_ * 1000;
+   webrtc::Thread::Current()->PostDelayedTask(
+       [this]() {
+         RTC_LOG(LS_INFO) << "⏰ Sender's auto-close timer triggered, closing connection";
+         // Queue the close operation to UI thread to avoid thread issues
+         main_wnd_->QueueUIThreadCallback(PEER_CONNECTION_CLOSED, nullptr);
+       },
+       webrtc::TimeDelta::Millis(timer_ms));
+ }
+
  //
  // PeerConnectionClientObserver implementation.
  //
@@ -796,12 +849,20 @@
    // Only create video device if video is not disabled
    if (!video_disabled) {
      if (use_video_file) {
-       RTC_LOG(LS_INFO) << "Using video file: " << file_path 
+       RTC_LOG(LS_INFO) << "Using video file: " << file_path
                         << " (" << width << "x" << height << " @ " << fps << " fps)";
-       
+
        // Native WebRTC using simple timer (like AlphaRTC serverless style)
-       video_device = VideoFileTrackSource::Create(
+       auto file_source = VideoFileTrackSource::Create(
           env_.task_queue_factory(), file_path, width, height, fps);
+       video_device = file_source;
+
+       // Store callback to start capturer when ICE connection is established
+       if (file_source) {
+         start_video_capturer_callback_ = [file_source]() {
+           file_source->StartCapturer();
+         };
+       }
     } else {
       RTC_LOG(LS_INFO) << "Using camera as video source";
       video_device = CapturerTrackSource::Create(env_.task_queue_factory());
@@ -826,9 +887,9 @@
       webrtc::BitrateSettings bitrate_settings;
       // 按照 BitrateConstraints 结构体的默认值设置：
       bitrate_settings.min_bitrate_bps = 0;                           // min_bitrate_bps = 0
-      bitrate_settings.start_bitrate_bps = 300000;                    // start_bitrate_bps = kDefaultStartBitrateBps (300kbps)
+      bitrate_settings.start_bitrate_bps = 300000;                     // start_bitrate_bps = 300kbps (conservative start for weak networks)
       // max_bitrate_bps 保持为 std::nullopt (对应 BitrateConstraints 的 -1，即无限制)
-      
+
       webrtc::RTCError result = peer_connection_->SetBitrate(bitrate_settings);
       if (result.ok()) {
         RTC_LOG(LS_INFO) << "✅ Successfully applied BitrateConstraints default values:";
@@ -880,37 +941,29 @@
    // =================================================================
    // Only set an auto-close timer if we are the sender.
    // The presence of a local video track is a good indicator.
+   // Timer will be started after ICE connection is established.
    // =================================================================
    if (video_track_) {
-     RTC_LOG(LS_INFO) << "📹 This is a sender - video track created, setting up auto-close timer";
-     
-     int timer_duration_seconds = 0;
-     
+     RTC_LOG(LS_INFO) << "📹 This is a sender - video track created, preparing auto-close timer";
+
      // Prioritize calculated file duration over config value
      if (use_video_file && !file_path.empty()) {
        // Calculate video duration based on YUV file size and video parameters
        int video_duration_seconds = CalculateVideoDurationFromFile(file_path, width, height, fps);
        if (video_duration_seconds > 0) {
-         // Add a small buffer time (2 seconds) to ensure complete transmission
-         timer_duration_seconds = video_duration_seconds + 2;
-         RTC_LOG(LS_INFO) << "📅 Calculated video duration: " << video_duration_seconds 
-                          << " seconds, setting auto-close timer: " << timer_duration_seconds << " seconds";
+         // Add buffer time (5 seconds) to ensure complete transmission
+         pending_timer_duration_seconds_ = video_duration_seconds + 5;
+         RTC_LOG(LS_INFO) << "📅 Calculated video duration: " << video_duration_seconds
+                          << " seconds, will set auto-close timer: " << pending_timer_duration_seconds_
+                          << " seconds (after ICE connected)";
        } else {
          RTC_LOG(LS_WARNING) << "📅 Failed to calculate video duration from file";
        }
      }
-     
-     
-     if (timer_duration_seconds > 0) {
-       webrtc::Thread::Current()->PostDelayedTask(
-           [this]() {
-             RTC_LOG(LS_INFO) << "⏰ Sender's auto-close timer triggered, closing connection";
-             DisconnectFromCurrentPeer();
-             main_wnd_->QueueUIThreadCallback(PEER_CONNECTION_CLOSED, nullptr);
-           },
-           webrtc::TimeDelta::Millis(timer_duration_seconds * 1000));
-     } else {
-       RTC_LOG(LS_INFO) << "📅 Sender auto-close timer disabled (timer_duration_seconds = " << timer_duration_seconds << ")";
+
+     if (pending_timer_duration_seconds_ <= 0) {
+       RTC_LOG(LS_INFO) << "📅 Sender auto-close timer disabled (pending_timer_duration_seconds = "
+                        << pending_timer_duration_seconds_ << ")";
      }
    } else {
      RTC_LOG(LS_INFO) << "📺 This is a receiver-only client. No auto-close timer will be set.";
@@ -930,11 +983,23 @@
  
  void Conductor::UIThreadCallback(int msg_id, void* data) {
    switch (msg_id) {
-     case PEER_CONNECTION_CLOSED:
+     case PEER_CONNECTION_CLOSED: {
        RTC_LOG(LS_INFO) << "PEER_CONNECTION_CLOSED";
+       // Save auto-close state before DeletePeerConnection resets it
+       bool should_auto_exit = config_ && config_->auto_close_on_completion() && auto_close_timer_started_;
+
+       // Send hangup message before deleting connection
+       if (peer_connection_.get() && peer_id_ != -1) {
+         client_->SendHangUp(peer_id_);
+       }
        DeletePeerConnection();
- 
-       if (main_wnd_->IsWindow()) {
+
+       // If auto-close is enabled and timer was started, exit the program
+       if (should_auto_exit) {
+         RTC_LOG(LS_INFO) << "🚪 Auto-close: Exiting program after video transmission";
+         DisconnectFromServer();
+         main_wnd_->Destroy();
+       } else if (main_wnd_->IsWindow()) {
          if (client_->is_connected()) {
            main_wnd_->SwitchToPeerList(client_->peers());
          } else {
@@ -944,7 +1009,8 @@
          DisconnectFromServer();
        }
        break;
- 
+     }
+
      case SEND_MESSAGE_TO_PEER: {
        RTC_LOG(LS_INFO) << "SEND_MESSAGE_TO_PEER";
        std::string* msg = reinterpret_cast<std::string*>(data);

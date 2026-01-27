@@ -12,6 +12,7 @@
 #define EXAMPLES_PEERCONNECTION_CLIENT_CONDUCTOR_H_
 
 #include <deque>
+#include <functional>
 #include <memory>
 #include <string>
 #include <vector>
@@ -87,7 +88,7 @@ class Conductor : public webrtc::PeerConnectionObserver,
       webrtc::scoped_refptr<webrtc::DataChannelInterface> channel) override {}
   void OnRenegotiationNeeded() override {}
   void OnIceConnectionChange(
-      webrtc::PeerConnectionInterface::IceConnectionState new_state) override {}
+      webrtc::PeerConnectionInterface::IceConnectionState new_state) override;
   void OnIceGatheringChange(
       webrtc::PeerConnectionInterface::IceGatheringState new_state) override {}
   void OnIceCandidate(const webrtc::IceCandidate* candidate) override;
@@ -176,6 +177,16 @@ class Conductor : public webrtc::PeerConnectionObserver,
   
   // Video track for transmission
   webrtc::scoped_refptr<webrtc::VideoTrackInterface> video_track_;
+
+  // Video capturer start callback (for delayed start after ICE connection)
+  std::function<void()> start_video_capturer_callback_;
+
+  // Auto-close timer parameters (for delayed start after ICE connection)
+  int pending_timer_duration_seconds_ = 0;
+  bool auto_close_timer_started_ = false;
+
+  // Helper to start the auto-close timer
+  void StartAutoCloseTimer();
 };
 
 #endif  // EXAMPLES_PEERCONNECTION_CLIENT_CONDUCTOR_H_

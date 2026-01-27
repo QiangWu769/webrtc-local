@@ -20,7 +20,9 @@
 #include "api/video/video_rotation.h"
 #include "api/video/video_sink_interface.h"
 #include "api/video/video_source_interface.h"
+#include "rtc_base/logging.h"
 #include "rtc_base/synchronization/mutex.h"
+#include "rtc_base/time_utils.h"
 
 namespace webrtc {
 namespace test {
@@ -46,12 +48,23 @@ void TestVideoCapturer::OnFrame(const VideoFrame& original_frame) {
 
   VideoFrame frame = MaybePreprocess(original_frame);
 
+  // Log OnFrame timing for jitter analysis
+  static int64_t last_onframe_time_us = 0;
+  int64_t onframe_mono_us = TimeMicros();
+  int64_t onframe_interval_us = (last_onframe_time_us > 0) ? (onframe_mono_us - last_onframe_time_us) : 0;
+  int64_t frame_timestamp_us = frame.timestamp_us();
+  last_onframe_time_us = onframe_mono_us;
+
   bool enable_adaptation;
   {
     MutexLock lock(&lock_);
     enable_adaptation = enable_adaptation_;
   }
   if (!enable_adaptation) {
+    RTC_LOG(LS_INFO) << "[FRAME-ONFRAME] timestamp_us=" << frame_timestamp_us
+                     << " onframe_mono_us=" << onframe_mono_us
+                     << " interval_ms=" << (onframe_interval_us / 1000.0)
+                     << " result=PASS(no_adapt)";
     broadcaster_.OnFrame(frame);
     return;
   }
@@ -60,8 +73,17 @@ void TestVideoCapturer::OnFrame(const VideoFrame& original_frame) {
           frame.width(), frame.height(), frame.timestamp_us() * 1000,
           &cropped_width, &cropped_height, &out_width, &out_height)) {
     // Drop frame in order to respect frame rate constraint.
+    RTC_LOG(LS_INFO) << "[FRAME-ONFRAME] timestamp_us=" << frame_timestamp_us
+                     << " onframe_mono_us=" << onframe_mono_us
+                     << " interval_ms=" << (onframe_interval_us / 1000.0)
+                     << " result=DROP(fps_constraint)";
     return;
   }
+
+  RTC_LOG(LS_INFO) << "[FRAME-ONFRAME] timestamp_us=" << frame_timestamp_us
+                   << " onframe_mono_us=" << onframe_mono_us
+                   << " interval_ms=" << (onframe_interval_us / 1000.0)
+                   << " result=PASS";
 
   if (out_height != frame.height() || out_width != frame.width()) {
     // Video adapter has requested a down-scale. Allocate a new buffer and
@@ -75,6 +97,7 @@ void TestVideoCapturer::OnFrame(const VideoFrame& original_frame) {
             .set_video_frame_buffer(scaled_buffer)
             .set_rotation(kVideoRotation_0)
             .set_timestamp_us(frame.timestamp_us())
+            .set_ntp_time_ms(frame.ntp_time_ms())
             .set_id(frame.id());
     if (frame.has_update_rect()) {
       VideoFrame::UpdateRect new_rect = frame.update_rect().ScaleWithFrame(

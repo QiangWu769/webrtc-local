@@ -1602,17 +1602,27 @@ void VideoStreamEncoder::OnFrame(Timestamp post_time,
   }
 
   if (c2r_enabled_.load()) {
-    int64_t mono_us = TimeMicros();
-    int64_t capture_ntp_us = ntp_converter_.MonotonicToNtpMicros(mono_us);
-
-    RTC_LOG(LS_INFO) << "[C2R-CAPTURE] MonoUs=" << mono_us
-                     << ", FrameId=" << video_frame.id()
-                     << ", CaptureNtpUs=" << capture_ntp_us;
-
-    // Set NTP time for downstream use (only set ntp_time_ms, don't touch RTP timestamp)
-    if (capture_ntp_us > 0) {
-      last_frame_ntp_ms_ = capture_ntp_us / 1000;
+    // C2R: Use frame's own ntp_time_ms if already set at generation time,
+    // otherwise compute from current time (for backward compatibility)
+    if (video_frame.ntp_time_ms() > 0) {
+      // Frame already has ntp_time_ms set at generation time - use it directly
+      last_frame_ntp_ms_ = video_frame.ntp_time_ms();
       incoming_frame.set_ntp_time_ms(last_frame_ntp_ms_);
+      RTC_LOG(LS_INFO) << "[C2R-CAPTURE] Using frame's original NtpTimeMs=" << last_frame_ntp_ms_
+                       << ", FrameId=" << video_frame.id();
+    } else {
+      // Fallback: compute NTP time from current time
+      int64_t mono_us = TimeMicros();
+      int64_t capture_ntp_us = ntp_converter_.MonotonicToNtpMicros(mono_us);
+
+      RTC_LOG(LS_INFO) << "[C2R-CAPTURE] MonoUs=" << mono_us
+                       << ", FrameId=" << video_frame.id()
+                       << ", CaptureNtpUs=" << capture_ntp_us;
+
+      if (capture_ntp_us > 0) {
+        last_frame_ntp_ms_ = capture_ntp_us / 1000;
+        incoming_frame.set_ntp_time_ms(last_frame_ntp_ms_);
+      }
     }
   }
 

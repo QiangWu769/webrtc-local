@@ -75,6 +75,9 @@ class TrendlineEstimator : public DelayIncreaseDetectorInterface {
 
   BandwidthUsage State() const override;
 
+  // Get the current trendline slope for external use
+  double GetTrendlineSlope() const { return prev_trend_; }
+
   struct PacketTiming {
     PacketTiming(double arrival_time_ms,
                  double smoothed_delay_ms,

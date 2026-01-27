@@ -199,17 +199,24 @@ void FrameEncodeMetadataWriter::FillMetadataAndTimingInfo(
     last_timing_frame_time_ms_ = encoded_image->capture_time_ms_;
   }
 
-  // If encode start is not available that means that encoder uses internal
-  // source. In that case capture timestamp may be from a different clock with a
-  // drift relative to TimeMillis(). We can't use it for Timing frames,
-  // because to being sent in the network capture time required to be less than
-  // all the other timestamps.
-  if (encode_start_ms) {
-    encoded_image->SetEncodeTime(*encode_start_ms, encode_done_ms);
-    encoded_image->timing_.flags = timing_flags;
-  } else {
-    encoded_image->timing_.flags = VideoSendTiming::kInvalid;
+  // If encode start is not available, use estimated value to ensure
+  // video-timing extension is always sent for delay breakdown analysis.
+  if (!encode_start_ms) {
+    encode_start_ms = encode_done_ms - 10;  // Estimate 10ms encoding time
+    RTC_LOG(LS_INFO) << "[VIDEO-TIMING] Using estimated encode_start_ms="
+                     << *encode_start_ms << " encode_done_ms=" << encode_done_ms;
   }
+  encoded_image->SetEncodeTime(*encode_start_ms, encode_done_ms);
+  encoded_image->timing_.flags = timing_flags;
+
+  // Log frame size for analysis of bitrate fluctuation -> frame size variation
+  RTC_LOG(LS_INFO) << "[FrameEnc] rtp=" << encoded_image->RtpTimestamp()
+                   << " size=" << encoded_image->size()
+                   << " qp=" << encoded_image->qp_
+                   << " type=" << (encoded_image->_frameType == VideoFrameType::kVideoFrameKey ? "I" : "P")
+                   << " target_bitrate=" << (timing_frames_info_.size() > simulcast_svc_idx
+                        ? timing_frames_info_[simulcast_svc_idx].target_bitrate_bytes_per_sec * 8 : 0)
+                   << " bps";
 }
 
 void FrameEncodeMetadataWriter::UpdateBitstream(

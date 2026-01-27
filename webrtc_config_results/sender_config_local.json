@@ -16,13 +16,13 @@
     "log_output_path": "/home/qwu26/webrtc-local/webrtc_config_results/sender_local.log"
   },
   "server": {
-    "host": "34.135.137.149",
+    "host": "35.239.132.191",
     "port": 8888,
     "auto_connect": true,
     "auto_call": true
   },
   "cellular_ratio": {
-    "influence_enabled": 1
+    "influence_enabled": 0
   },
   "auto_close_on_completion": true
 }

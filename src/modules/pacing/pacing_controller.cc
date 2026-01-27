@@ -571,6 +571,15 @@ void PacingController::ProcessPackets() {
   // Poll the time again, since we might have enqueued new fec/padding packets
   // with a later timestamp than `now`.
   MaybeUpdateMediaRateDueToLongQueue(CurrentTime());
+
+  // Log burst info for analysis
+  if (packets_sent > 0) {
+    RTC_LOG(LS_INFO) << "[PacerBurst] packets=" << packets_sent
+                     << " bytes=" << data_sent.bytes()
+                     << " queue_remain=" << packet_queue_.SizeInPackets()
+                     << " pacing_rate=" << pacing_rate_.kbps()
+                     << " adjusted_rate=" << adjusted_media_rate_.kbps();
+  }
 }
 
 DataSize PacingController::PaddingToAdd(DataSize recommended_probe_size,

@@ -44,7 +44,7 @@ FrameGeneratorCapturer::FrameGeneratorCapturer(
     TaskQueueFactory& task_queue_factory,
     bool allow_zero_hertz)
     : clock_(clock),
-      sending_(true),
+      sending_(false),  // Start as false, only send after Start() is called
       sink_wants_observer_(nullptr),
       frame_generator_(std::move(frame_generator)),
       source_fps_(target_fps),
@@ -124,11 +124,28 @@ void FrameGeneratorCapturer::InsertFrame() {
       number_of_frames_skipped_ = 0;
     }
     last_frame_captured_ = frame_data.buffer;
+    // Get current time and set both timestamp_us and ntp_time_ms at generation time
+    // This prevents timestamp collision when frames are queued and processed in bursts
+    int64_t capture_time_us = clock_->TimeInMicroseconds();
+    int64_t capture_time_ms = capture_time_us / 1000;
+
+    // Log generation timing for jitter analysis
+    static int64_t last_gen_time_us = 0;
+    static int gen_frame_count = 0;
+    int64_t gen_interval_us = (last_gen_time_us > 0) ? (capture_time_us - last_gen_time_us) : 0;
+    RTC_LOG(LS_INFO) << "[FRAME-GEN] frame=" << gen_frame_count
+                     << " gen_mono_us=" << capture_time_us
+                     << " interval_ms=" << (gen_interval_us / 1000.0)
+                     << " timestamp_us=" << capture_time_us;
+    last_gen_time_us = capture_time_us;
+    gen_frame_count++;
+
     TestVideoCapturer::OnFrame(
         VideoFrame::Builder()
             .set_video_frame_buffer(frame_data.buffer)
             .set_rotation(fake_rotation_)
-            .set_timestamp_us(clock_->TimeInMicroseconds())
+            .set_timestamp_us(capture_time_us)
+            .set_ntp_time_ms(capture_time_ms)
             .set_update_rect(frame_data.update_rect)
             .set_color_space(fake_color_space_)
             .build());
@@ -230,11 +247,16 @@ void FrameGeneratorCapturer::RemoveSink(VideoSinkInterface<VideoFrame>* sink) {
 void FrameGeneratorCapturer::RequestRefreshFrame() {
   MutexLock lock(&lock_);
   if (sending_ && last_frame_captured_ != nullptr) {
+    // Set both timestamp_us and ntp_time_ms at generation time
+    int64_t capture_time_us = clock_->TimeInMicroseconds();
+    int64_t capture_time_ms = capture_time_us / 1000;
+
     TestVideoCapturer::OnFrame(
         VideoFrame::Builder()
             .set_video_frame_buffer(last_frame_captured_)
             .set_rotation(fake_rotation_)
-            .set_timestamp_us(clock_->TimeInMicroseconds())
+            .set_timestamp_us(capture_time_us)
+            .set_ntp_time_ms(capture_time_ms)
             .set_color_space(fake_color_space_)
             .build());
   }

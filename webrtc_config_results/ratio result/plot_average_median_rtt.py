@@ -87,7 +87,7 @@ def plot_video_quality_comparison(output_path):
         ax.set_title(name, fontsize=15, fontweight='bold', pad=10)
         ax.set_xticks(x)
         ax.set_xticklabels(['GCC', 'Ratio'], fontsize=12, fontweight='bold')
-        ax.set_ylim(bottom=min_val * 0.9 if min_val > 0 else 0, top=max_val * 1.15)
+        ax.set_ylim(bottom=0, top=max_val * 1.15)
         ax.grid(True, axis='y', alpha=0.3, linestyle='--')
         ax.set_axisbelow(True)
 
@@ -107,10 +107,18 @@ def plot_video_quality_comparison(output_path):
     plt.close()
 
 
-def plot_metrics_comparison(env_name, metrics_data, output_path):
+def plot_metrics_comparison(env_name, metrics_data, output_path, unified_ylims=None):
     """Plot detailed metrics comparison between GCC and Ratio"""
-    fig, axes = plt.subplots(2, 3, figsize=(14, 9))
-    axes = axes.flatten()
+    n_metrics = len(metrics_data)
+    if n_metrics <= 3:
+        fig, axes = plt.subplots(1, n_metrics, figsize=(4*n_metrics, 5))
+    elif n_metrics <= 6:
+        rows = 2
+        cols = (n_metrics + 1) // 2
+        fig, axes = plt.subplots(rows, cols, figsize=(4*cols, 8))
+    else:
+        fig, axes = plt.subplots(2, 3, figsize=(14, 9))
+    axes = np.atleast_1d(axes).flatten()
 
     for idx, (name, gcc_val, ratio_val, better) in enumerate(metrics_data):
         ax = axes[idx]
@@ -122,8 +130,13 @@ def plot_metrics_comparison(env_name, metrics_data, output_path):
                       edgecolor=['#4682B4', '#0D1B2A'], linewidth=2)
         bars[1].set_hatch('//')
 
+        # Use unified y-limits if provided, otherwise calculate from data
+        if unified_ylims and name in unified_ylims:
+            max_val = unified_ylims[name]
+        else:
+            max_val = max(gcc_val, ratio_val) if max(gcc_val, ratio_val) > 0 else 1
+
         # Add value labels
-        max_val = max(gcc_val, ratio_val) if max(gcc_val, ratio_val) > 0 else 1
         for bar, val in zip(bars, [gcc_val, ratio_val]):
             height = bar.get_height()
             label_y = height + max_val * 0.03
@@ -137,6 +150,10 @@ def plot_metrics_comparison(env_name, metrics_data, output_path):
         ax.set_ylim(bottom=0, top=max_val * 1.25)
         ax.grid(True, axis='y', alpha=0.3, linestyle='--')
         ax.set_axisbelow(True)
+
+    # Hide unused subplots
+    for idx in range(len(metrics_data), len(axes)):
+        axes[idx].set_visible(False)
 
     fig.suptitle(f'Quality Metrics Comparison: GCC vs Ratio ({env_name} Environment)',
                  fontsize=16, fontweight='bold', y=1.02)
@@ -505,10 +522,7 @@ def main():
         ('Switch Rate (%)', 4.05, 2.70, 'lower'),  # Lower is better
         ('FPS', 28.97, 29.58, 'higher'),           # Higher is better
         ('Frame Drop (%)', 0, 0, 'lower'),         # Lower is better
-        ('1080p Ratio (%)', 3.42, 58.77, 'higher') # Higher is better
     ]
-    metrics_output_home = data_dir / 'home_quality_metrics_comparison.png'
-    plot_metrics_comparison('Home', home_metrics, metrics_output_home)
 
     # Plot detailed metrics comparison for Lab
     lab_metrics = [
@@ -517,10 +531,21 @@ def main():
         ('Switch Rate (%)', 2.75, 2.04, 'lower'),  # Lower is better
         ('FPS', 29.87, 29.81, 'higher'),           # Higher is better
         ('Frame Drop (%)', 0, 0, 'lower'),         # Lower is better
-        ('1080p Ratio (%)', 78.10, 89.20, 'higher') # Higher is better
     ]
+
+    # Calculate unified y-limits across both environments
+    unified_ylims = {}
+    for i, (name, home_gcc, home_ratio, _) in enumerate(home_metrics):
+        lab_gcc = lab_metrics[i][1]
+        lab_ratio = lab_metrics[i][2]
+        max_val = max(home_gcc, home_ratio, lab_gcc, lab_ratio)
+        unified_ylims[name] = max_val if max_val > 0 else 1
+
+    metrics_output_home = data_dir / 'home_quality_metrics_comparison.png'
+    plot_metrics_comparison('Home', home_metrics, metrics_output_home, unified_ylims)
+
     metrics_output_lab = data_dir / 'lab_quality_metrics_comparison.png'
-    plot_metrics_comparison('Lab', lab_metrics, metrics_output_lab)
+    plot_metrics_comparison('Lab', lab_metrics, metrics_output_lab, unified_ylims)
 
     # Plot video quality metrics (PSNR, SSIM, VMAF, LPIPS) for Home
     video_quality_output = data_dir / 'home_video_quality_comparison.png'

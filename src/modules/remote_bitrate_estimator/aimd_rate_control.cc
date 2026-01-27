@@ -104,6 +104,7 @@ AimdRateControl::AimdRateControl(const FieldTrialsView& key_value_config,
                 : kDefaultBackoffFactor),
       in_alr_(false),
       rtt_(kDefaultRtt),
+      previous_rtt_(kDefaultRtt),
       send_side_(send_side),
       no_bitrate_increase_in_alr_(
           key_value_config.IsEnabled("WebRTC-DontIncreaseDelayBasedBweInAlr")) {
@@ -169,6 +170,7 @@ DataRate AimdRateControl::LatestEstimate() const {
 }
 
 void AimdRateControl::SetRtt(TimeDelta rtt) {
+  previous_rtt_ = rtt_;
   rtt_ = rtt;
 }
 
@@ -331,21 +333,76 @@ void AimdRateControl::ChangeBitrate(const RateControlInput& input,
 
         // Use cellular ratio-based gain if enabled and data is fresh
         if (cellular_ratio_influence_enabled_ && HasFreshCellularData(at_time)) {
-          // Calculate gain from ratio using sigmoid function
-          double gain = ComputeGainFromRatio(smoothed_cellular_ratio_);
+          // Define neutral zone boundaries (must match ComputeGainFromRatio)
+          const double kNeutralLower = 0.20;  // Neutral zone lower bound
+          const double kNeutralUpper = 0.40;  // Neutral zone upper bound
+          bool is_in_neutral_zone = (smoothed_cellular_ratio_ >= kNeutralLower &&
+                                     smoothed_cellular_ratio_ <= kNeutralUpper);
 
-          // Target bitrate = current_bitrate * gain
-          target_bitrate = current_bitrate_ * gain;
+          if (is_in_neutral_zone) {
+            // In neutral zone (ratio 0.2-0.4, gain=1.0): use slope to decide direction
+            if (trendline_slope_ <= 0) {
+              // Delay trend stable or decreasing: additive bonus
+              DataRate additive_bonus =
+                  AdditiveRateIncrease(at_time, time_last_bitrate_change_);
+              target_bitrate = current_bitrate_ + additive_bonus;
 
-          RTC_LOG(LS_INFO) << "[AIMD-RatioGain] Ratio: " << smoothed_cellular_ratio_
-                           << ", Gain: " << gain
-                           << ", Current: " << current_bitrate_.bps() << " bps"
-                           << ", Target: " << target_bitrate.bps() << " bps";
+              RTC_LOG(LS_INFO) << "[AIMD-NeutralPlus] Slope: " << trendline_slope_
+                               << " (not increasing), Ratio: " << smoothed_cellular_ratio_
+                               << " (neutral zone), AdditiveBonus: " << additive_bonus.bps() << " bps"
+                               << ", Current: " << current_bitrate_.bps() << " bps"
+                               << ", Target: " << target_bitrate.bps() << " bps";
 
-          last_strategy_name_ = "Ratio-Based-Gain";
-          last_strategy_params_ = "Ratio=" + std::to_string(smoothed_cellular_ratio_) +
-                                  ",Gain=" + std::to_string(gain) +
-                                  ",Target=" + std::to_string(target_bitrate.bps()) + "bps";
+              last_strategy_name_ = "Neutral-Zone-Plus-Additive";
+              last_strategy_params_ = "Slope=" + std::to_string(trendline_slope_) +
+                                      ",Ratio=" + std::to_string(smoothed_cellular_ratio_) +
+                                      ",Additive=" + std::to_string(additive_bonus.bps()) + "bps";
+            } else {
+              // Delay trend increasing: reduction
+              DataRate reduction =
+                  AdditiveRateIncrease(at_time, time_last_bitrate_change_);
+              target_bitrate = current_bitrate_ - reduction;
+
+              // Ensure we don't go below a minimum threshold
+              DataRate min_bitrate = DataRate::KilobitsPerSec(100);
+              if (target_bitrate < min_bitrate) {
+                target_bitrate = min_bitrate;
+              }
+
+              RTC_LOG(LS_INFO) << "[AIMD-NeutralMinus] Slope: " << trendline_slope_
+                               << " (increasing), Ratio: " << smoothed_cellular_ratio_
+                               << " (neutral zone), Reduction: " << reduction.bps() << " bps"
+                               << ", Current: " << current_bitrate_.bps() << " bps"
+                               << ", Target: " << target_bitrate.bps() << " bps";
+
+              last_strategy_name_ = "Neutral-Zone-Minus-Reduction";
+              last_strategy_params_ = "Slope=" + std::to_string(trendline_slope_) +
+                                      ",Ratio=" + std::to_string(smoothed_cellular_ratio_) +
+                                      ",Reduction=" + std::to_string(reduction.bps()) + "bps";
+            }
+          } else if (smoothed_cellular_ratio_ > kNeutralUpper) {
+            // Above neutral zone (ratio > 0.40): hold here
+            // RatioImmediateIncrease already handles increase
+            target_bitrate = current_bitrate_;
+
+            RTC_LOG(LS_INFO) << "[AIMD-RatioHoldIncrease] Ratio: " << smoothed_cellular_ratio_
+                             << " > " << kNeutralUpper
+                             << ", holding (RatioImmediateIncrease handles)";
+
+            last_strategy_name_ = "Ratio-Hold-Increase";
+            last_strategy_params_ = "Ratio=" + std::to_string(smoothed_cellular_ratio_);
+          } else {
+            // Below neutral zone (ratio < 0.20): hold here
+            // RatioImmediate already handles reduction, don't double-reduce
+            target_bitrate = current_bitrate_;
+
+            RTC_LOG(LS_INFO) << "[AIMD-RatioHold] Ratio: " << smoothed_cellular_ratio_
+                             << " < " << kNeutralLower
+                             << ", holding (RatioImmediate handles reduction)";
+
+            last_strategy_name_ = "Ratio-Hold";
+            last_strategy_params_ = "Ratio=" + std::to_string(smoothed_cellular_ratio_);
+          }
         } else {
           // Fallback to standard AIMD logic when ratio influence disabled or no fresh data
           if (link_capacity_.has_estimate()) {
@@ -409,7 +466,45 @@ void AimdRateControl::ChangeBitrate(const RateControlInput& input,
                            << " bps, Limited to: " << new_bitrate->bps() << " bps";
         }
       } else {
-        RTC_LOG(LS_INFO) << "[AIMD-NoIncrease] Current bitrate at or above limit";
+        // Current bitrate is at or above limit - don't increase
+        // But still apply ratio-based reduction if network is congested
+        if (cellular_ratio_influence_enabled_ && HasFreshCellularData(at_time)) {
+          double gain_ratio = ComputeGainFromRatio(smoothed_cellular_ratio_);
+
+          if (gain_ratio < 1.0) {
+            // Ratio indicates congestion, apply reduction even above limit
+            DataRate target_bitrate = current_bitrate_ * gain_ratio;
+
+            // Ensure we don't go below minimum
+            DataRate min_bitrate = DataRate::KilobitsPerSec(100);
+            if (target_bitrate < min_bitrate) {
+              target_bitrate = min_bitrate;
+            }
+
+            new_bitrate = target_bitrate;
+
+            RTC_LOG(LS_INFO) << "[AIMD-AboveLimitReduction] Ratio: " << smoothed_cellular_ratio_
+                             << ", GainRatio: " << gain_ratio
+                             << ", Current: " << current_bitrate_.bps() << " bps"
+                             << ", Target: " << target_bitrate.bps() << " bps"
+                             << ", Reduction: " << (current_bitrate_.bps() - target_bitrate.bps()) << " bps";
+
+            last_strategy_name_ = "Above-Limit-Ratio-Reduction";
+            last_strategy_params_ = "Ratio=" + std::to_string(smoothed_cellular_ratio_) +
+                                    ",GainRatio=" + std::to_string(gain_ratio) +
+                                    ",Reduction=" + std::to_string(current_bitrate_.bps() - target_bitrate.bps()) + "bps";
+          } else {
+            RTC_LOG(LS_INFO) << "[AIMD-NoIncrease] Current bitrate at or above limit, ratio healthy: "
+                             << smoothed_cellular_ratio_;
+            last_strategy_name_ = "Hold-Above-Limit";
+            last_strategy_params_ = "Ratio=" + std::to_string(smoothed_cellular_ratio_) +
+                                    ",GainRatio=" + std::to_string(gain_ratio);
+          }
+        } else {
+          RTC_LOG(LS_INFO) << "[AIMD-NoIncrease] Current bitrate at or above limit";
+          last_strategy_name_ = "Hold-Above-Limit";
+          last_strategy_params_ = "NoFreshRatioData";
+        }
       }
       time_last_bitrate_change_ = at_time;
       break;
@@ -565,8 +660,16 @@ void AimdRateControl::ChangeState(const RateControlInput& input,
       }
       break;
     case BandwidthUsage::kBwOverusing:
-      if (rate_control_state_ != RateControlState::kRcDecrease) {
-        rate_control_state_ = RateControlState::kRcDecrease;
+      // When cellular ratio influence is enabled, skip GCC's Overuse reduction
+      // All reductions are controlled by ratio-driven immediate reduction
+      if (cellular_ratio_influence_enabled_) {
+        RTC_LOG(LS_INFO) << "[AIMD-SkipOveruse] Ratio influence enabled, "
+                         << "ignoring GCC Overuse signal (ratio controls reduction)";
+        // Stay in current state, don't transition to Decrease
+      } else {
+        if (rate_control_state_ != RateControlState::kRcDecrease) {
+          rate_control_state_ = RateControlState::kRcDecrease;
+        }
       }
       break;
     case BandwidthUsage::kBwUnderusing:
@@ -614,19 +717,83 @@ void AimdRateControl::SetCellularResourceRatio(double ratio,
                                                Timestamp at_time) {
   // Clamp ratio to valid range [0, 2]
   ratio = std::max(0.0, std::min(2.0, ratio));
+
+  // Skip ratio >= 1.0 as analysis shows 95.6% are single-sample noise spikes
+  if (ratio >= 1.0) {
+    RTC_LOG(LS_INFO) << "[AIMD-RatioSkip] Ignoring high ratio: " << ratio;
+    return;
+  }
+
   cellular_resource_saturation_ = saturation;
-  
+
   // Store previous ratio for trend detection
   previous_ratio_ = smoothed_cellular_ratio_;
-  
-  // Apply exponential smoothing with alpha = 0.3 for faster response
-  // Higher alpha means new values have more weight, allowing faster recovery
-  const double kSmoothingAlpha = 0.3;
-  smoothed_cellular_ratio_ = kSmoothingAlpha * ratio + 
-                             (1.0 - kSmoothingAlpha) * smoothed_cellular_ratio_;
-  
+
+  // Apply exponential smoothing with fixed alpha
+  // Lower alpha = more smoothing, less variance
+  double alpha = 0.6;
+  smoothed_cellular_ratio_ = alpha * ratio + (1.0 - alpha) * smoothed_cellular_ratio_;
+
   cellular_resource_ratio_ = ratio;
   last_ratio_update_time_ = at_time;
+
+  // RatioImmediate: 当ratio低于neutral zone时立即减速，不等TransportFeedback
+  // 每次ratio更新都响应（~7ms），使用小增量保持响应性
+  const double kNeutralLower = 0.20;  // Neutral zone lower bound
+
+  if (cellular_ratio_influence_enabled_ &&
+      smoothed_cellular_ratio_ < kNeutralLower &&
+      current_bitrate_.IsFinite() && current_bitrate_ > min_configured_bitrate_) {
+
+    double gain = ComputeGainFromRatio(smoothed_cellular_ratio_);
+    DataRate new_bitrate = current_bitrate_ * gain;
+    new_bitrate = std::max(new_bitrate, min_configured_bitrate_);
+
+    RTC_LOG(LS_INFO) << "[AIMD-RatioImmediate] Ratio: " << smoothed_cellular_ratio_
+                     << " < " << kNeutralLower
+                     << ", Gain: " << gain
+                     << ", Bitrate: " << current_bitrate_.bps()
+                     << " -> " << new_bitrate.bps() << " bps"
+                     << ", Reduction: " << (current_bitrate_ - new_bitrate).bps() << " bps";
+
+    current_bitrate_ = new_bitrate;
+    time_last_bitrate_change_ = at_time;
+    time_last_bitrate_decrease_ = at_time;
+  }
+
+  // RatioImmediate增速: 当ratio高于neutral zone时立即增速
+  // 每次ratio更新都响应（~7ms），使用小增量保持响应性
+  // 限制不超过estimated_throughput的1.5倍（与原版GCC一致）
+  const double kNeutralUpper = 0.40;  // neutral zone upper bound
+
+  if (cellular_ratio_influence_enabled_ &&
+      smoothed_cellular_ratio_ > kNeutralUpper &&
+      current_bitrate_.IsFinite() &&
+      latest_estimated_throughput_.IsFinite()) {
+
+    // 计算增长限制：1.5倍estimated_throughput + 10kbps（原版GCC逻辑）
+    DataRate increase_limit =
+        1.5 * latest_estimated_throughput_ + DataRate::KilobitsPerSec(10);
+
+    // 只有当前比特率低于限制时才增速
+    if (current_bitrate_ < increase_limit) {
+      double gain = ComputeGainFromRatio(smoothed_cellular_ratio_);
+      DataRate new_bitrate = current_bitrate_ * gain;
+
+      // 确保不超过限制
+      new_bitrate = std::min(new_bitrate, increase_limit);
+
+      RTC_LOG(LS_INFO) << "[AIMD-RatioImmediateIncrease] Ratio: " << smoothed_cellular_ratio_
+                       << " > " << kNeutralUpper
+                       << ", Gain: " << gain
+                       << ", Bitrate: " << current_bitrate_.bps()
+                       << " -> " << new_bitrate.bps() << " bps"
+                       << ", Limit: " << increase_limit.bps() << " bps";
+
+      current_bitrate_ = new_bitrate;
+      time_last_bitrate_change_ = at_time;
+    }
+  }
 
   // Log significant ratio changes
   if (std::abs(ratio - previous_ratio_) > 0.1 || std::abs(saturation) > 0.1) {
@@ -646,35 +813,52 @@ bool AimdRateControl::HasFreshCellularData(Timestamp at_time) const {
 }
 
 double AimdRateControl::ComputeGainFromRatio(double ratio) const {
-  // Sigmoid gain function based on cellular resource ratio with a neutral
-  // plateau. We retain the existing sigmoid mapping but clamp the gain to 1.0
-  // when the ratio is in the [0.20, 0.40] band so small ratio noise around the
-  // neutral point does not cause immediate up/down adjustments.
+  // Ratio-based gain using sigmoid for smooth transitions outside neutral zone
   //
-  // Base sigmoid: gain = 0.95 + 0.13 * sigmoid((ratio - 0.35) * 10.73)
-  // Plateau handling:
-  // - ratio in [0.20, 0.40]  → gain = 1.0
-  // - ratio below 0.20       → gain clamped to ≤ 1.0
-  // - ratio above 0.40       → gain clamped to ≥ 1.0
+  // 设计目标（7ms更新频率，~143次/秒）：
+  //   - 最大增长：~143%/秒 → 1.01/次 (1%)
+  //   - 最大减少：~143%/秒 → 0.99/次 (1%)
+  //
+  // Ratio → gain_ratio:
+  //    - ratio < 0.20  → sigmoid从1.0平滑过渡到0.99 (减速)
+  //    - ratio 0.20~0.40 → gain_ratio = 1.0 (neutral zone, 不动)
+  //    - ratio > 0.40  → sigmoid从1.0平滑过渡到1.01 (增速)
 
-  const double kNeutralLower = 0.20;
-  const double kNeutralUpper = 0.40;
-  const double kRatioOffset = 0.35;  // Center point of sigmoid
-  const double kSteepness = 10.73;   // Controls transition sharpness
-  const double kMinGain = 0.95;      // Minimum gain factor
-  const double kGainRange = 0.13;    // Gain range (max - min)
+  const double kNeutralLower = 0.20;  // Neutral zone lower bound
+  const double kNeutralUpper = 0.40;  // Neutral zone upper bound
+  const double kMinGain = 0.99;       // Max reduction: 1% per update
+  const double kMaxGain = 1.01;       // Max increase: 1% per update
+  const double kSteepness = 50.0;     // Sigmoid steepness
 
-  double x = (ratio - kRatioOffset) * kSteepness;
-  double sigmoid = 1.0 / (1.0 + std::exp(-x));
-  double gain = kMinGain + kGainRange * sigmoid;
+  double gain_ratio = 1.0;
 
   if (ratio >= kNeutralLower && ratio <= kNeutralUpper) {
-    return 1.0;
+    // Neutral zone: no change
+    gain_ratio = 1.0;
+  } else if (ratio < kNeutralLower) {
+    // Below neutral zone: sigmoid减速
+    // ratio=0.10 → gain=1.0, ratio=0.00 → gain≈0.992
+    // sigmoid中心点在0.05，向左递减
+    double x = (ratio - 0.05) * kSteepness;  // 中心点0.05
+    double sigmoid = 1.0 / (1.0 + std::exp(-x));
+    // sigmoid: 0→0.076, 0.05→0.5, 0.10→0.924
+    // 映射: gain = 0.992 + 0.008 * sigmoid
+    gain_ratio = kMinGain + (1.0 - kMinGain) * sigmoid;
+  } else {
+    // Above neutral zone: sigmoid增速
+    // ratio=0.40 → gain=1.0, ratio=0.70+ → gain≈1.008
+    // sigmoid中心点在0.55，向右递增
+    double x = (ratio - 0.55) * kSteepness;  // 中心点0.55
+    double sigmoid = 1.0 / (1.0 + std::exp(-x));
+    // sigmoid: 0.40→0.0007, 0.55→0.5, 0.70→0.9993
+    // 映射: gain = 1.0 + 0.008 * sigmoid
+    gain_ratio = 1.0 + (kMaxGain - 1.0) * sigmoid;
   }
-  if (ratio < kNeutralLower) {
-    return std::min(gain, 1.0);
-  }
-  return std::max(gain, 1.0);
+
+  RTC_LOG(LS_INFO) << "[AIMD-RatioGain] "
+                   << "Ratio: " << ratio << " → GainRatio: " << gain_ratio;
+
+  return gain_ratio;
 }
 
 void AimdRateControl::SetCellularRatioInfluenceEnabled(bool enabled) {
@@ -687,6 +871,34 @@ void AimdRateControl::SetCUSUMInfluenceEnabled(bool enabled) {
   cusum_influence_enabled_ = enabled;
   RTC_LOG(LS_INFO) << "[AIMD-Cellular] CUSUM influence "
                    << (enabled ? "enabled" : "disabled");
+}
+
+void AimdRateControl::SetTrendlineSlope(double slope) {
+  trendline_slope_ = slope;
+}
+
+double AimdRateControl::ComputeGainFromSlope(double slope) const {
+  // Map trendline slope to gain using sigmoid function (asymmetric)
+  // slope < 0 (delay decreasing) → gain > 1.0 (can increase bandwidth)
+  // slope = 0 (delay stable)     → gain = 1.0 (maintain)
+  // slope > 0 (delay increasing) → gain < 1.0 (should be conservative)
+  //
+  // Asymmetric design: larger increase (+5%), smaller decrease (-2%)
+  // This allows more aggressive growth when network is good,
+  // but conservative reduction when network shows congestion signs.
+
+  const double kSensitivity = 100.0;   // Controls how quickly gain changes with slope
+  const double kMaxIncrease = 0.05;    // Maximum increase when slope < 0 (+5%)
+
+  double sigmoid = 1.0 / (1.0 + std::exp(slope * kSensitivity));
+
+  // Only increase, never decrease: sigmoid ∈ [0,1] maps to gain ∈ [1.0, 1+kMaxIncrease]
+  double gain = 1.0 + kMaxIncrease * sigmoid;
+
+  // Clamp to valid range [1.0, 1.05]
+  gain = std::max(1.0, std::min(1.0 + kMaxIncrease, gain));
+
+  return gain;
 }
 
 }  // namespace webrtc
