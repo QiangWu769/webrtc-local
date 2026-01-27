@@ -11,6 +11,7 @@
 #ifndef API_TRANSPORT_NETWORK_CONTROL_H_
 #define API_TRANSPORT_NETWORK_CONTROL_H_
 
+#include <functional>
 #include <memory>
 #include <optional>
 
@@ -97,6 +98,13 @@ class NetworkControllerInterface {
   // Called with network state estimate updates.
   ABSL_MUST_USE_RESULT virtual NetworkControlUpdate OnNetworkStateEstimate(
       NetworkStateEstimate) = 0;
+
+  // Callback type for immediate pacer updates when ratio signal changes
+  using PacerUpdateCallback = std::function<void(DataRate pacing_rate, DataRate padding_rate)>;
+
+  // Set callback for immediate pacer updates (optional, default no-op)
+  // Used by RatioCC to update pacer immediately when cellular ratio changes
+  virtual void SetPacerUpdateCallback(PacerUpdateCallback /*callback*/) {}
 };
 
 // NetworkControllerFactoryInterface is an interface for creating a network

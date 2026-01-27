@@ -19,12 +19,15 @@ namespace webrtc {
 
 CellularRatioReceiver::CellularRatioReceiver(
     TaskQueueBase* task_queue,
-    DelayBasedBwe* delay_based_bwe)
+    DelayBasedBwe* delay_based_bwe,
+    RatioRateUpdateCallback on_rate_update)
     : task_queue_(task_queue),
-      delay_based_bwe_(delay_based_bwe) {
+      delay_based_bwe_(delay_based_bwe),
+      on_rate_update_(std::move(on_rate_update)) {
   RTC_DCHECK(task_queue_);
   RTC_DCHECK(delay_based_bwe_);
-  RTC_LOG(LS_INFO) << "[CellularReceiver] Created";
+  RTC_LOG(LS_INFO) << "[CellularReceiver] Created with pacer callback: "
+                   << (on_rate_update_ ? "yes" : "no");
 }
 
 CellularRatioReceiver::~CellularRatioReceiver() {
@@ -160,7 +163,29 @@ void CellularRatioReceiver::ProcessPacket(const CellularRatioPacket& packet) {
 
     task_queue_->PostTask([this, ratio, saturation] {
       Timestamp now = Timestamp::Millis(TimeMillis());
+
+      // Get rate before update
+      DataRate rate_before = delay_based_bwe_->last_estimate();
+
+      // Update ratio (this may modify current_bitrate_ in AIMD)
       delay_based_bwe_->UpdateCellularResourceRatio(ratio, saturation, now);
+
+      // Get rate after update
+      DataRate rate_after = delay_based_bwe_->last_estimate();
+
+      // If rate changed and callback is set, notify pacer immediately
+      if (on_rate_update_ && rate_after != rate_before) {
+        // Pacing rate is typically 2.5x the target rate (WebRTC default pacing factor)
+        constexpr double kPacingFactor = 2.5;
+        DataRate pacing_rate = rate_after * kPacingFactor;
+        DataRate padding_rate = DataRate::Zero();  // No padding by default
+
+        RTC_LOG(LS_INFO) << "[CellularReceiver] Immediate pacer update: "
+                         << rate_before.bps() << " -> " << rate_after.bps()
+                         << " bps, pacing_rate: " << pacing_rate.bps() << " bps";
+
+        on_rate_update_(pacing_rate, padding_rate);
+      }
     });
   }
 }

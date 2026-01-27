@@ -715,6 +715,23 @@ void RtpTransportControllerSend::MaybeCreateControllers() {
     controller_ = controller_factory_fallback_->Create(initial_config_);
     process_interval_ = controller_factory_fallback_->GetProcessInterval();
   }
+
+  // Set up callback for immediate pacer updates when ratio signal arrives
+  // The virtual method has a default no-op implementation, so this is safe
+  // for all controller types
+  RTC_LOG(LS_INFO) << "Setting up ratio-to-pacer callback";
+  controller_->SetPacerUpdateCallback(
+      [this](DataRate pacing_rate, DataRate padding_rate) {
+        // Post to task queue to ensure thread safety
+        task_queue_->PostTask([this, pacing_rate, padding_rate] {
+          RTC_DCHECK_RUN_ON(&sequence_checker_);
+          RTC_LOG(LS_INFO) << "[RatioToPacer] Immediate pacer update: "
+                           << "pacing=" << pacing_rate.bps()
+                           << " bps, padding=" << padding_rate.bps() << " bps";
+          pacer_.SetPacingRates(pacing_rate, padding_rate);
+        });
+      });
+
   UpdateControllerWithTimeInterval();
   StartProcessPeriodicTasks();
 }

@@ -232,8 +232,19 @@ std::string ToMsString(Timestamp value) {
     cellular_ratio_receiver_->Stop();
   }
 }
- 
- NetworkControlUpdate GoogCcNetworkController::OnNetworkAvailability(
+
+void GoogCcNetworkController::SetPacerUpdateCallback(
+    PacerUpdateCallback callback) {
+  if (cellular_ratio_receiver_) {
+    RTC_LOG(LS_INFO) << "[GoogCC] Setting pacer update callback for ratio";
+    cellular_ratio_receiver_->SetRateUpdateCallback(std::move(callback));
+  } else {
+    RTC_LOG(LS_WARNING) << "[GoogCC] Cannot set pacer callback: "
+                        << "CellularRatioReceiver not initialized";
+  }
+}
+
+NetworkControlUpdate GoogCcNetworkController::OnNetworkAvailability(
      NetworkAvailability msg) {
    NetworkControlUpdate update;
    update.probe_cluster_configs = probe_controller_->OnNetworkAvailability(msg);

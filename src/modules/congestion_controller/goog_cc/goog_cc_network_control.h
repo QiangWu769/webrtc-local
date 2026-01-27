@@ -75,6 +75,10 @@ class GoogCcNetworkController : public NetworkControllerInterface {
 
   NetworkControlUpdate GetNetworkState(Timestamp at_time) const;
 
+  // Set callback for immediate pacer updates when ratio changes
+  // This should be called by RtpTransportControllerSend after controller creation
+  void SetPacerUpdateCallback(PacerUpdateCallback callback) override;
+
  private:
   friend class GoogCcStatePrinter;
   std::vector<ProbeClusterConfig> ResetConstraints(
