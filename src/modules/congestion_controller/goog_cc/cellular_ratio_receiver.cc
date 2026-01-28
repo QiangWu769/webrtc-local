@@ -160,12 +160,23 @@ void CellularRatioReceiver::ProcessPacket(const CellularRatioPacket& packet) {
   if (task_queue_ && delay_based_bwe_) {
     double ratio = packet.ratio;
     double saturation = packet.saturation;
+    int64_t recv_time_ms = TimeMillis();
 
-    task_queue_->PostTask([this, ratio, saturation] {
+    // Log packet arrival at receiver level
+    RTC_LOG(LS_INFO) << "[CellularReceiver-Recv] PacketNum: " << packets_received_
+                     << ", RecvTimeMs: " << recv_time_ms
+                     << ", Ratio: " << ratio
+                     << ", Saturation: " << saturation;
+
+    task_queue_->PostTask([this, ratio, saturation, recv_time_ms] {
       Timestamp now = Timestamp::Millis(TimeMillis());
+      int64_t queue_delay_ms = now.ms() - recv_time_ms;
 
       // Get rate before update
       DataRate rate_before = delay_based_bwe_->last_estimate();
+
+      RTC_LOG(LS_INFO) << "[CellularReceiver-Process] QueueDelayMs: " << queue_delay_ms
+                       << ", RateBefore: " << rate_before.bps() << " bps";
 
       // Update ratio (this may modify current_bitrate_ in AIMD)
       delay_based_bwe_->UpdateCellularResourceRatio(ratio, saturation, now);

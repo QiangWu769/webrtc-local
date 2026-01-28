@@ -801,6 +801,10 @@ void RtpTransportControllerSend::PostUpdates(NetworkControlUpdate update) {
     UpdateCongestedState();
   }
   if (update.pacer_config) {
+    RTC_LOG(LS_INFO) << "[PostUpdates-Pacer] PacingRate: "
+                     << update.pacer_config->data_rate().bps()
+                     << " bps, PaddingRate: "
+                     << update.pacer_config->pad_rate().bps() << " bps";
     pacer_.SetPacingRates(update.pacer_config->data_rate(),
                           update.pacer_config->pad_rate());
   }
@@ -808,6 +812,8 @@ void RtpTransportControllerSend::PostUpdates(NetworkControlUpdate update) {
     pacer_.CreateProbeClusters(std::move(update.probe_cluster_configs));
   }
   if (update.target_rate) {
+    RTC_LOG(LS_INFO) << "[PostUpdates-Encoder] TargetRate: "
+                     << update.target_rate->target_rate.bps() << " bps";
     control_handler_->SetTargetRate(*update.target_rate);
     UpdateControlState();
   }
