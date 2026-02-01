@@ -127,6 +127,7 @@ class GoogCcNetworkController : public NetworkControllerInterface {
 
   DataRate last_loss_based_target_rate_;
   DataRate last_pushback_target_rate_;
+  DataRate last_delay_based_estimate_;  // Track delay-based changes for ratio updates
   LossBasedState last_loss_base_state_;
 
   std::optional<uint8_t> last_estimated_fraction_loss_ = 0;

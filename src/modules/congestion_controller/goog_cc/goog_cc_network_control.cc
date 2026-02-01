@@ -247,7 +247,10 @@ void GoogCcNetworkController::SetPacerUpdateCallback(
 NetworkControlUpdate GoogCcNetworkController::OnNetworkAvailability(
      NetworkAvailability msg) {
    NetworkControlUpdate update;
-   update.probe_cluster_configs = probe_controller_->OnNetworkAvailability(msg);
+   // 当 Ratio 启用时，禁用探测
+   if (!delay_based_bwe_->IsCellularRatioInfluenceEnabled()) {
+     update.probe_cluster_configs = probe_controller_->OnNetworkAvailability(msg);
+   }
    return update;
  }
  
@@ -295,22 +298,25 @@ NetworkControlUpdate GoogCcNetworkController::OnNetworkAvailability(
          ResetConstraints(initial_config_->constraints);
      update.pacer_config = GetPacingRates(msg.at_time);
  
-     if (initial_config_->stream_based_config.requests_alr_probing) {
-       probe_controller_->EnablePeriodicAlrProbing(
-           *initial_config_->stream_based_config.requests_alr_probing);
-     }
-     if (initial_config_->stream_based_config.enable_repeated_initial_probing) {
-       probe_controller_->EnableRepeatedInitialProbing(
-           *initial_config_->stream_based_config
-                .enable_repeated_initial_probing);
-     }
-     std::optional<DataRate> total_bitrate =
-         initial_config_->stream_based_config.max_total_allocated_bitrate;
-     if (total_bitrate) {
-       auto probes = probe_controller_->OnMaxTotalAllocatedBitrate(
-           *total_bitrate, msg.at_time);
-       update.probe_cluster_configs.insert(update.probe_cluster_configs.end(),
-                                           probes.begin(), probes.end());
+     // 当 Ratio 启用时，禁用所有探测相关配置
+     if (!delay_based_bwe_->IsCellularRatioInfluenceEnabled()) {
+       if (initial_config_->stream_based_config.requests_alr_probing) {
+         probe_controller_->EnablePeriodicAlrProbing(
+             *initial_config_->stream_based_config.requests_alr_probing);
+       }
+       if (initial_config_->stream_based_config.enable_repeated_initial_probing) {
+         probe_controller_->EnableRepeatedInitialProbing(
+             *initial_config_->stream_based_config
+                  .enable_repeated_initial_probing);
+       }
+       std::optional<DataRate> total_bitrate =
+           initial_config_->stream_based_config.max_total_allocated_bitrate;
+       if (total_bitrate) {
+         auto probes = probe_controller_->OnMaxTotalAllocatedBitrate(
+             *total_bitrate, msg.at_time);
+         update.probe_cluster_configs.insert(update.probe_cluster_configs.end(),
+                                             probes.begin(), probes.end());
+       }
      }
      initial_config_.reset();
    }
@@ -319,12 +325,15 @@ NetworkControlUpdate GoogCcNetworkController::OnNetworkAvailability(
          msg.pacer_queue->bytes());
    }
    bandwidth_estimation_->UpdateEstimate(msg.at_time);
-   probe_controller_->SetAlrStartTime(
-       alr_detector_->GetApplicationLimitedRegionStartTime());
- 
-   auto probes = probe_controller_->Process(msg.at_time);
-   update.probe_cluster_configs.insert(update.probe_cluster_configs.end(),
-                                       probes.begin(), probes.end());
+   // 当 Ratio 启用时，禁用探测处理
+   if (!delay_based_bwe_->IsCellularRatioInfluenceEnabled()) {
+     probe_controller_->SetAlrStartTime(
+         alr_detector_->GetApplicationLimitedRegionStartTime());
+
+     auto probes = probe_controller_->Process(msg.at_time);
+     update.probe_cluster_configs.insert(update.probe_cluster_configs.end(),
+                                         probes.begin(), probes.end());
+   }
  
    if (rate_control_settings_.UseCongestionWindow() &&
        !feedback_max_rtts_.empty()) {
@@ -468,7 +477,13 @@ NetworkControlUpdate GoogCcNetworkController::OnNetworkAvailability(
    if (starting_rate_)
      delay_based_bwe_->SetStartBitrate(*starting_rate_);
    delay_based_bwe_->SetMinBitrate(min_data_rate_);
- 
+
+   // 当 Ratio 启用时，禁用探测机制
+   if (delay_based_bwe_->IsCellularRatioInfluenceEnabled()) {
+     RTC_LOG(LS_INFO) << "[GoogCC-RatioMode] Probing disabled - Ratio controls rate";
+     return std::vector<ProbeClusterConfig>();  // 返回空，不进行探测
+   }
+
    return probe_controller_->SetBitrates(
        min_data_rate_, starting_rate_.value_or(DataRate::Zero()), max_data_rate_,
        new_constraints.at_time);
@@ -646,7 +661,8 @@ NetworkControlUpdate GoogCcNetworkController::OnNetworkAvailability(
  
    recovered_from_overuse = result.recovered_from_overuse;
  
-   if (recovered_from_overuse) {
+   // 当 Ratio 启用时，禁用 overuse recovery 探测
+   if (recovered_from_overuse && !delay_based_bwe_->IsCellularRatioInfluenceEnabled()) {
      probe_controller_->SetAlrStartTime(alr_start_time);
      auto probes = probe_controller_->RequestProbe(report.feedback_time);
      update.probe_cluster_configs.insert(update.probe_cluster_configs.end(),
@@ -762,7 +778,19 @@ NetworkControlUpdate GoogCcNetworkController::OnNetworkAvailability(
    DataRate loss_based_target_rate = bandwidth_estimation_->target_rate();
    LossBasedState loss_based_state = bandwidth_estimation_->loss_based_state();
    DataRate pushback_target_rate = loss_based_target_rate;
- 
+   DataRate delay_based_estimate = delay_based_bwe_->last_estimate();
+
+   // ===== Ratio 完全控制模式 =====
+   // 当 Ratio 启用时，使用 AIMD 的值（Ratio 修改后的）作为目标速率
+   if (delay_based_bwe_->IsCellularRatioInfluenceEnabled() &&
+       delay_based_estimate.IsFinite() && delay_based_estimate > DataRate::Zero()) {
+     RTC_LOG(LS_INFO) << "[GoogCC-RatioControl] Ratio enabled, using AIMD value: "
+                      << delay_based_estimate.bps() << " bps (was BWE: "
+                      << loss_based_target_rate.bps() << " bps)";
+     loss_based_target_rate = delay_based_estimate;
+     pushback_target_rate = delay_based_estimate;
+   }
+
    double cwnd_reduce_ratio = 0.0;
    if (congestion_window_pushback_controller_) {
      // Verify loss_based_target_rate is finite before using
@@ -815,9 +843,11 @@ NetworkControlUpdate GoogCcNetworkController::OnNetworkAvailability(
        (loss_based_state != last_loss_base_state_) ||
        (fraction_loss != last_estimated_fraction_loss_) ||
        (round_trip_time != last_estimated_round_trip_time_) ||
-       (pushback_target_rate != last_pushback_target_rate_)) {
+       (pushback_target_rate != last_pushback_target_rate_) ||
+       (delay_based_estimate != last_delay_based_estimate_)) {
      last_loss_based_target_rate_ = loss_based_target_rate;
      last_pushback_target_rate_ = pushback_target_rate;
+     last_delay_based_estimate_ = delay_based_estimate;
      last_estimated_fraction_loss_ = fraction_loss;
      last_estimated_round_trip_time_ = round_trip_time;
      last_loss_base_state_ = loss_based_state;
@@ -860,14 +890,17 @@ NetworkControlUpdate GoogCcNetworkController::OnNetworkAvailability(
  
      update->target_rate = target_rate_msg;
  
-     auto probes = probe_controller_->SetEstimatedBitrate(
-         loss_based_target_rate,
-         GetBandwidthLimitedCause(bandwidth_estimation_->loss_based_state(),
-                                  bandwidth_estimation_->IsRttAboveLimit(),
-                                  delay_based_bwe_->last_state()),
-         at_time);
-     update->probe_cluster_configs.insert(update->probe_cluster_configs.end(),
-                                          probes.begin(), probes.end());
+     // 当 Ratio 启用时，禁用基于估计的探测
+     if (!delay_based_bwe_->IsCellularRatioInfluenceEnabled()) {
+       auto probes = probe_controller_->SetEstimatedBitrate(
+           loss_based_target_rate,
+           GetBandwidthLimitedCause(bandwidth_estimation_->loss_based_state(),
+                                    bandwidth_estimation_->IsRttAboveLimit(),
+                                    delay_based_bwe_->last_state()),
+           at_time);
+       update->probe_cluster_configs.insert(update->probe_cluster_configs.end(),
+                                            probes.begin(), probes.end());
+     }
      update->pacer_config = GetPacingRates(at_time);
     RTC_LOG(LS_VERBOSE) << "bwe " << ToMsString(at_time) << " pushback_target_bps="
                          << last_pushback_target_rate_.bps()

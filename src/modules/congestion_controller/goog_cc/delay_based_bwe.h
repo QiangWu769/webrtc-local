@@ -95,6 +95,9 @@ class DelayBasedBwe {
   void SetCellularRatioInfluenceEnabled(bool enabled);
   void SetCUSUMInfluenceEnabled(bool enabled);
 
+  // Check if cellular ratio influence is enabled (for GoogCC to use AIMD value)
+  bool IsCellularRatioInfluenceEnabled() const { return cellular_ratio_influence_enabled_; }
+
  private:
   friend class GoogCcStatePrinter;
   void IncomingPacketFeedback(const PacketResult& packet_feedback,

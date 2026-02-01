@@ -404,7 +404,7 @@ bool DelayBasedBwe::UpdateEstimate(Timestamp at_time,
   // Pass trendline slope to rate control for combined gain calculation
   auto* trendline = static_cast<TrendlineEstimator*>(active_delay_detector_);
   if (trendline) {
-    rate_control_.SetTrendlineSlope(trendline->GetTrendlineSlope());
+    rate_control_.SetTrendlineSlope(trendline->GetTrendlineSlope(), at_time);
   }
 
   const RateControlInput input(active_delay_detector_->State(), acked_bitrate);
@@ -488,13 +488,13 @@ void DelayBasedBwe::UpdateCellularResourceRatio(double ratio,
 
   rate_control_.SetCellularResourceRatio(ratio, saturation, at_time);
 
-  // Update prev_bitrate_ if RatioImmediate reduced the rate
-  // This ensures GCC gets the reduced bitrate even without Transport Feedback
+  // Update prev_bitrate_ whenever Ratio changes the rate
+  // This ensures GCC gets the Ratio-modified bitrate even without Transport Feedback
   DataRate current_rate = rate_control_.LatestEstimate();
-  if (current_rate < prev_bitrate_ && prev_bitrate_.IsFinite()) {
+  if (current_rate != prev_bitrate_ && prev_bitrate_.IsFinite() && current_rate.IsFinite()) {
     RTC_LOG(LS_INFO) << "[DelayBWE-RatioUpdate] Updating prev_bitrate: "
                      << prev_bitrate_.bps() << " -> " << current_rate.bps()
-                     << " bps (RatioImmediate reduction)";
+                     << " bps (Ratio " << (current_rate > prev_bitrate_ ? "increase" : "reduction") << ")";
     prev_bitrate_ = current_rate;
   }
 }

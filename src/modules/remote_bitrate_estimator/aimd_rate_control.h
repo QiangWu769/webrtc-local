@@ -82,7 +82,7 @@ class AimdRateControl {
   void SetCUSUMInfluenceEnabled(bool enabled);
 
   // Trendline slope support for combined gain calculation
-  void SetTrendlineSlope(double slope);
+  void SetTrendlineSlope(double slope, Timestamp at_time);
 
  private:
   enum class RateControlState { kRcHold, kRcIncrease, kRcDecrease };
@@ -159,6 +159,8 @@ class AimdRateControl {
 
   // Trendline slope tracking
   double trendline_slope_ = 0.0;
+  Timestamp last_slope_update_time_ = Timestamp::MinusInfinity();
+  double prev_applied_slope_ = 0.0;  // Track last applied slope to avoid re-applying
 
   // Immediate ratio-driven reduction tracking
   Timestamp last_ratio_immediate_reduction_time_ = Timestamp::MinusInfinity();
