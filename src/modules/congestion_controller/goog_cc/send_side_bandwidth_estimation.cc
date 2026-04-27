@@ -427,7 +427,15 @@ std::string ToMsString(TimeDelta value) {
                            0)
          << 8;
      last_fraction_loss_ = std::min<int>(lost_q8 / expected, 255);
- 
+
+     RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
+                      << " [SendBWE-PacketLoss] MonoTime: " << at_time.ms() << " ms"
+                      << ", Lost: " << (lost_packets_since_last_loss_update_ + packets_lost)
+                      << ", Expected: " << expected
+                      << ", FractionLoss: " << last_fraction_loss_
+                      << "/256 (" << (last_fraction_loss_ * 100.0 / 256.0) << "%)"
+                      << ", CurrentTarget: " << current_target_.bps() << " bps";
+
      // Reset accumulators.
      lost_packets_since_last_loss_update_ = 0;
      expected_packets_since_last_loss_update_ = 0;

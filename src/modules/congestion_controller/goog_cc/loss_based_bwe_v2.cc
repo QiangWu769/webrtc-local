@@ -1245,6 +1245,21 @@ bool LossBasedBweV2::PushBackObservation(
   observations_[observation.id % config_->observation_window_size] =
       observation;
 
+  double loss_rate = observation.num_packets > 0
+      ? static_cast<double>(observation.num_lost_packets) / observation.num_packets
+      : 0.0;
+  RTC_LOG(LS_INFO) << "[" << GetWallClockTimestampString() << "]"
+                   << " [LossBWE-Observation] MonoTime: "
+                   << ToMsString(last_send_time_most_recent_observation_) << " ms"
+                   << ", ObsId: " << observation.id
+                   << ", NumPkts: " << observation.num_packets
+                   << ", NumLost: " << observation.num_lost_packets
+                   << ", NumRecv: " << observation.num_received_packets
+                   << ", LossRate: " << loss_rate
+                   << ", SendingRate: " << observation.sending_rate.kbps() << " kbps"
+                   << ", LostSize: " << observation.lost_size.bytes() << " bytes"
+                   << ", TotalSize: " << observation.size.bytes() << " bytes";
+
   partial_observation_ = PartialObservation();
   UpdateAverageReportedLossRatio();
   CalculateInstantUpperBound();

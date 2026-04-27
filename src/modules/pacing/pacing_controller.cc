@@ -225,8 +225,21 @@ void PacingController::EnqueuePacket(std::unique_ptr<RtpPacketToSend> packet) {
     }
     UpdateBudgetWithElapsedTime(UpdateTimeAndGetElapsed(target_process_time));
   }
+  // Track per-frame enqueue time (first packet only)
+  const uint32_t rtp_ts = packet->Timestamp();
+  if (frame_enqueue_time_.find(rtp_ts) == frame_enqueue_time_.end()) {
+    frame_enqueue_time_.emplace(rtp_ts, now);
+  }
+
   packet_queue_.Push(now, std::move(packet));
   seen_first_packet_ = true;
+
+  RTC_LOG(LS_INFO) << "[PacerEnqueue] MonoUs: " << now.us()
+                   << ", QueuePkts: " << packet_queue_.SizeInPackets()
+                   << ", QueueBytes: " << packet_queue_.SizeInPayloadBytes()
+                   << ", MediaDebt: " << media_debt_.bytes()
+                   << ", PacingRate: " << pacing_rate_.kbps() << " kbps"
+                   << ", AdjustedRate: " << adjusted_media_rate_.kbps() << " kbps";
 
   // Queue length has increased, check if we need to change the pacing rate.
   MaybeUpdateMediaRateDueToLongQueue(now);
@@ -498,6 +511,23 @@ void PacingController::ProcessPackets() {
                        transport_overhead_per_packet_;
       }
 
+      // Log per-frame pacing latency when last packet (marker bit) is sent
+      const uint32_t pkt_rtp_ts = rtp_packet->Timestamp();
+      const bool is_marker = rtp_packet->Marker();
+      if (is_marker) {
+        auto it = frame_enqueue_time_.find(pkt_rtp_ts);
+        if (it != frame_enqueue_time_.end()) {
+          int64_t pacing_latency_us = now.us() - it->second.us();
+          RTC_LOG(LS_INFO) << "[PacerFrameLatency] RtpTs: " << pkt_rtp_ts
+                           << ", PacingLatencyUs: " << pacing_latency_us
+                           << ", PacingLatencyMs: " << pacing_latency_us / 1000
+                           << ", MediaDebt: " << media_debt_.bytes()
+                           << ", PacingRate: " << pacing_rate_.kbps() << " kbps"
+                           << ", PacketSize: " << packet_size.bytes();
+          frame_enqueue_time_.erase(it);
+        }
+      }
+
       packet_sender_->SendPacket(std::move(rtp_packet), pacing_info);
       for (auto& packet : packet_sender_->FetchFec()) {
         EnqueuePacket(std::move(packet));
@@ -574,11 +604,15 @@ void PacingController::ProcessPackets() {
 
   // Log burst info for analysis
   if (packets_sent > 0) {
-    RTC_LOG(LS_INFO) << "[PacerBurst] packets=" << packets_sent
-                     << " bytes=" << data_sent.bytes()
-                     << " queue_remain=" << packet_queue_.SizeInPackets()
-                     << " pacing_rate=" << pacing_rate_.kbps()
-                     << " adjusted_rate=" << adjusted_media_rate_.kbps();
+    RTC_LOG(LS_INFO) << "[PacerDequeue] MonoUs: " << now.us()
+                     << ", Sent: " << packets_sent << " pkts"
+                     << ", SentBytes: " << data_sent.bytes()
+                     << ", QueuePkts: " << packet_queue_.SizeInPackets()
+                     << ", QueueBytes: " << packet_queue_.SizeInPayloadBytes()
+                     << ", MediaDebt: " << media_debt_.bytes()
+                     << ", PaddingDebt: " << padding_debt_.bytes()
+                     << ", PacingRate: " << pacing_rate_.kbps() << " kbps"
+                     << ", AdjustedRate: " << adjusted_media_rate_.kbps() << " kbps";
   }
 }
 
@@ -671,13 +705,30 @@ void PacingController::OnPacketSent(RtpPacketMediaType packet_type,
 }
 
 void PacingController::UpdateBudgetWithElapsedTime(TimeDelta delta) {
+  DataSize old_media_debt = media_debt_;
   media_debt_ -= std::min(media_debt_, adjusted_media_rate_ * delta);
   padding_debt_ -= std::min(padding_debt_, padding_rate_ * delta);
+  if (old_media_debt > DataSize::Zero()) {
+    RTC_LOG(LS_VERBOSE) << "[PacerBudgetDrain] DeltaMs: " << delta.ms()
+                        << ", DebtBefore: " << old_media_debt.bytes()
+                        << ", DebtAfter: " << media_debt_.bytes()
+                        << ", Drained: " << (old_media_debt - media_debt_).bytes()
+                        << ", Rate: " << adjusted_media_rate_.kbps() << " kbps";
+  }
 }
 
 void PacingController::UpdateBudgetWithSentData(DataSize size) {
+  DataSize old_debt = media_debt_;
   media_debt_ += size;
+  bool capped = media_debt_ > adjusted_media_rate_ * kMaxDebtInTime;
   media_debt_ = std::min(media_debt_, adjusted_media_rate_ * kMaxDebtInTime);
+  if (capped) {
+    RTC_LOG(LS_INFO) << "[PacerBudgetCapped] DebtBefore: " << old_debt.bytes()
+                     << ", Added: " << size.bytes()
+                     << ", DebtCapped: " << media_debt_.bytes()
+                     << ", MaxDebt: " << (adjusted_media_rate_ * kMaxDebtInTime).bytes()
+                     << " (debt hit ceiling, queue will stall)";
+  }
   UpdatePaddingBudgetWithSentData(size);
 }
 

@@ -15,6 +15,7 @@
 #include <stdint.h>
 
 #include <array>
+#include <map>
 #include <memory>
 #include <optional>
 #include <vector>
@@ -284,6 +285,9 @@ class PacingController {
   bool include_overhead_;
 
   int circuit_breaker_threshold_;
+
+  // Per-frame pacing latency tracking: rtp_timestamp -> first enqueue time
+  std::map<uint32_t, Timestamp> frame_enqueue_time_;
 };
 }  // namespace webrtc
 

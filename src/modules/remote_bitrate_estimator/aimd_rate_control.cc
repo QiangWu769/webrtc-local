@@ -780,44 +780,19 @@ bool AimdRateControl::HasFreshCellularData(Timestamp at_time) const {
 }
 
 double AimdRateControl::ComputeGainFromRatio(double ratio) const {
-  // Ratio → Gain 映射（Sigmoid + 中性区）
-  //
-  // Ratio 范围：[0, 2]
-  // Gain 范围：[0.99, 1.01]
-  // 中心点：ratio = 0.2 → gain = 1.0
-  //
-  // 设计：
-  //   - ratio < 0.15:   危险区，sigmoid 减速 (0.99 → 1.0)
-  //   - ratio 0.15-0.25: 中性区，gain = 1.0（只靠 slope additive）
-  //   - ratio > 0.25:   安全区，sigmoid 增速 (1.0 → 1.01)
+  // Asymmetric dual-sigmoid gain: steeper left, gentle right
+  // Left  (η ≤ 0.2): 0.06·σ(25·η) + 0.94,  gain [0.97, ~1.00]
+  // Right (η > 0.2):  0.01·σ(50·(η−0.4)) + 1.00, gain [1.00, 1.01]
+  // η*=0.2 sits in the flat tails of both sigmoids → stable neutral zone
 
-  const double kNeutralLow = 0.15;   // 中性区下界
-  const double kNeutralHigh = 0.25;  // 中性区上界
+  const double kTargetRatio = 0.2;
 
-  if (ratio <= kNeutralLow) {
-    // 危险区：sigmoid 减速
-    // ratio = 0 → gain ≈ 0.99
-    // ratio = 0.15 → gain ≈ 1.0
-    const double k = 20.0;           // 陡峭程度
-    const double center = 0.1;       // sigmoid 中心点
-    double x = ratio - center;
-    double sigmoid = 1.0 / (1.0 + exp(-k * x));
-    // 映射到 gain: 0.99 → 1.0
-    return 0.99 + 0.01 * sigmoid;
-  } else if (ratio >= kNeutralHigh) {
-    // 安全区：sigmoid 增速
-    // ratio = 0.25 → gain ≈ 1.0
-    // ratio = 2.0 → gain ≈ 1.01
-    const double k = 20.0;           // 陡峭程度
-    const double center = 0.5;       // sigmoid 中心点
-    double x = ratio - center;
-    double sigmoid = 1.0 / (1.0 + exp(-k * x));
-    // 映射到 gain: 1.0 → 1.01
-    return 1.0 + 0.01 * sigmoid;
+  auto sigmoid = [](double x) { return 1.0 / (1.0 + exp(-x)); };
+
+  if (ratio <= kTargetRatio) {
+    return 0.06 * sigmoid(25.0 * ratio) + 0.94;
   } else {
-    // 中性区：gain = 1.0
-    // 完全依赖 slope 的 additive 调整
-    return 1.0;
+    return 0.01 * sigmoid(50.0 * (ratio - 0.4)) + 1.00;
   }
 }
 

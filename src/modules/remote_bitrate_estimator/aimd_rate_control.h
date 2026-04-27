@@ -146,9 +146,9 @@ class AimdRateControl {
   // Helper functions for cellular ratio
   bool HasFreshCellularData(Timestamp at_time) const;
 
-  // Compute gain factor from cellular ratio using sigmoid function
-  // gain = 0.95 + 0.13 * sigmoid((ratio - 0.35) * 10.73)
-  // Maps ratio [0, 2] to gain [0.95, 1.08]
+  // Asymmetric dual-sigmoid gain: steeper left, gentle right
+  // Left:  0.06·σ(25·η) + 0.94       when η ≤ 0.2
+  // Right: 0.01·σ(50·(η−0.4)) + 1.00 when η > 0.2
   double ComputeGainFromRatio(double ratio) const;
 
   // Compute gain factor from trendline slope
